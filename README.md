@@ -32,3 +32,8 @@ L'application est développée pour les téléphones Android. Le développement 
 
 * [Google Drive](https://drive.google.com/drive/folders/0B9w0H-NLpQyebkpoV0J0Rmt2eUk)
 * [Trello](https://trello.com/b/IZpxAou7/projet-big-follow)
+
+## 4. Bugs
+
+[ ] Vérifier avec nouvelle version activeandroid
+[ ] Vérifier google service
