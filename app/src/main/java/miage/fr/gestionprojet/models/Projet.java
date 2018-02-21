@@ -1,5 +1,6 @@
 package miage.fr.gestionprojet.models;
 
+import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
@@ -12,7 +13,7 @@ import java.util.List;
  * Created by Audrey on 23/01/2017.
  */
 @Table(name="Projet")
-public class Projet extends ActiveModel {
+public class Projet extends Model {
 
     @Column(name="nom")
     private String nom;

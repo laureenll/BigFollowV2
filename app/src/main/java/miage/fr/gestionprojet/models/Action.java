@@ -1,5 +1,6 @@
 package miage.fr.gestionprojet.models;
 
+import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
@@ -10,7 +11,7 @@ import java.util.Date;
  */
 
 @Table(name="Action")
-public class Action extends ActiveModel {
+public class Action extends Model {
 
 
     @Column(name="typeTravail")
