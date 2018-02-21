@@ -35,5 +35,5 @@ L'application est développée pour les téléphones Android. Le développement 
 
 ## 4. Bugs
 
-[ ] Vérifier avec nouvelle version activeandroid
-[ ] Vérifier google service
+- [ ] Vérifier avec nouvelle version activeandroid
+- [ ] Vérifier google service
