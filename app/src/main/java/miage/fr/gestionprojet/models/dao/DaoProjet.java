@@ -29,8 +29,7 @@ public class DaoProjet {
                 .execute();
     }
     public static List<Projet> loadAll(){
-        List<Projet> projets = new Select().from(Projet.class).execute();
-        return projets;
+        return new Select().from(Projet.class).execute();
     }
 
     public static Date getDateFin(long idProjet){
@@ -45,7 +44,7 @@ public class DaoProjet {
             dateFinPrevu = Calendar.getInstance().getTime();
             return dateFinPrevu;
         }
-            return null;
+        return null;
     }
 
     public static Date getDateDebut(long idProjet){
@@ -54,6 +53,7 @@ public class DaoProjet {
                 .rawQuery("SELECT min(a.dt_debut) FROM " + new Action().getTableName()
                         + " a INNER JOIN "+ new Domaine().getTableName() + " d ON a.domaine = d.id INNER JOIN "
                         +new Projet().getTableName() +" p ON d.projet = p.id WHERE p.id = "+idProjet, null);
+
         Date dateDebut;
         if(c.moveToFirst()){
             Calendar.getInstance().setTimeInMillis(c.getLong(0));

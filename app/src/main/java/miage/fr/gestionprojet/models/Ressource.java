@@ -1,15 +1,13 @@
 package miage.fr.gestionprojet.models;
 
-import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
 /**
  * Created by Audrey on 25/02/2017.
  */
-
 @Table(name="Ressource")
-public class Ressource extends Model{
+public class Ressource extends ActiveModel {
 
     @Column(name="initiales")
     private String initiales;

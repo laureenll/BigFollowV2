@@ -1,10 +1,8 @@
 package miage.fr.gestionprojet.models;
 
-import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
-import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,7 +12,7 @@ import java.util.List;
  * Created by Audrey on 23/01/2017.
  */
 @Table(name="Projet")
-public class Projet extends Model {
+public class Projet extends ActiveModel {
 
     @Column(name="nom")
     private String nom;
@@ -87,6 +85,7 @@ public class Projet extends Model {
     public List<Domaine> getLstDomaines() {
         return getMany(Domaine.class, "projet");
     }
+
     @Override
     public String toString() {
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");

@@ -23,28 +23,29 @@ import miage.fr.gestionprojet.models.Projet;
 public class DaoAction {
     public static List<Action> loadActionsByCode(String code) {
         //getAll
-        List<Action> actions = new Select()
+        return new Select()
                 .from(Action.class)
                 .where("code=?",code)
                 .execute();
-        return actions;
     }
 
     public static List<Action> loadActionsByType(String type, long idProjet) {
         Projet proj = Model.load(Projet.class, idProjet);
-        ArrayList<Action> lstActions = new ArrayList<>();
+        List<Action> lstActions = new ArrayList<>();
+
         for(Domaine d : proj.getLstDomaines()) {
             List<Action> actions = new Select().from(Action.class)
                     .where("typeTravail = ? and domaine=?", type, d.getId())
                     .execute();
             lstActions.addAll(actions);
         }
+
         return lstActions;
     }
 
     public static List<Action> loadActionsByPhaseAndDate(String phase,Date d, long idProjet) {
         Projet proj = Model.load(Projet.class, idProjet);
-        ArrayList<Action> lstActions = new ArrayList<>();
+        List<Action> lstActions = new ArrayList<>();
         for(Domaine dom : proj.getLstDomaines()) {
             List<Action> actions = new Select().from(Action.class)
                     .where("phase = ? and dt_fin_prevue>=? and dt_debut<=? and domaine=?", phase, d.getTime(), d.getTime(), dom.getId())
@@ -56,7 +57,7 @@ public class DaoAction {
 
     public static List<Action> loadActionsByDate(Date d, long idProjet) {
         Projet proj = Model.load(Projet.class, idProjet);
-        ArrayList<Action> lstActions = new ArrayList<>();
+        List<Action> lstActions = new ArrayList<>();
         for(Domaine dom : proj.getLstDomaines()) {
             List<Action> actions = new Select()
                     .from(Action.class)
@@ -68,13 +69,12 @@ public class DaoAction {
     }
 
     public static List<Action> loadAll(){
-        List<Action> actions = new Select().from(Action.class).execute();
-        return actions;
+        return new Select().from(Action.class).execute();
     }
 
     public static List<Action> loadActionsOrderByNomAndDate(Date d, long idProjet){
         Projet proj = Model.load(Projet.class, idProjet);
-        ArrayList<Action> lstActions = new ArrayList<>();
+        List<Action> lstActions = new ArrayList<>();
         for(Domaine dom : proj.getLstDomaines()) {
             List<Action> actions = new Select()
                     .from(Action.class)
@@ -86,11 +86,11 @@ public class DaoAction {
         return lstActions;
     }
 
-    public static ArrayList<Action> loadActionsByDomaineAndDate(int idDomaine,Date d, long idProjet){
+    public static List<Action> loadActionsByDomaineAndDate(int idDomaine,Date d, long idProjet){
         Projet proj = Model.load(Projet.class, idProjet);
-        ArrayList<Action> lstActions = new ArrayList<>();
+        List<Action> lstActions = new ArrayList<>();
         for(Domaine dom : proj.getLstDomaines()) {
-            ArrayList<Action> result = new Select()
+            List<Action> result = new Select()
                     .from(Action.class)
                     .where("domaine=? and dt_fin_prevue>=? and dt_debut<=? and domaine=?", idDomaine, d.getTime(), d.getTime(),dom.getId())
                     .execute();
@@ -98,7 +98,7 @@ public class DaoAction {
         }
         return lstActions;
     }
-    public static ArrayList<Action> getActionbyCode(String id) {
+    public static List<Action> getActionbyCode(String id) {
         return new Select()
                 .from(Action.class)
                 .where("code = ?", id)
@@ -175,11 +175,11 @@ public class DaoAction {
         return lstResult;
     }
 
-    public static ArrayList<String> getLstTypeTravail(){
+    public static List<String> getLstTypeTravail(){
         Cursor c = ActiveAndroid
                 .getDatabase()
                 .rawQuery("SELECT DISTINCT(typeTravail) FROM " + new Action().getTableName(), null);
-        ArrayList<String> lstResults = new ArrayList<>();
+        List<String> lstResults = new ArrayList<>();
 
         try {
             while (c.moveToNext()) {
@@ -261,11 +261,12 @@ public class DaoAction {
         return lstResult;
     }
 
-    public static ArrayList<Action> getActionRealiseesByProjet(long idProjet){
+    public static List<Action> getActionRealiseesByProjet(long idProjet){
         Projet proj = Model.load(Projet.class,idProjet);
         List<Domaine> lstDomaines = proj.getLstDomaines();
-        ArrayList<Action> lstActionRealisees = new ArrayList<>();
-        ArrayList<Action> lstActionRecuperees = new ArrayList<>();
+        List<Action> lstActionRealisees = new ArrayList<>();
+        List<Action> lstActionRecuperees;
+
         for(Domaine d: lstDomaines){
             lstActionRecuperees = new Select()
                     .from(Action.class)
@@ -276,11 +277,11 @@ public class DaoAction {
         return lstActionRealisees;
     }
 
-    public static ArrayList<Action> getAllActionsByProjet(long idProjet){
+    public static List<Action> getAllActionsByProjet(long idProjet){
         Projet proj = Model.load(Projet.class,idProjet);
         List<Domaine> lstDomaines = proj.getLstDomaines();
-        ArrayList<Action> lstAction = new ArrayList<>();
-        ArrayList<Action> lstActionRecuperees = new ArrayList<>();
+        List<Action> lstAction = new ArrayList<>();
+        List<Action> lstActionRecuperees;
         for(Domaine d: lstDomaines){
             lstActionRecuperees = new Select()
                     .from(Action.class)

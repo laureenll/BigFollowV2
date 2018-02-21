@@ -1,21 +1,19 @@
 package miage.fr.gestionprojet.models;
 
-import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
-import java.nio.channels.FileLock;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Audrey on 25/02/2017.
  */
 @Table(name="SaisieCharge")
-public class SaisieCharge extends Model {
+public class SaisieCharge extends ActiveModel {
 
     @Column(name="action")
-    Action action;
+    private Action action;
 
     @Column(name="nb_unites_cibles")
     private int nbUnitesCibles;
@@ -52,10 +50,7 @@ public class SaisieCharge extends Model {
     @Column(name="prct_charge_faite_par_semaine_par_cahre_estimee")
     private float prctChargeFaiteParSemaineParChargeEstimee;
 
-
-
-
-     private ArrayList<Mesure> lstMesures;
+    private List<Mesure> lstMesures;
 
     public SaisieCharge() {
         super();
@@ -149,12 +144,12 @@ public class SaisieCharge extends Model {
         this.prctChargeFaiteParSemaineParChargeEstimee = prctChargeFaiteParSemaineParChargeEstimee;
     }
 
-    public ArrayList<Mesure> getLstMesures() {
+    public List<Mesure> getLstMesures() {
         this.lstMesures = getMany(Mesure.class, "action");
        return this.lstMesures;
     }
 
-    public void setLstMesures(ArrayList<Mesure> lstMesures) {
+    public void setLstMesures(List<Mesure> lstMesures) {
       this.lstMesures = lstMesures;
     }
 

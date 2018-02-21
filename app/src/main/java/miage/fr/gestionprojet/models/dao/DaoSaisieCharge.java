@@ -20,22 +20,21 @@ public class DaoSaisieCharge {
 
 
     public static List<SaisieCharge> loadSaisiebyAction(Action action) {
-        List<SaisieCharge> saisieCharge= new Select().from(SaisieCharge.class).where("action=?",action.getId()).execute();
-        return saisieCharge;
+        return new Select().from(SaisieCharge.class).where("action=?",action.getId()).execute();
 
     }
     public static List<SaisieCharge> loadAll() {
-        List<SaisieCharge> saisieCharge= new Select().from(SaisieCharge.class).execute();
-        return saisieCharge;
+        return new Select().from(SaisieCharge.class).execute();
 
     }
 
-    public static ArrayList<SaisieCharge> loadSaisieChargesByDomaine(int idDomaine){
-        ArrayList<SaisieCharge> lst = new ArrayList<>();
-        ArrayList<Action> results = new Select()
+    public static List<SaisieCharge> loadSaisieChargesByDomaine(int idDomaine){
+        List<SaisieCharge> lst = new ArrayList<>();
+        List<Action> results = new Select()
                 .from(Action.class)
                 .where("domaine=?",idDomaine)
                 .execute();
+
         for(Action a : results) {
             if(a.getTypeTravail().equalsIgnoreCase("Saisie")||a.getTypeTravail().equalsIgnoreCase("Test")) {
                 SaisieCharge result = (SaisieCharge) new Select()
@@ -44,16 +43,16 @@ public class DaoSaisieCharge {
                         .execute().get(0);
                 lst.add(result);
             }
-
         }
+
         return lst;
     }
 
-    public static ArrayList<SaisieCharge> loadSaisieChargeByUtilisateur(int idUser){
+    public static List<SaisieCharge> loadSaisieChargeByUtilisateur(int idUser){
 
 
-        ArrayList<SaisieCharge> lst = new ArrayList<>();
-        ArrayList<Action> results = new Select()
+        List<SaisieCharge> lst = new ArrayList<>();
+        List<Action> results = new Select()
                 .from(Action.class)
                 .where("resp_ouv=? or resp_oeu=?",idUser,idUser)
                 .execute();
@@ -71,7 +70,7 @@ public class DaoSaisieCharge {
     }
 
     public static SaisieCharge loadSaisieChargeByAction(long idAction){
-        ArrayList<SaisieCharge> lst = new Select()
+        List<SaisieCharge> lst = new Select()
                 .from(SaisieCharge.class)
                 .where("action = ?", idAction)
                 .execute();

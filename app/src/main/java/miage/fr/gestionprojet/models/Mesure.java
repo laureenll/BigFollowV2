@@ -1,6 +1,5 @@
 package miage.fr.gestionprojet.models;
 
-import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
@@ -11,7 +10,7 @@ import java.util.Date;
  */
 
 @Table(name="Mesure")
-public class Mesure extends Model {
+public class Mesure extends ActiveModel {
 
     @Column(name="action")
     private SaisieCharge action;

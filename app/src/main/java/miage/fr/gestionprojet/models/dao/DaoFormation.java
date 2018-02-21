@@ -27,11 +27,11 @@ public class DaoFormation {
     public static float getAvancementTotal (long idProjet){
         Projet proj = Model.load(Projet.class,idProjet);
         List<Domaine> lstDoms = proj.getLstDomaines();
-        ArrayList<Action> lstActions = new ArrayList<>();
+        List<Action> lstActions = new ArrayList<>();
         for(Domaine d: lstDoms){
             lstActions.addAll(d.getLstActions());
         }
-        ArrayList<Formation> lstFormation = new ArrayList<>();
+        List<Formation> lstFormation = new ArrayList<>();
         float avancementTotal = 0;
         for(Action a : lstActions){
             if(a.getTypeTravail().equalsIgnoreCase("Formation")){
@@ -49,9 +49,7 @@ public class DaoFormation {
 
     }
     public static List<Formation> loadAll() {
-        List<Formation> formations= new Select().from(Formation.class).execute();
-        return formations;
-
+        return new Select().from(Formation.class).execute();
     }
 
 }
