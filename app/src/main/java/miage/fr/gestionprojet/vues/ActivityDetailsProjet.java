@@ -14,11 +14,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.activeandroid.Model;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -56,7 +51,7 @@ public class ActivityDetailsProjet extends AppCompatActivity {
         // s'il n'y pas d'erreur, un projet est sélectionné
         if (id > 0) {
             // on récupère toutes les données de ce projet
-            proj = Model.load(Projet.class, id);
+            proj = DaoProjet.loadById(id);
 
             // on récupère les différents élements de la vue
             TextView txtNomProj = (TextView) findViewById(R.id.textViewNomProjet);

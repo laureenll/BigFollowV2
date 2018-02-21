@@ -1,5 +1,6 @@
 package miage.fr.gestionprojet.vues;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -285,7 +286,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void showPopUp(String cat){
-        ContextThemeWrapper wrapper = new ContextThemeWrapper(this, R.style.MyPopupMenu);
+        @SuppressLint("RestrictedApi") ContextThemeWrapper wrapper = new ContextThemeWrapper(this, R.style.MyPopupMenu);
         PopupMenu popupMenu = new PopupMenu(wrapper, mEmptyView);
         Menu menu = popupMenu.getMenu();
         if(cat.equalsIgnoreCase("type")){

@@ -15,9 +15,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <meta-data android:name="AA_DB_NAME" android:value="BigFollow.db" />
-        <meta-data android:name="AA_DB_VERSION" android:value="5" />
-
         <activity android:name=".vues.ActivityConnexion">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

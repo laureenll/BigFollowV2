@@ -1,18 +1,23 @@
 package miage.fr.gestionprojet.models;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
+import com.reactiveandroid.Model;
+import com.reactiveandroid.annotation.Column;
+import com.reactiveandroid.annotation.PrimaryKey;
+import com.reactiveandroid.annotation.Table;
+import com.reactiveandroid.query.Select;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import miage.fr.gestionprojet.AppDatabase;
 
 /**
  * Created by Audrey on 25/02/2017.
  */
-@Table(name="SaisieCharge")
-public class SaisieCharge extends Model {
+@Table(name="SaisieCharge", database = AppDatabase.class)
+public class SaisieCharge {
 
+    @PrimaryKey
+    private Long id;
     @Column(name="action")
     private Action action;
 
@@ -55,6 +60,10 @@ public class SaisieCharge extends Model {
 
     public SaisieCharge() {
         super();
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public int getNbUnitesCibles() {
@@ -146,8 +155,7 @@ public class SaisieCharge extends Model {
     }
 
     public List<Mesure> getLstMesures() {
-        this.lstMesures = getMany(Mesure.class, "action");
-       return this.lstMesures;
+        return Select.from(Mesure.class).where("action = ?", getId()).fetch();
     }
 
     public void setLstMesures(List<Mesure> lstMesures) {

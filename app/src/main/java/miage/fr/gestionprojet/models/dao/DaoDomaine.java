@@ -1,8 +1,7 @@
 package miage.fr.gestionprojet.models.dao;
 
-import com.activeandroid.query.Select;
+import com.reactiveandroid.query.Select;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import miage.fr.gestionprojet.models.Domaine;
@@ -14,16 +13,16 @@ import miage.fr.gestionprojet.models.Domaine;
 public class DaoDomaine {
 
     public static List<Domaine> loadAll(){
-        return new Select()
+        return Select
                 .from(Domaine.class)
-                .execute();
+                .fetch();
     }
 
     public static Domaine getByName(String name){
-        List<Domaine> lst = new Select()
+        List<Domaine> lst = Select
                 .from(Domaine.class)
                 .where("nom = ?",name)
-                .execute();
+                .fetch();
         if(lst.size()>0){
             return lst.get(0);
         }else{

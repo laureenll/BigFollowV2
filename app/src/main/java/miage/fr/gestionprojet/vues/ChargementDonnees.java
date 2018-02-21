@@ -22,9 +22,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.activeandroid.ActiveAndroid;
-import com.activeandroid.query.Delete;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -37,6 +34,9 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.ValueRange;
+import com.reactiveandroid.ReActiveAndroid;
+import com.reactiveandroid.query.Delete;
+import com.reactiveandroid.query.Insert;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -46,6 +46,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import miage.fr.gestionprojet.AppDatabase;
 import miage.fr.gestionprojet.models.Action;
 import miage.fr.gestionprojet.models.Domaine;
 import miage.fr.gestionprojet.models.Formation;
@@ -569,7 +570,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
         }
 
         public void initialiserressource(List<List<Object>> values) {
-            new Delete().from(Ressource.class).execute();
+            Delete.from(Ressource.class).execute();
 
             Ressource resource = new Ressource();
             resource.setNom("");
@@ -581,8 +582,10 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             resource.setPrenom("");
             resource.setTelephoneFixe("");
             resource.setTelephoneMobile("");
-            resource.save();
-            ActiveAndroid.beginTransaction();
+//            resource.save();//TODO
+
+            ReActiveAndroid.getDatabase(AppDatabase.class).beginTransaction();
+
             try {
                 for (List row : values) {
                     resource.setNom(row.get(2).toString());
@@ -594,26 +597,25 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                     resource.setPrenom(row.get(1).toString());
                     resource.setTelephoneFixe(row.get(6).toString());
                     resource.setTelephoneMobile(row.get(7).toString());
-                    resource.save();
-
+//                    resource.save(); //TODO
                 }
-                ActiveAndroid.setTransactionSuccessful();
             } finally {
-                ActiveAndroid.endTransaction();
+                ReActiveAndroid.getDatabase(AppDatabase.class).endTransaction();
             }
 
         }
 
         public void initialiserAction(List<List<Object>> values, List<List<Object>> valuesDcConso) throws ParseException {
-            new Delete().from(Action.class).execute();
-            new Delete().from(Domaine.class).execute();
+            Delete.from(Action.class).execute();
+            Delete.from(Domaine.class).execute();
 
             /*
              */
             Projet projet = DaoProjet.loadAll().get(0);
             /*
              */
-            ActiveAndroid.beginTransaction();
+            ReActiveAndroid.getDatabase(AppDatabase.class).beginTransaction();
+
             try {
                 for (List row : values) {
                     Action action = new Action();
@@ -628,7 +630,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                     Domaine domaine = DaoDomaine.getByName(row.get(3).toString());
                     if (domaine == null) {
                         domaine = new Domaine(row.get(3).toString(), "description demo", projet);
-                        domaine.save();
+                        Insert.into(Domaine.class).values(domaine);
                     }
                     Ressource respOuv;
                     if (row.get(13).toString() == null || row.get(13).toString().length() == 0) {
@@ -647,7 +649,8 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                         respOuv.setPrenom("");
                         respOuv.setTelephoneFixe("");
                         respOuv.setTelephoneMobile("");
-                        respOuv.save();
+
+                        Insert.into(Ressource.class).values(respOuv);
                     }
                     action.setRespOuv(respOuv);
                     Ressource respOeu;
@@ -667,7 +670,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                         respOeu.setPrenom("");
                         respOeu.setTelephoneFixe("");
                         respOeu.setTelephoneMobile("");
-                        respOeu.save();
+                        Insert.into(Ressource.class).values(respOeu);
                     }
                     action.setRespOuv(respOuv);
 
@@ -703,23 +706,22 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                     }
 
                /*  */
-                    action.save();
+//                    action.save();//TODO
                 }
-
-                ActiveAndroid.setTransactionSuccessful();
             } finally {
-                ActiveAndroid.endTransaction();
+                ReActiveAndroid.getDatabase(AppDatabase.class).endTransaction();
             }
 
         }
 
         public void intialiserFormation(List<List<Object>> values) {
-            new Delete().from(Formation.class).execute();
+            Delete.from(Formation.class).execute();
 
 
             List<Action> actionList = new ArrayList<>();
             Action action = new Action();
-            ActiveAndroid.beginTransaction();
+            ReActiveAndroid.getDatabase(AppDatabase.class).beginTransaction();
+
             try {
 
                 for (List row : values) {
@@ -741,55 +743,49 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                         formation.setAvancementPostFormation(chainetofloat(row.get(9).toString().replace('%', '0')));
 
                     }
-                    formation.save();
+//                    formation.save();//TODO
 
 
 
                 }
 
-
-
-
-                ActiveAndroid.setTransactionSuccessful();
             } finally {
-                ActiveAndroid.endTransaction();
+                ReActiveAndroid.getDatabase(AppDatabase.class).endTransaction();
             }
         }
 
         public void initialiserPojet(List<List<Object>> values) throws ParseException {
-            new Delete().from(Projet.class).execute();
+            Delete.from(Projet.class).execute();
             Projet projet = new Projet();
             projet.setDescription("");
             projet.setNom("");
             projet.setDateDebut(chainetoDate("20/01/2017"));
             projet.setDateFinReelle(chainetoDate("20/05/2018"));
             projet.setDateFinInitiale(chainetoDate("20/05/2018"));
-            ActiveAndroid.beginTransaction();
+
+            ReActiveAndroid.getDatabase(AppDatabase.class).beginTransaction();
+
             try {
 
                 for (List row : values) {
                     projet.setNom(row.get(0).toString());
                     projet.setDescription("Projet_Master2_MIAGE");
-                    projet.save();
+//                    projet.save();//TODO
                 }
 
-                ActiveAndroid.setTransactionSuccessful();
             } finally {
-                ActiveAndroid.endTransaction();
+                ReActiveAndroid.getDatabase(AppDatabase.class).endTransaction();
             }
         }
 
         public void initialiserSaisieCharge(List<List<Object>> values) throws ParseException {
-            new Delete().from(SaisieCharge.class).execute();
-
-
-
-
+            Delete.from(SaisieCharge.class).execute();
 
             for (List row : values) {
                 SaisieCharge saisiecharge = new SaisieCharge();
                 if (!row.get(0).equals("")) {
-                    ActiveAndroid.beginTransaction();
+                    ReActiveAndroid.getDatabase(AppDatabase.class).beginTransaction();
+
                     try {
                         saisiecharge.setNbSemainePassee(chainetoint(row.get(11).toString()));
                         saisiecharge.setNbSemaines(chainetofloat(row.get(8).toString()));
@@ -812,25 +808,26 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                         }
 
 
-                        saisiecharge.save();
+//                        saisiecharge.save();//TODO
                         List<SaisieCharge> listes = DaoSaisieCharge.loadAll();
 
 
-                        ActiveAndroid.setTransactionSuccessful();
                     } finally {
-                        ActiveAndroid.endTransaction();
+                        ReActiveAndroid.getDatabase(AppDatabase.class).endTransaction();
                     }
                 }
             }
         }
 
         public void initialiserMesures(List<List<Object>> values) throws ParseException {
-            new Delete().from(Mesure.class).execute();
+            Delete.from(Mesure.class).execute();
 
             List<Mesure>listfi = new ArrayList<>();
 
             SaisieCharge action = new SaisieCharge();
-            ActiveAndroid.beginTransaction();
+
+            ReActiveAndroid.getDatabase(AppDatabase.class).beginTransaction();
+
             try {
                 for (List row : values) {
                     Mesure mesure = new Mesure();
@@ -847,12 +844,11 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
 
                     mesure.setDtMesure(chainetoDate(row.get(2).toString()));
                     mesure.setNbUnitesMesures(chainetoint(row.get(1).toString()));
-                    mesure.save();
+//                    mesure.save();//TODO
                 }
 
-                ActiveAndroid.setTransactionSuccessful();
             } finally {
-                ActiveAndroid.endTransaction();
+                ReActiveAndroid.getDatabase(AppDatabase.class).endTransaction();
             }
         }
 

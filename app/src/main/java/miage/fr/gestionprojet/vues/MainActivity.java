@@ -10,8 +10,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.activeandroid.ActiveAndroid;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,7 +29,6 @@ public class MainActivity  extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActiveAndroid.initialize(this);
 
         Intent intentInitial = getIntent();
         initialUtilisateur = intentInitial.getStringExtra(ActivityGestionDesInitials.EXTRA_INITIAL);

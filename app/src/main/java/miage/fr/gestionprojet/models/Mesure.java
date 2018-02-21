@@ -1,17 +1,23 @@
 package miage.fr.gestionprojet.models;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
+import com.reactiveandroid.Model;
+import com.reactiveandroid.annotation.Column;
+import com.reactiveandroid.annotation.PrimaryKey;
+import com.reactiveandroid.annotation.Table;
 
 import java.util.Date;
+
+import miage.fr.gestionprojet.AppDatabase;
 
 /**
  * Created by Audrey on 25/02/2017.
  */
 
-@Table(name="Mesure")
-public class Mesure extends Model {
+@Table(name="Mesure", database = AppDatabase.class)
+public class Mesure {
+
+    @PrimaryKey
+    private Long id;
 
     @Column(name="action")
     private SaisieCharge action;
@@ -24,6 +30,10 @@ public class Mesure extends Model {
 
     public Mesure() {
         super();
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public SaisieCharge getAction() {

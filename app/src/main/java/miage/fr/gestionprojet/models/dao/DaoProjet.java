@@ -1,19 +1,10 @@
 package miage.fr.gestionprojet.models.dao;
 
-import android.database.Cursor;
+import com.reactiveandroid.query.Select;
 
-import com.activeandroid.ActiveAndroid;
-import com.activeandroid.query.Select;
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import miage.fr.gestionprojet.models.Action;
-import miage.fr.gestionprojet.models.Domaine;
 import miage.fr.gestionprojet.models.Projet;
 
 /**
@@ -23,43 +14,48 @@ import miage.fr.gestionprojet.models.Projet;
 public class DaoProjet {
 
     public List<Projet> getProjetEnCours(Date dateDuJour){
-        return new Select()
+        return Select
                 .from(Projet.class)
                 .where("date_fin_initiale>? or date_fin_reelle>?", dateDuJour.getTime(),dateDuJour.getTime())
-                .execute();
+                .fetch();
     }
+
+    public static Projet loadById(long idProjet) {
+        return Select.from(Projet.class).where("id=?", idProjet).fetchSingle();
+    }
+
     public static List<Projet> loadAll(){
-        return new Select().from(Projet.class).execute();
+        return Select.from(Projet.class).fetch();
     }
 
     public static Date getDateFin(long idProjet){
-        Cursor c = ActiveAndroid
-                .getDatabase()
-                .rawQuery("SELECT max(a.dt_fin_prevue) FROM " + new Action().getTableName()
-                        + " a INNER JOIN "+ new Domaine().getTableName() + " d ON a.domaine = d.id INNER JOIN "
-                        +new Projet().getTableName() +" p ON d.projet = p.id WHERE p.id = "+idProjet, null);
-        Date dateFinPrevu;
-        if(c.moveToFirst()){
-            Calendar.getInstance().setTimeInMillis(c.getLong(0));
-            dateFinPrevu = Calendar.getInstance().getTime();
-            return dateFinPrevu;
-        }
+//        Cursor c = ActiveAndroid
+//                .getDatabase()
+//                .rawQuery("SELECT max(a.dt_fin_prevue) FROM " + new Action().getTableName()
+//                        + " a INNER JOIN "+ new Domaine().getTableName() + " d ON a.domaine = d.id INNER JOIN "
+//                        +new Projet().getTableName() +" p ON d.projet = p.id WHERE p.id = "+idProjet, null);
+//        Date dateFinPrevu;
+//        if(c.moveToFirst()){
+//            Calendar.getInstance().setTimeInMillis(c.getLong(0));
+//            dateFinPrevu = Calendar.getInstance().getTime();
+//            return dateFinPrevu;
+//        }
         return null;
     }
 
     public static Date getDateDebut(long idProjet){
-        Cursor c = ActiveAndroid
-                .getDatabase()
-                .rawQuery("SELECT min(a.dt_debut) FROM " + new Action().getTableName()
-                        + " a INNER JOIN "+ new Domaine().getTableName() + " d ON a.domaine = d.id INNER JOIN "
-                        +new Projet().getTableName() +" p ON d.projet = p.id WHERE p.id = "+idProjet, null);
-
-        Date dateDebut;
-        if(c.moveToFirst()){
-            Calendar.getInstance().setTimeInMillis(c.getLong(0));
-            dateDebut = Calendar.getInstance().getTime();
-            return dateDebut;
-        }
+//        Cursor c = ActiveAndroid
+//                .getDatabase()
+//                .rawQuery("SELECT min(a.dt_debut) FROM " + new Action().getTableName()
+//                        + " a INNER JOIN "+ new Domaine().getTableName() + " d ON a.domaine = d.id INNER JOIN "
+//                        +new Projet().getTableName() +" p ON d.projet = p.id WHERE p.id = "+idProjet, null);
+//
+//        Date dateDebut;
+//        if(c.moveToFirst()){
+//            Calendar.getInstance().setTimeInMillis(c.getLong(0));
+//            dateDebut = Calendar.getInstance().getTime();
+//            return dateDebut;
+//        }
         return null;
     }
 }

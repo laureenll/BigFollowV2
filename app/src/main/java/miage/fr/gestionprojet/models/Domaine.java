@@ -1,17 +1,23 @@
 package miage.fr.gestionprojet.models;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
+import com.reactiveandroid.Model;
+import com.reactiveandroid.annotation.Column;
+import com.reactiveandroid.annotation.PrimaryKey;
+import com.reactiveandroid.annotation.Table;
+import com.reactiveandroid.query.Select;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import miage.fr.gestionprojet.AppDatabase;
 
 /**
  * Created by Audrey on 23/01/2017.
  */
-@Table(name="Domaine")
-public class Domaine extends Model {
+@Table(name="Domaine", database = AppDatabase.class)
+public class Domaine {
+
+    @PrimaryKey
+    private Long id;
 
     @Column(name="nom")
     private String nom;
@@ -21,10 +27,6 @@ public class Domaine extends Model {
 
     @Column(name="projet")
     private Projet projet;
-
-    private List<Action> lstActions;
-
-    private List<SaisieCharge> lstSaisieCharge;
 
     public Domaine(String nom, String description, Projet projet) {
         super();
@@ -36,6 +38,10 @@ public class Domaine extends Model {
 
     public Domaine() {
         super();
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getNom() {
@@ -63,10 +69,8 @@ public class Domaine extends Model {
     }
 
     public List<Action> getLstActions() {
-        this.lstActions = getMany(Action.class, "domaine");
-        return this.lstActions;
+        return Select.from(Action.class).where("domaine = ?", getId()).fetch();
     }
-
 
     @Override
     public String toString() {

@@ -1,5 +1,6 @@
 package miage.fr.gestionprojet.vues;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,9 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.support.v7.widget.PopupMenu;
 
-import com.activeandroid.Model;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +24,7 @@ import miage.fr.gestionprojet.models.Domaine;
 import miage.fr.gestionprojet.models.Projet;
 import miage.fr.gestionprojet.models.Ressource;
 import miage.fr.gestionprojet.models.SaisieCharge;
+import miage.fr.gestionprojet.models.dao.DaoProjet;
 import miage.fr.gestionprojet.models.dao.DaoSaisieCharge;
 
 public class ActivityIndicateursSaisieCharge extends AppCompatActivity {
@@ -49,7 +48,7 @@ public class ActivityIndicateursSaisieCharge extends AppCompatActivity {
 
         if (id > 0 ) {
             // on récupère les données associées à ce projet
-            proj = Model.load(Projet.class, id);
+            proj = DaoProjet.loadById(id);
             // on récupère la liste des travaux à afficher
             lstSaisieCharge= new ArrayList<SaisieCharge>();
             List<Domaine> lstDomaines = proj.getLstDomaines();
@@ -143,7 +142,7 @@ public class ActivityIndicateursSaisieCharge extends AppCompatActivity {
     }
 
     private void showPopup(String type){
-        ContextThemeWrapper wrapper = new ContextThemeWrapper(this, R.style.MyPopupMenu);
+        @SuppressLint("RestrictedApi") ContextThemeWrapper wrapper = new ContextThemeWrapper(this, R.style.MyPopupMenu);
         PopupMenu pMenu = new PopupMenu(wrapper,liste);
         Menu menu = pMenu.getMenu();
         if(type.equalsIgnoreCase("domaine")){

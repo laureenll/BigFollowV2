@@ -1,24 +1,20 @@
 package miage.fr.gestionprojet.vues;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.activeandroid.Model;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import miage.fr.gestionprojet.R;
-import miage.fr.gestionprojet.adapter.AdapterBudgetType;
 import miage.fr.gestionprojet.adapter.AdapterMesure;
 import miage.fr.gestionprojet.models.Mesure;
 import miage.fr.gestionprojet.models.SaisieCharge;
 import miage.fr.gestionprojet.models.dao.DaoMesure;
+import miage.fr.gestionprojet.models.dao.DaoSaisieCharge;
 
 public class ActivityMesures extends AppCompatActivity {
     public final static String EXTRA_INITIAL = "initial";
@@ -36,7 +32,7 @@ public class ActivityMesures extends AppCompatActivity {
 
 
         if(id > 0) {
-            saisieCharge = Model.load(SaisieCharge.class, id);
+            saisieCharge = DaoSaisieCharge.loadById(id);
             ListView lstViewMesures = (ListView) findViewById(R.id.lstViewMesures);
             List<Mesure> lstMesures = DaoMesure.getListtMesureByAction(id);
             final AdapterMesure adapter = new AdapterMesure(this, R.layout.lst_view_mesures, lstMesures);

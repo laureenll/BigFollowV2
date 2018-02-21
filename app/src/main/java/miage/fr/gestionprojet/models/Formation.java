@@ -1,19 +1,25 @@
 package miage.fr.gestionprojet.models;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
+import com.reactiveandroid.Model;
+import com.reactiveandroid.annotation.Column;
+import com.reactiveandroid.annotation.PrimaryKey;
+import com.reactiveandroid.annotation.Table;
+import com.reactiveandroid.query.Select;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import miage.fr.gestionprojet.AppDatabase;
+
 /**
  * Created by Audrey on 25/02/2017.
  */
-@Table(name = "Formation")
-public class Formation extends Model {
+@Table(name = "Formation", database = AppDatabase.class)
+public class Formation {
 
 
+    @PrimaryKey
+    private Long id;
     @Column(name="action")
     private Action action;
 
@@ -32,9 +38,12 @@ public class Formation extends Model {
         super();
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public List<EtapeFormation> getLstEtapesFormations() {
-        this.lstEtapesFormation = getMany(EtapeFormation.class, "formation");
-        return this.lstEtapesFormation;
+        return Select.from(EtapeFormation.class).where("formation = ?", getId()).fetch();
     }
 
     public float getAvancementTotal() {

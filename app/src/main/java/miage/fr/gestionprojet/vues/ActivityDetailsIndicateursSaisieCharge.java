@@ -12,7 +12,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.activeandroid.Model;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
 import java.text.DateFormat;
@@ -24,6 +23,7 @@ import java.util.List;
 import miage.fr.gestionprojet.models.Mesure;
 import miage.fr.gestionprojet.models.SaisieCharge;
 import miage.fr.gestionprojet.models.dao.DaoMesure;
+import miage.fr.gestionprojet.models.dao.DaoSaisieCharge;
 import miage.fr.gestionprojet.outils.Outils;
 import miage.fr.gestionprojet.R;
 
@@ -46,7 +46,7 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
 
 
         if(id > 0){
-            saisieCharge = Model.load(SaisieCharge.class, id);
+            saisieCharge = DaoSaisieCharge.loadById(id);
             Mesure mesure = DaoMesure.getLastMesureBySaisieCharge(saisieCharge.getId());
             txtSaisieCharge = (TextView) findViewById(R.id.textViewSaisieCharge);
             txtSaisieCharge.setText(saisieCharge.toString());

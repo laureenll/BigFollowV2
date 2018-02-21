@@ -11,8 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 
-import com.activeandroid.Model;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +23,7 @@ import miage.fr.gestionprojet.models.Projet;
 import miage.fr.gestionprojet.models.Ressource;
 import miage.fr.gestionprojet.models.dao.DaoAction;
 import miage.fr.gestionprojet.models.dao.DaoDomaine;
+import miage.fr.gestionprojet.models.dao.DaoProjet;
 import miage.fr.gestionprojet.models.dao.DaoRessource;
 
 public class ActivityBudget extends AppCompatActivity {
@@ -59,7 +58,7 @@ public class ActivityBudget extends AppCompatActivity {
         Intent intent = getIntent();
         long id =  intent.getLongExtra(ActivityDetailsProjet.PROJET,0);
         if(id>0){
-            proj = Model.load(Projet.class, id);
+            proj = DaoProjet.loadById(id);
         }else{
             proj = new Projet();
         }

@@ -1,20 +1,26 @@
 package miage.fr.gestionprojet.models;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
+import com.reactiveandroid.Model;
+import com.reactiveandroid.annotation.Column;
+import com.reactiveandroid.annotation.PrimaryKey;
+import com.reactiveandroid.annotation.Table;
+import com.reactiveandroid.query.Select;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import miage.fr.gestionprojet.AppDatabase;
+
 /**
  * Created by Audrey on 23/01/2017.
  */
-@Table(name="Projet")
-public class Projet extends Model {
+@Table(name="Projet", database = AppDatabase.class)
+public class Projet {
 
+    @PrimaryKey
+    private Long id;
     @Column(name="nom")
     private String nom;
 
@@ -41,6 +47,10 @@ public class Projet extends Model {
         this.dateDebut = dateDebut;
         this.dateFinInitiale = dateFinInitiale;
         this.dateFinReelle = dateFinReelle;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getNom() {
@@ -84,7 +94,7 @@ public class Projet extends Model {
     }
 
     public List<Domaine> getLstDomaines() {
-        return getMany(Domaine.class, "projet");
+        return Select.from(Domaine.class).where("projet = ?", getId()).fetch();
     }
 
     @Override

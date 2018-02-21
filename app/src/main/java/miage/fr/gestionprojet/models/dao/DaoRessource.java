@@ -1,6 +1,6 @@
 package miage.fr.gestionprojet.models.dao;
 
-import com.activeandroid.query.Select;
+import com.reactiveandroid.query.Select;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,15 +15,15 @@ public class DaoRessource {
 
 
     public static List<Ressource> loadAll(){
-        return new Select()
+        return Select
                 .from(Ressource.class)
-                .execute();
+                .fetch();
     }
 
     public  List<Ressource> loadAllWithInitialNotEmpty(){
 
-        List<Ressource> listeRessource=loadAll();
-        List<Ressource> listeRessourceFinal=new ArrayList<>();
+        List<Ressource> listeRessource = loadAll();
+        List<Ressource> listeRessourceFinal = new ArrayList<>();
 
         for ( int i=0; i < listeRessource.size();i++){
             if (!listeRessource.get(i).getInitiales().equals("") && listeRessource.get(i).getInitiales().length()>0) {
@@ -34,8 +34,8 @@ public class DaoRessource {
     }
 
     public List<String> getAllRessourceInitials(){
-        List<Ressource> listeRessource=new Select().from(Ressource.class).execute();
-        List<String> listeInitials=new ArrayList<>();
+        List<Ressource> listeRessource = loadAll();
+        List<String> listeInitials = new ArrayList<>();
 
         for ( int i=0; i < listeRessource.size();i++){
             if (!listeRessource.get(i).getInitiales().equals("") && listeRessource.get(i).getInitiales().length()>0) {
@@ -46,10 +46,10 @@ public class DaoRessource {
     }
 
     public static Ressource getRessourceByInitial(String initiales){
-        List<Ressource> lst = new Select()
+        List<Ressource> lst = Select
                 .from(Ressource.class)
                 .where("initiales = ?", initiales)
-                .execute();
+                .fetch();
         if(lst.size()>0){
             return lst.get(0);
         }else{

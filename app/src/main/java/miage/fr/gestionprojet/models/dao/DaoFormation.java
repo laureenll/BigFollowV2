@@ -1,7 +1,6 @@
 package miage.fr.gestionprojet.models.dao;
 
-import com.activeandroid.Model;
-import com.activeandroid.query.Select;
+import com.reactiveandroid.query.Select;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,15 +16,15 @@ import miage.fr.gestionprojet.models.Projet;
 public class DaoFormation {
 
     public static List<Formation> getFormations() {
-        return new Select().from(Formation.class).execute();
+        return Select.from(Formation.class).fetch();
     }
 
     public static Formation getFormation(long id) {
-        return new Select().from(Formation.class).where("Id = ?", id).executeSingle();
+        return Select.from(Formation.class).where("id = ?", id).fetchSingle();
     }
 
     public static float getAvancementTotal (long idProjet){
-        Projet proj = Model.load(Projet.class,idProjet);
+        Projet proj = Select.from(Projet.class).where("id = ?", idProjet).fetchSingle();
         List<Domaine> lstDoms = proj.getLstDomaines();
         List<Action> lstActions = new ArrayList<>();
         for(Domaine d: lstDoms){
@@ -35,7 +34,7 @@ public class DaoFormation {
         float avancementTotal = 0;
         for(Action a : lstActions){
             if(a.getTypeTravail().equalsIgnoreCase("Formation")){
-                Formation form = new Select().from(Formation.class).where("action = ?",a.getId()).executeSingle();
+                Formation form = Select.from(Formation.class).where("action = ?",a.getId()).fetchSingle();
                 lstFormation.add(form);
                 if(form!=null) {
                     avancementTotal += form.getAvancementTotal();
@@ -49,7 +48,7 @@ public class DaoFormation {
 
     }
     public static List<Formation> loadAll() {
-        return new Select().from(Formation.class).execute();
+        return Select.from(Formation.class).fetch();
     }
 
 }
