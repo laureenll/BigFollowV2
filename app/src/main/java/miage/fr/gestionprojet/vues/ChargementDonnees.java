@@ -34,9 +34,9 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.ValueRange;
+import com.reactiveandroid.Model;
 import com.reactiveandroid.ReActiveAndroid;
 import com.reactiveandroid.query.Delete;
-import com.reactiveandroid.query.Insert;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -582,7 +582,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             resource.setPrenom("");
             resource.setTelephoneFixe("");
             resource.setTelephoneMobile("");
-//            resource.save();//TODO
+            Model.save(resource);
 
             ReActiveAndroid.getDatabase(AppDatabase.class).beginTransaction();
 
@@ -597,7 +597,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                     resource.setPrenom(row.get(1).toString());
                     resource.setTelephoneFixe(row.get(6).toString());
                     resource.setTelephoneMobile(row.get(7).toString());
-//                    resource.save(); //TODO
+                    Model.save(resource);
                 }
             } finally {
                 ReActiveAndroid.getDatabase(AppDatabase.class).endTransaction();
@@ -630,7 +630,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                     Domaine domaine = DaoDomaine.getByName(row.get(3).toString());
                     if (domaine == null) {
                         domaine = new Domaine(row.get(3).toString(), "description demo", projet);
-                        Insert.into(Domaine.class).values(domaine);
+                        Model.save(domaine);
                     }
                     Ressource respOuv;
                     if (row.get(13).toString() == null || row.get(13).toString().length() == 0) {
@@ -649,8 +649,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                         respOuv.setPrenom("");
                         respOuv.setTelephoneFixe("");
                         respOuv.setTelephoneMobile("");
-
-                        Insert.into(Ressource.class).values(respOuv);
+                        Model.save(respOuv);
                     }
                     action.setRespOuv(respOuv);
                     Ressource respOeu;
@@ -670,7 +669,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                         respOeu.setPrenom("");
                         respOeu.setTelephoneFixe("");
                         respOeu.setTelephoneMobile("");
-                        Insert.into(Ressource.class).values(respOeu);
+                        Model.save(respOeu);
                     }
                     action.setRespOuv(respOuv);
 
@@ -704,9 +703,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                             }
                         }
                     }
-
-               /*  */
-//                    action.save();//TODO
+                    Model.save(action);
                 }
             } finally {
                 ReActiveAndroid.getDatabase(AppDatabase.class).endTransaction();
@@ -727,8 +724,6 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                 for (List row : values) {
                     Formation formation = new Formation();
 
-                    ;
-
                     actionList = DaoAction.getActionbyCode(row.get(5).toString());
 
                     if (actionList.size() >0){
@@ -743,10 +738,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                         formation.setAvancementPostFormation(chainetofloat(row.get(9).toString().replace('%', '0')));
 
                     }
-//                    formation.save();//TODO
-
-
-
+                     Model.save(formation);
                 }
 
             } finally {
@@ -770,7 +762,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                 for (List row : values) {
                     projet.setNom(row.get(0).toString());
                     projet.setDescription("Projet_Master2_MIAGE");
-//                    projet.save();//TODO
+                    Model.save(projet);
                 }
 
             } finally {
@@ -807,8 +799,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                             saisiecharge.setAction(actionsaisie);
                         }
 
-
-//                        saisiecharge.save();//TODO
+                        Model.save(saisiecharge);
                         List<SaisieCharge> listes = DaoSaisieCharge.loadAll();
 
 
@@ -844,7 +835,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
 
                     mesure.setDtMesure(chainetoDate(row.get(2).toString()));
                     mesure.setNbUnitesMesures(chainetoint(row.get(1).toString()));
-//                    mesure.save();//TODO
+                    Model.save(mesure);
                 }
 
             } finally {

@@ -22,8 +22,14 @@ public class MyApplication extends Application {
         super.onCreate();
 
         DatabaseConfig appDatabase = new DatabaseConfig.Builder(AppDatabase.class)
-                .addModelClasses(Action.class, Domaine.class, EtapeFormation.class,
-                        Formation.class, Mesure.class, Projet.class, Ressource.class,
+                .addModelClasses(
+                        Action.class,
+                        Domaine.class,
+                        EtapeFormation.class,
+                        Formation.class,
+                        Mesure.class,
+                        Projet.class,
+                        Ressource.class,
                         SaisieCharge.class
                 )
                 .build();
