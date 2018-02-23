@@ -2,37 +2,27 @@ package miage.fr.gestionprojet.vues;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.CommonStatusCodes;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.plus.People;
-import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
-import com.google.android.gms.plus.model.people.PersonBuffer;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 
 import miage.fr.gestionprojet.R;
 
@@ -118,29 +108,24 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
         switch (v.getId()) {
             case R.id.sign_in_button:
                 progress_dialog.show();
-                gPlusSignIn();
+                signIn();
                 break;
+
             case R.id.sign_out_button:
                 progress_dialog.show();
-                gPlusSignOut();
-
+                signOut();
                 break;
+
             case R.id.disconnect_button:
                 progress_dialog.show();
-//                gPlusRevokeAccess();
-
-            case R.id.frnd_button:
-
-                break;
-
-
+                revokeAccess();
         }
     }
 
     /*
       Sign-in into the Google + account
      */
-    private void gPlusSignIn() {
+    private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, SIGN_IN_CODE);
     }
@@ -148,13 +133,27 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
     /*
       Sign-out from Google+ account
      */
-    private void gPlusSignOut() {
-//        if (google_api_client.isConnected()) {
-//            Plus.AccountApi.clearDefaultAccount(google_api_client);
-//            google_api_client.disconnect();
-////            google_api_client.connect();
-//            changeUI();
-//        }
+    private void signOut() {
+        mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        // ...
+                    }
+                });
+    }
+
+    /*
+      Disconnect accounts
+     */
+    private void revokeAccess() {
+        mGoogleSignInClient.revokeAccess()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        // ...
+                    }
+                });
     }
 
     private void changeActivity(GoogleSignInAccount account) {
