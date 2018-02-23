@@ -40,6 +40,7 @@ public class DaoProjet {
 //            dateFinPrevu = Calendar.getInstance().getTime();
 //            return dateFinPrevu;
 //        }
+        // TODO
         return null;
     }
 
@@ -49,7 +50,7 @@ public class DaoProjet {
 //                .rawQuery("SELECT min(a.dt_debut) FROM " + new Action().getTableName()
 //                        + " a INNER JOIN "+ new Domaine().getTableName() + " d ON a.domaine = d.id INNER JOIN "
 //                        +new Projet().getTableName() +" p ON d.projet = p.id WHERE p.id = "+idProjet, null);
-//
+// TODO
 //        Date dateDebut;
 //        if(c.moveToFirst()){
 //            Calendar.getInstance().setTimeInMillis(c.getLong(0));

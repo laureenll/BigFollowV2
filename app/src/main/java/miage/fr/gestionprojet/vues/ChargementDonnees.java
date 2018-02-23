@@ -44,6 +44,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import miage.fr.gestionprojet.AppDatabase;
@@ -72,7 +73,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
     private EditText buttonInput;
 
     private static String spreadsheetId ;
-    private static String spreadsheetIdParDefaut= "1yw_8OO4oFYR6Q25KH0KE4LOr86UfwoNl_E6hGgq2UD4";
+    private static String spreadsheetIdParDefaut= "10JKhVbqrwQ8oKufdBXRoSLN6hGIDqtOsbbIKsLfipO4";
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
@@ -414,11 +415,11 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
          * @throws IOException
          */
         private List<String> getDataFromApi() throws IOException, ParseException {
-            /*tables des feuilles à parcourir
-            HashMap<String,String>feuilles= new HashMap<>();
+            //tables des feuilles à parcourir
+            HashMap<String,String> feuilles= new HashMap<>();
             feuilles.put("rangeActions","Liste des actions projet!A3:Z");
             feuilles.put("rangeRessources","Ressources!A2:Z");
-            */
+
             String spreadsheetId = "1yw_8OO4oFYR6Q25KH0KE4LOr86UfwoNl_E6hGgq2UD4";
             String rangeProject = "Informations générales!A2:E";
             String rangeActions = "Liste des actions projet!A3:Z";
@@ -747,7 +748,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
         }
 
         public void initialiserPojet(List<List<Object>> values) throws ParseException {
-            Delete.from(Projet.class).execute();
+            //Delete.from(Projet.class).execute();
             Projet projet = new Projet();
             projet.setDescription("");
             projet.setNom("");
