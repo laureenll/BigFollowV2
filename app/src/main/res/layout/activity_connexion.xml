@@ -20,7 +20,6 @@
         android:background="#00008B"
         android:layout_height="wrap_content" />
 
-
     <LinearLayout
         android:id="@+id/sign_out_and_disconnect"
         android:layout_width="fill_parent"

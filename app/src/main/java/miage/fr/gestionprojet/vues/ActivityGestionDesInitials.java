@@ -26,13 +26,15 @@ public class ActivityGestionDesInitials extends AppCompatActivity {
     private ListView liste = null;
     private List<Ressource> lstRessourceInitials = null;
     public final static String EXTRA_INITIAL = "Initial";
+    private String initialUtilisateurGoogle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gestion_des_initials);
 
-
+        Intent intentInitial = getIntent();
+        initialUtilisateurGoogle = intentInitial.getStringExtra(ActivityGestionDesInitials.EXTRA_INITIAL);
 
 
         //on récupère la liste des ressources
@@ -67,7 +69,7 @@ public class ActivityGestionDesInitials extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                     Intent intent = new Intent(ActivityGestionDesInitials.this, MainActivity.class);
-                    intent.putExtra(EXTRA_INITIAL,"LL");
+                    intent.putExtra(EXTRA_INITIAL, initialUtilisateurGoogle);
                     startActivity(intent);
                 }
             });

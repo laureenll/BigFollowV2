@@ -5,97 +5,64 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.plus.People;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
 import com.google.android.gms.plus.model.people.PersonBuffer;
+import com.google.android.gms.tasks.Task;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 
 import miage.fr.gestionprojet.R;
 
-public class ActivityConnexion extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, GoogleApiClient.ConnectionCallbacks, ResultCallback<People.LoadPeopleResult> {
-    GoogleApiClient google_api_client;
-    GoogleApiAvailability google_api_availability;
-    SignInButton signIn_btn;
+import static miage.fr.gestionprojet.vues.ActivityGestionDesInitials.EXTRA_INITIAL;
+
+public class ActivityConnexion extends AppCompatActivity implements View.OnClickListener {
+
+    private GoogleSignInClient mGoogleSignInClient;
     private static final int SIGN_IN_CODE = 0;
     private static final int PROFILE_PIC_SIZE = 120;
-    private ConnectionResult connection_result;
-    private boolean is_intent_inprogress;
-    private boolean is_signInBtn_clicked;
-    private int request_code;
     ProgressDialog progress_dialog;
-
-
-
-
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        is_signInBtn_clicked=true;
-        buidNewGoogleApiClient();
         setContentView(R.layout.activity_connexion);
         //Customize sign-in button.a red button may be displayed when Google+ scopes are requested
-        custimizeSignBtn();
         setBtnClickListeners();
         progress_dialog = new ProgressDialog(this);
         progress_dialog.setMessage("Chargement....");
-    }
 
-    /*
-    create and  initialize GoogleApiClient object to use Google Plus Api.
-    While initializing the GoogleApiClient object, request the Plus.SCOPE_PLUS_LOGIN scope.
-    */
-
-
-    private void buidNewGoogleApiClient(){
-
-        google_api_client =  new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Plus.API, Plus.PlusOptions.builder().build())
-                .addScope(Plus.SCOPE_PLUS_LOGIN)
-                .addScope(Plus.SCOPE_PLUS_PROFILE)
+        // Configure sign-in to request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
                 .build();
-    }
 
-    /*
-      Customize sign-in button. The sign-in button can be displayed in
-      multiple sizes and color schemes. It can also be contextually
-      rendered based on the requested scopes. For example. a red button may
-      be displayed when Google+ scopes are requested, but a white button
-      may be displayed when only basic profile is requested. Try adding the
-      Plus.SCOPE_PLUS_LOGIN scope to see the  difference.
-    */
-
-    private void custimizeSignBtn(){
-
-        signIn_btn = (SignInButton) findViewById(R.id.sign_in_button);
-        signIn_btn.setSize(SignInButton.SIZE_STANDARD);
-        signIn_btn.setScopes(new Scope[]{Plus.SCOPE_PLUS_LOGIN});
-
+        // Build a GoogleSignInClient with the options specified by gso.
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
     /*
@@ -104,88 +71,46 @@ public class ActivityConnexion extends AppCompatActivity implements GoogleApiCli
 
     private void setBtnClickListeners(){
         // Button listeners
-        signIn_btn.setOnClickListener(this);
+        findViewById(R.id.sign_in_button).setOnClickListener(this);
         findViewById(R.id.sign_out_button).setOnClickListener(this);
         findViewById(R.id.frnd_button).setOnClickListener(this);
         findViewById(R.id.disconnect_button).setOnClickListener(this);
-    }
-
-    protected void onStart() {
-        super.onStart();
-        google_api_client.connect();
-    }
-
-    protected void onStop() {
-        super.onStop();
-        if (google_api_client.isConnected()) {
-            google_api_client.disconnect();
-        }
-    }
-
-    protected void onResume(){
-        super.onResume();
-        if (google_api_client.isConnected()) {
-            google_api_client.connect();
-        }
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult result) {
-        if (!result.hasResolution()) {
-            google_api_availability.getErrorDialog(this, result.getErrorCode(),request_code).show();
-            return;
-        }
-
-        if (!is_intent_inprogress) {
-
-            connection_result = result;
-
-            if (is_signInBtn_clicked) {
-
-                resolveSignInError();
-            }
-        }
-
     }
 
     /*
       Will receive the activity result and check which request we are responding to
      */
     @Override
-    protected void onActivityResult(int requestCode, int responseCode,
-                                    Intent intent) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
         // Check which request we're responding to
         if (requestCode == SIGN_IN_CODE) {
-            request_code = requestCode;
-            if (responseCode != RESULT_OK) {
-                is_signInBtn_clicked = false;
-                progress_dialog.dismiss();
-            }
-
-            is_intent_inprogress = false;
-
-            if (!google_api_client.isConnecting()) {
-                google_api_client.connect();
-            }
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
+        } else {
+            progress_dialog.dismiss();
         }
 
     }
 
-    @Override
-    public void onConnected(Bundle arg0) {
-        is_signInBtn_clicked = false;
-        // Get user's information and set it into the layout
-        getProfileInfo();
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
-        // Update the UI after signin
-        changeUI();
+            // Update the UI after signin
+            changeUI();
 
-    }
+            // Change activity
+            changeActivity(account);
 
-    @Override
-    public void onConnectionSuspended(int arg0) {
-        google_api_client.connect();
-        changeUI();
+        } catch (ApiException e) {
+            // The ApiException status code indicates the detailed failure reason.
+            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+            System.out.println(e.getMessage());
+            changeUI();
+        }
     }
 
     @Override
@@ -202,11 +127,9 @@ public class ActivityConnexion extends AppCompatActivity implements GoogleApiCli
                 break;
             case R.id.disconnect_button:
                 progress_dialog.show();
-                gPlusRevokeAccess();
+//                gPlusRevokeAccess();
 
             case R.id.frnd_button:
-                Plus.PeopleApi.loadVisible(google_api_client, null)
-                        .setResultCallback(this);
 
                 break;
 
@@ -214,103 +137,36 @@ public class ActivityConnexion extends AppCompatActivity implements GoogleApiCli
         }
     }
 
-
-
     /*
       Sign-in into the Google + account
      */
-
     private void gPlusSignIn() {
-        if (!google_api_client.isConnecting()) {
-            Log.d("user connected","connected");
-            is_signInBtn_clicked = true;
-            progress_dialog.show();
-            resolveSignInError();
-            Intent intent = new Intent(ActivityConnexion.this,ActivityGestionDesInitials.class);
-            startActivity(intent);
-
-        }
-    }
-
-    /*
-     Revoking access from Google+ account
-     */
-
-    private void gPlusRevokeAccess() {
-        if (google_api_client.isConnected()) {
-            Plus.AccountApi.clearDefaultAccount(google_api_client);
-            Plus.AccountApi.revokeAccessAndDisconnect(google_api_client)
-                    .setResultCallback(new ResultCallback<Status>() {
-                        @Override
-                        public void onResult(Status arg0) {
-                            Log.d("ActivityConnexion", "User access revoked!");
-                            buidNewGoogleApiClient();
-                            google_api_client.connect();
-                            changeUI();
-                        }
-
-                    });
-        }
-    }
-
-
-    /*
-      Method to resolve any signin errors
-     */
-
-    private void resolveSignInError() {
-        if (connection_result==null){
-            gPlusRevokeAccess();
-        }
-        else if (connection_result.hasResolution() ) {
-            try {
-                is_intent_inprogress = true;
-                connection_result.startResolutionForResult(this, SIGN_IN_CODE);
-                Log.d("resolve error", "sign in error resolved");
-            } catch (IntentSender.SendIntentException e) {
-                is_intent_inprogress = false;
-                google_api_client.connect();
-            }
-        }
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, SIGN_IN_CODE);
     }
 
     /*
       Sign-out from Google+ account
      */
-
     private void gPlusSignOut() {
-        if (google_api_client.isConnected()) {
-            Plus.AccountApi.clearDefaultAccount(google_api_client);
-            google_api_client.disconnect();
-            google_api_client.connect();
-            changeUI();
-        }
+//        if (google_api_client.isConnected()) {
+//            Plus.AccountApi.clearDefaultAccount(google_api_client);
+//            google_api_client.disconnect();
+////            google_api_client.connect();
+//            changeUI();
+//        }
     }
 
-
-
-    /*
-     get user's information name, email, profile pic,Date of birth,tag line and about me
-     */
-
-    private void getProfileInfo() {
-
-        try {
-
-            if (Plus.PeopleApi.getCurrentPerson(google_api_client) != null) {
-                Person currentPerson = Plus.PeopleApi.getCurrentPerson(google_api_client);
-                setPersonalInfo(currentPerson);
-
-            } else {
-                Toast.makeText(getApplicationContext(),
-                        "No Personal info mention", Toast.LENGTH_LONG).show();
-
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+    private void changeActivity(GoogleSignInAccount account) {
+        String initial = "";
+        if (account.getGivenName().length() > 0 && account.getFamilyName().length() > 0) {
+            initial = account.getGivenName().substring(0, 1) + account.getFamilyName().substring(0, 1);
         }
-
+        Log.d("user connected","connected");
+        Intent intent = new Intent(ActivityConnexion.this,ActivityGestionDesInitials.class);
+        intent.putExtra(EXTRA_INITIAL, initial);
+        startActivity(intent);
+        progress_dialog.hide();
     }
 
     /*
@@ -348,31 +204,7 @@ public class ActivityConnexion extends AppCompatActivity implements GoogleApiCli
     private void changeUI() {
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
             findViewById(R.id.sign_out_and_disconnect).setVisibility(View.GONE);
-
     }
-
-    @Override
-    public void onResult(People.LoadPeopleResult peopleData) {
-        if (peopleData.getStatus().getStatusCode() == CommonStatusCodes.SUCCESS) {
-            PersonBuffer personBuffer = peopleData.getPersonBuffer();
-            ArrayList<String> list = new ArrayList<String>();
-            ArrayList<String> img_list= new ArrayList<String>();
-            try {
-                int count = personBuffer.getCount();
-
-                for (int i = 0; i < count; i++) {
-                    list.add(personBuffer.get(i).getDisplayName());
-                    img_list.add(personBuffer.get(i).getImage().getUrl());
-                }
-
-            } finally {
-                personBuffer.release();
-            }
-        } else {
-            Log.e("circle error", "Error requesting visible circles: " + peopleData.getStatus());
-        }
-    }
-
 
    /*
     Perform background operation asynchronously, to load user profile picture with new dimensions from the modified url
