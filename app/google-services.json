@@ -1,25 +1,33 @@
 {
   "project_info": {
-    "project_number": "1025819528334",
-    "project_id": "gestionprojetandroid-156122"
+    "project_number": "586880551652",
+    "project_id": "bigfollow-195922"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1025819528334:android:53efa5a14e417c1f",
+        "mobilesdk_app_id": "1:586880551652:android:9052dec98f597079",
         "android_client_info": {
           "package_name": "miage.fr.gestionprojet"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1025819528334-2sqoparbtpc72f18dffn7eot9m8mkbrn.apps.googleusercontent.com",
+          "client_id": "586880551652-6r4j6drjge15k55bi6fjt3ft8prjo0kj.apps.googleusercontent.com",
           "client_type": 3
+        },
+        {
+          "client_id": "586880551652-h67v92fd1ilag3unp2v01895g15esl4c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "miage.fr.gestionprojet",
+            "certificate_hash": "337f9c08ea73cee63c177a2d5956d487eec15c97"
+          }
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBrhUV24YCVMuxgCQaokx84BiS02e_Cwdc"
+          "current_key": "AIzaSyDxClFcplpVsy740h4_L1cPKuYyjEnwsiw"
         }
       ],
       "services": {
