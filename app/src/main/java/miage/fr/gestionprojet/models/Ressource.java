@@ -11,7 +11,7 @@ import miage.fr.gestionprojet.AppDatabase;
  * Created by Audrey on 25/02/2017.
  */
 @Table(name="Ressource", database = AppDatabase.class)
-public class Ressource {
+public class Ressource extends Model{
 
     @PrimaryKey
     private Long id;

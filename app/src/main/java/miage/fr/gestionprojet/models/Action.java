@@ -16,7 +16,7 @@ import miage.fr.gestionprojet.AppDatabase;
  */
 
 @Table(name="Action", database = AppDatabase.class)
-public class Action {
+public class Action extends Model{
 
     @PrimaryKey
     private Long id;

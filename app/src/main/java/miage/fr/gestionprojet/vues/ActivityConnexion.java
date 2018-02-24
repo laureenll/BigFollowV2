@@ -25,6 +25,7 @@ import com.google.android.gms.tasks.Task;
 import java.io.InputStream;
 
 import miage.fr.gestionprojet.R;
+import miage.fr.gestionprojet.models.Ressource;
 
 import static miage.fr.gestionprojet.vues.ActivityGestionDesInitials.EXTRA_INITIAL;
 
@@ -53,6 +54,20 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
 
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // Check for existing Google Sign In account
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+
+        // if the user is already signed in
+        // the GoogleSignInAccount will be non-null.
+        if (account != null) {
+            changeActivity(account);
+        }
     }
 
     /*
@@ -161,6 +176,12 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
         if (account.getGivenName().length() > 0 && account.getFamilyName().length() > 0) {
             initial = account.getGivenName().substring(0, 1) + account.getFamilyName().substring(0, 1);
         }
+        Ressource ressource = new Ressource();
+        ressource.setInitiales(initial);
+        ressource.setPrenom(account.getGivenName());
+        ressource.setNom(account.getFamilyName());
+        ressource.setEmail(account.getEmail());
+        ressource.save();
         Log.d("user connected","connected");
         Intent intent = new Intent(ActivityConnexion.this,ActivityGestionDesInitials.class);
         intent.putExtra(EXTRA_INITIAL, initial);

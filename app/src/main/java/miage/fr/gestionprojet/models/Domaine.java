@@ -14,7 +14,7 @@ import miage.fr.gestionprojet.AppDatabase;
  * Created by Audrey on 23/01/2017.
  */
 @Table(name="Domaine", database = AppDatabase.class)
-public class Domaine {
+public class Domaine extends Model{
 
     @PrimaryKey
     private Long id;

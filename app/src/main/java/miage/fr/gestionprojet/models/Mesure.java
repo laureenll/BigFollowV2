@@ -14,7 +14,7 @@ import miage.fr.gestionprojet.AppDatabase;
  */
 
 @Table(name="Mesure", database = AppDatabase.class)
-public class Mesure {
+public class Mesure extends Model{
 
     @PrimaryKey
     private Long id;

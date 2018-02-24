@@ -12,7 +12,7 @@ import miage.fr.gestionprojet.AppDatabase;
  */
 
 @Table(name="EtapeFormation", database = AppDatabase.class)
-public class EtapeFormation {
+public class EtapeFormation extends Model{
 
     @PrimaryKey
     private Long id;

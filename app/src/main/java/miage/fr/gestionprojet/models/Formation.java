@@ -15,7 +15,7 @@ import miage.fr.gestionprojet.AppDatabase;
  * Created by Audrey on 25/02/2017.
  */
 @Table(name = "Formation", database = AppDatabase.class)
-public class Formation {
+public class Formation extends Model{
 
 
     @PrimaryKey

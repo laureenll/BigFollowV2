@@ -17,7 +17,7 @@ import miage.fr.gestionprojet.AppDatabase;
  * Created by Audrey on 23/01/2017.
  */
 @Table(name="Projet", database = AppDatabase.class)
-public class Projet {
+public class Projet extends Model{
 
     @PrimaryKey
     private Long id;

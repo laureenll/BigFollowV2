@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -34,7 +35,6 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.ValueRange;
-import com.reactiveandroid.Model;
 import com.reactiveandroid.ReActiveAndroid;
 import com.reactiveandroid.query.Delete;
 
@@ -72,8 +72,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
     private Button idButtonParDefaut;
     private EditText buttonInput;
 
-    private static String spreadsheetId ;
-    private static String spreadsheetIdParDefaut= "10JKhVbqrwQ8oKufdBXRoSLN6hGIDqtOsbbIKsLfipO4";
+    public static String spreadsheetIdParDefaut= "10JKhVbqrwQ8oKufdBXRoSLN6hGIDqtOsbbIKsLfipO4";
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
@@ -173,7 +172,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
         };
 
         if(!projetIdVide) {
-            spreadsheetId=buttonInput.getText().toString();
+//            spreadsheetId=buttonInput.getText().toString();
             if (!isGooglePlayServicesAvailable()) {
                 acquireGooglePlayServices();
             } else if (mCredential.getSelectedAccountName() == null) {
@@ -420,7 +419,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             feuilles.put("rangeActions","Liste des actions projet!A3:Z");
             feuilles.put("rangeRessources","Ressources!A2:Z");
 
-            String spreadsheetId = "1yw_8OO4oFYR6Q25KH0KE4LOr86UfwoNl_E6hGgq2UD4";
+            String spreadsheetId = spreadsheetIdParDefaut;
             String rangeProject = "Informations générales!A2:E";
             String rangeActions = "Liste des actions projet!A3:Z";
             String rangeDcConso = "DC et détails conso!A5:Z";
@@ -463,28 +462,24 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             List<List<Object>> valuesMEsure = reponsesmesure.getValues();
             mProgress.setProgress(Outils.calculerPourcentage(5, 7));
             List<List<Object>> valuesressources = responseressources.getValues();
+
+            ReActiveAndroid.getDatabase(AppDatabase.class).beginTransaction();
+
             if (valueproject != null) {
                 initialiserPojet(valueproject);
             }
             if (valuesressources != null) {
                 initialiserressource(reglerDonnees(valuesressources));
-
-
             }
             mProgress.setProgress(Outils.calculerPourcentage(6, 7));
             if (values != null && valuesDcConso != null) {
-
-
                 initialiserAction(reglerDonnees(values), reglerDonnees(valuesDcConso));
-
             }
 
             mProgress.setProgress(Outils.calculerPourcentage(7, 7));
             List<List<Object>> valuesformation = responseformation.getValues();
             if (valuesformation != null) {
                 intialiserFormation(reglerDonnees(valuesformation));
-
-
             }
 
             if (valuesSaisieCharge != null) {
@@ -493,10 +488,8 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             if (valuesMEsure != null) {
                 initialiserMesures(reglerDonnees(valuesMEsure));
             }
-            for (List row : valuesformation) {
 
-
-            }
+            ReActiveAndroid.getDatabase(AppDatabase.class).endTransaction();
             return results;
         }
 
@@ -583,25 +576,19 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             resource.setPrenom("");
             resource.setTelephoneFixe("");
             resource.setTelephoneMobile("");
-            Model.save(resource);
+            resource.save();
 
-            ReActiveAndroid.getDatabase(AppDatabase.class).beginTransaction();
-
-            try {
-                for (List row : values) {
-                    resource.setNom(row.get(2).toString());
-                    resource.setEmail(row.get(5).toString());
-                    resource.setEntreprise(row.get(3).toString());
-                    resource.setFonction(row.get(4).toString());
-                    resource.setInformationsDiverses(row.get(8).toString());
-                    resource.setInitiales(row.get(0).toString());
-                    resource.setPrenom(row.get(1).toString());
-                    resource.setTelephoneFixe(row.get(6).toString());
-                    resource.setTelephoneMobile(row.get(7).toString());
-                    Model.save(resource);
-                }
-            } finally {
-                ReActiveAndroid.getDatabase(AppDatabase.class).endTransaction();
+            for (List row : values) {
+                resource.setNom(row.get(2).toString());
+                resource.setEmail(row.get(5).toString());
+                resource.setEntreprise(row.get(3).toString());
+                resource.setFonction(row.get(4).toString());
+                resource.setInformationsDiverses(row.get(8).toString());
+                resource.setInitiales(row.get(0).toString());
+                resource.setPrenom(row.get(1).toString());
+                resource.setTelephoneFixe(row.get(6).toString());
+                resource.setTelephoneMobile(row.get(7).toString());
+                resource.save();
             }
 
         }
@@ -615,99 +602,94 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             Projet projet = DaoProjet.loadAll().get(0);
             /*
              */
-            ReActiveAndroid.getDatabase(AppDatabase.class).beginTransaction();
 
-            try {
-                for (List row : values) {
-                    Action action = new Action();
-                    action.setCode(row.get(5).toString());
-                    action.setOrdre(chainetoint(row.get(1).toString()));
-                    action.setTarif(row.get(2).toString());
+            for (List row : values) {
+                Action action = new Action();
+                action.setCode(row.get(5).toString());
+                action.setOrdre(chainetoint(row.get(1).toString()));
+                action.setTarif(row.get(2).toString());
 
-                    action.setTypeTravail(row.get(0).toString());
-                    action.setPhase(row.get(4).toString());
-                    action.setCode(row.get(5).toString());
+                action.setTypeTravail(row.get(0).toString());
+                action.setPhase(row.get(4).toString());
+                action.setCode(row.get(5).toString());
 
-                    Domaine domaine = DaoDomaine.getByName(row.get(3).toString());
-                    if (domaine == null) {
-                        domaine = new Domaine(row.get(3).toString(), "description demo", projet);
-                        Model.save(domaine);
-                    }
-                    Ressource respOuv;
-                    if (row.get(13).toString() == null || row.get(13).toString().length() == 0) {
-                        respOuv = new Ressource();
-                        respOuv.setInitiales("");
-                    }
-                    respOuv = DaoRessource.getRessourceByInitial(row.get(13).toString());
-                    if (respOuv == null) {
-                        respOuv = new Ressource();
-                        respOuv.setInitiales(row.get(13).toString());
-                        respOuv.setNom("");
-                        respOuv.setEmail("");
-                        respOuv.setEntreprise("");
-                        respOuv.setFonction("");
-                        respOuv.setInformationsDiverses("");
-                        respOuv.setPrenom("");
-                        respOuv.setTelephoneFixe("");
-                        respOuv.setTelephoneMobile("");
-                        Model.save(respOuv);
-                    }
-                    action.setRespOuv(respOuv);
-                    Ressource respOeu;
-                    if (row.get(12).toString() == null || row.get(12).toString().length() == 0) {
-                        respOeu = new Ressource();
-                        respOeu.setInitiales("");
-                    }
-                    respOeu = DaoRessource.getRessourceByInitial(row.get(12).toString());
-                    if (respOeu == null) {
-                        respOeu = new Ressource();
-                        respOeu.setInitiales(row.get(12).toString());
-                        respOeu.setNom("");
-                        respOeu.setEmail("");
-                        respOeu.setEntreprise("");
-                        respOeu.setFonction("");
-                        respOeu.setInformationsDiverses("");
-                        respOeu.setPrenom("");
-                        respOeu.setTelephoneFixe("");
-                        respOeu.setTelephoneMobile("");
-                        Model.save(respOeu);
-                    }
-                    action.setRespOuv(respOuv);
+                Domaine domaine = DaoDomaine.getByName(row.get(3).toString());
+                if (domaine == null) {
+                    domaine = new Domaine(row.get(3).toString(), "description demo", projet);
+                    domaine.save();
+                }
+                Ressource respOuv;
+                if (row.get(13).toString() == null || row.get(13).toString().length() == 0) {
+                    respOuv = new Ressource();
+                    respOuv.setInitiales("");
+                }
+                respOuv = DaoRessource.getRessourceByInitial(row.get(13).toString());
+                if (respOuv == null) {
+                    respOuv = new Ressource();
+                    respOuv.setInitiales(row.get(13).toString());
+                    respOuv.setNom("");
+                    respOuv.setEmail("");
+                    respOuv.setEntreprise("");
+                    respOuv.setFonction("");
+                    respOuv.setInformationsDiverses("");
+                    respOuv.setPrenom("");
+                    respOuv.setTelephoneFixe("");
+                    respOuv.setTelephoneMobile("");
+                    respOuv.save();
+                }
+                action.setRespOuv(respOuv);
+                Ressource respOeu;
+                if (row.get(12).toString() == null || row.get(12).toString().length() == 0) {
+                    respOeu = new Ressource();
+                    respOeu.setInitiales("");
+                }
+                respOeu = DaoRessource.getRessourceByInitial(row.get(12).toString());
+                if (respOeu == null) {
+                    respOeu = new Ressource();
+                    respOeu.setInitiales(row.get(12).toString());
+                    respOeu.setNom("");
+                    respOeu.setEmail("");
+                    respOeu.setEntreprise("");
+                    respOeu.setFonction("");
+                    respOeu.setInformationsDiverses("");
+                    respOeu.setPrenom("");
+                    respOeu.setTelephoneFixe("");
+                    respOeu.setTelephoneMobile("");
+                    respOeu.save();
+                }
+                action.setRespOuv(respOuv);
 
-                    action.setDomaine(domaine);
+                action.setDomaine(domaine);
 
-                    action.setApparaitrePlanning(chainetoBoolean(row.get(6).toString()));
-                    action.setTypeFacturation(row.get(7).toString());
-                    action.setNbJoursPrevus(chainetofloat(row.get(8).toString()));
-                    action.setCoutParJour(chainetofloat(row.get(11).toString()));
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
-                    Date datedebut = chainetoDate(row.get(9).toString());
-                    Date datefin = chainetoDate(row.get(10).toString());
-                    action.setDtDeb(datedebut);
-                    action.setDtFinPrevue(datefin);
-                    action.setDtFinReelle(datefin);
+                action.setApparaitrePlanning(chainetoBoolean(row.get(6).toString()));
+                action.setTypeFacturation(row.get(7).toString());
+                action.setNbJoursPrevus(chainetofloat(row.get(8).toString()));
+                action.setCoutParJour(chainetofloat(row.get(11).toString()));
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
+                Date datedebut = chainetoDate(row.get(9).toString());
+                Date datefin = chainetoDate(row.get(10).toString());
+                action.setDtDeb(datedebut);
+                action.setDtFinPrevue(datefin);
+                action.setDtFinReelle(datefin);
 
-                    for (List row_Dc : valuesDcConso) {
+                for (List row_Dc : valuesDcConso) {
 
-                        if (action.getCode().equals(row_Dc.get(5).toString())) {
+                    if (action.getCode().equals(row_Dc.get(5).toString())) {
 
-                            if (row_Dc.get(20).toString() == null || row_Dc.get(20).toString().length() == 0) {
-                                action.setEcartProjete(0);
-                            } else {
-                                action.setEcartProjete(chainetofloat(row_Dc.get(20).toString()));
-                            }
+                        if (row_Dc.get(20).toString() == null || row_Dc.get(20).toString().length() == 0) {
+                            action.setEcartProjete(0);
+                        } else {
+                            action.setEcartProjete(chainetofloat(row_Dc.get(20).toString()));
+                        }
 
-                            if (row_Dc.get(18).toString() == null || row_Dc.get(18).toString().length() == 0) {
-                                action.setResteAFaire(0);
-                            } else {
-                                action.setResteAFaire(chainetofloat(row_Dc.get(18).toString()));
-                            }
+                        if (row_Dc.get(18).toString() == null || row_Dc.get(18).toString().length() == 0) {
+                            action.setResteAFaire(0);
+                        } else {
+                            action.setResteAFaire(chainetofloat(row_Dc.get(18).toString()));
                         }
                     }
-                    Model.save(action);
                 }
-            } finally {
-                ReActiveAndroid.getDatabase(AppDatabase.class).endTransaction();
+                action.save();
             }
 
         }
@@ -718,37 +700,31 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
 
             List<Action> actionList = new ArrayList<>();
             Action action = new Action();
-            ReActiveAndroid.getDatabase(AppDatabase.class).beginTransaction();
 
-            try {
+            for (List row : values) {
+                Formation formation = new Formation();
 
-                for (List row : values) {
-                    Formation formation = new Formation();
+                actionList = DaoAction.getActionbyCode(row.get(5).toString());
 
-                    actionList = DaoAction.getActionbyCode(row.get(5).toString());
+                if (actionList.size() >0){
 
-                    if (actionList.size() >0){
+                    action = actionList.get(0);
 
-                        action = actionList.get(0);
+                    formation.setAction(action);
+                    formation.setAvancementObjectif(chainetofloat(row.get(8).toString().replace('%', '0')));
+                    formation.setAvancementTotal(chainetofloat(row.get(6).toString().replace('%', '0')));
+                    formation.setAvancementPreRequis(chainetofloat(row.get(7).toString().replace('%', '0')));
 
-                        formation.setAction(action);
-                        formation.setAvancementObjectif(chainetofloat(row.get(8).toString().replace('%', '0')));
-                        formation.setAvancementTotal(chainetofloat(row.get(6).toString().replace('%', '0')));
-                        formation.setAvancementPreRequis(chainetofloat(row.get(7).toString().replace('%', '0')));
+                    formation.setAvancementPostFormation(chainetofloat(row.get(9).toString().replace('%', '0')));
 
-                        formation.setAvancementPostFormation(chainetofloat(row.get(9).toString().replace('%', '0')));
-
-                    }
-                     Model.save(formation);
                 }
-
-            } finally {
-                ReActiveAndroid.getDatabase(AppDatabase.class).endTransaction();
+                 formation.save();
             }
+
         }
 
         public void initialiserPojet(List<List<Object>> values) throws ParseException {
-            //Delete.from(Projet.class).execute();
+            Delete.from(Projet.class).execute();
             Projet projet = new Projet();
             projet.setDescription("");
             projet.setNom("");
@@ -756,18 +732,10 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             projet.setDateFinReelle(chainetoDate("20/05/2018"));
             projet.setDateFinInitiale(chainetoDate("20/05/2018"));
 
-            ReActiveAndroid.getDatabase(AppDatabase.class).beginTransaction();
-
-            try {
-
-                for (List row : values) {
-                    projet.setNom(row.get(0).toString());
-                    projet.setDescription("Projet_Master2_MIAGE");
-                    Model.save(projet);
-                }
-
-            } finally {
-                ReActiveAndroid.getDatabase(AppDatabase.class).endTransaction();
+            for (List row : values) {
+                projet.setNom(row.get(0).toString());
+                projet.setDescription("Projet_Master2_MIAGE");
+                projet.save();
             }
         }
 
@@ -777,36 +745,29 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             for (List row : values) {
                 SaisieCharge saisiecharge = new SaisieCharge();
                 if (!row.get(0).equals("")) {
-                    ReActiveAndroid.getDatabase(AppDatabase.class).beginTransaction();
 
-                    try {
-                        saisiecharge.setNbSemainePassee(chainetoint(row.get(11).toString()));
-                        saisiecharge.setNbSemaines(chainetofloat(row.get(8).toString()));
-                        saisiecharge.setChargeEstimeeParSemaine(chainetofloat(row.get(9).toString()));
-                        saisiecharge.setChargeRestanteEstimeeEnHeure(chainetofloat(row.get(12).toString()));
-                        saisiecharge.setChargeTotaleEstimeeEnHeure(chainetofloat(row.get(5).toString()));
-                        saisiecharge.setHeureParUnite(chainetofloat(row.get(4).toString()));
+                    saisiecharge.setNbSemainePassee(chainetoint(row.get(11).toString()));
+                    saisiecharge.setNbSemaines(chainetofloat(row.get(8).toString()));
+                    saisiecharge.setChargeEstimeeParSemaine(chainetofloat(row.get(9).toString()));
+                    saisiecharge.setChargeRestanteEstimeeEnHeure(chainetofloat(row.get(12).toString()));
+                    saisiecharge.setChargeTotaleEstimeeEnHeure(chainetofloat(row.get(5).toString()));
+                    saisiecharge.setHeureParUnite(chainetofloat(row.get(4).toString()));
 
-                        saisiecharge.setNbUnitesCibles(chainetoint(row.get(3).toString()));
+                    saisiecharge.setNbUnitesCibles(chainetoint(row.get(3).toString()));
 
-                        saisiecharge.setChargeRestanteParSemaine(chainetofloat(row.get(15).toString()));
+                    saisiecharge.setChargeRestanteParSemaine(chainetofloat(row.get(15).toString()));
 
-                        saisiecharge.setPrctChargeFaiteParSemaineParChargeEstimee(chainetofloat(row.get(17).toString().replace('%', ' ')));
-                        List<Action> listesActions = DaoAction.getActionbyCode(row.get(2).toString());
+                    saisiecharge.setPrctChargeFaiteParSemaineParChargeEstimee(chainetofloat(row.get(17).toString().replace('%', ' ')));
+                    List<Action> listesActions = DaoAction.getActionbyCode(row.get(2).toString());
 
-                        if (listesActions.size() > 0) {
-                            Action actionsaisie = new Action();
-                            actionsaisie = listesActions.get(0);
-                            saisiecharge.setAction(actionsaisie);
-                        }
-
-                        Model.save(saisiecharge);
-                        List<SaisieCharge> listes = DaoSaisieCharge.loadAll();
-
-
-                    } finally {
-                        ReActiveAndroid.getDatabase(AppDatabase.class).endTransaction();
+                    if (listesActions.size() > 0) {
+                        Action actionsaisie = new Action();
+                        actionsaisie = listesActions.get(0);
+                        saisiecharge.setAction(actionsaisie);
                     }
+
+                    saisiecharge.save();
+
                 }
             }
         }
@@ -818,30 +779,24 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
 
             SaisieCharge action = new SaisieCharge();
 
-            ReActiveAndroid.getDatabase(AppDatabase.class).beginTransaction();
-
-            try {
-                for (List row : values) {
-                    Mesure mesure = new Mesure();
-                    List<SaisieCharge> listsaisieCharges= new ArrayList<>();
-                    List<Action> listeaction = DaoAction.getActionbyCode(row.get(0).toString());
-                    if (listeaction.size() > 0){
-                        listsaisieCharges=DaoSaisieCharge.loadSaisiebyAction(listeaction.get(0));
-                    }
-
-                    if(listsaisieCharges.size()>0) {
-                        action =  listsaisieCharges.get(0);
-                        mesure.setAction(action);
-                    }
-
-                    mesure.setDtMesure(chainetoDate(row.get(2).toString()));
-                    mesure.setNbUnitesMesures(chainetoint(row.get(1).toString()));
-                    Model.save(mesure);
+            for (List row : values) {
+                Mesure mesure = new Mesure();
+                List<SaisieCharge> listsaisieCharges= new ArrayList<>();
+                List<Action> listeaction = DaoAction.getActionbyCode(row.get(0).toString());
+                if (listeaction.size() > 0){
+                    listsaisieCharges=DaoSaisieCharge.loadSaisiebyAction(listeaction.get(0));
                 }
 
-            } finally {
-                ReActiveAndroid.getDatabase(AppDatabase.class).endTransaction();
+                if(listsaisieCharges.size()>0) {
+                    action =  listsaisieCharges.get(0);
+                    mesure.setAction(action);
+                }
+
+                mesure.setDtMesure(chainetoDate(row.get(2).toString()));
+                mesure.setNbUnitesMesures(chainetoint(row.get(1).toString()));
+                mesure.save();
             }
+
         }
 
         @Override
