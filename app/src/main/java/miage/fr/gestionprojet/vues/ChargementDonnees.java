@@ -33,6 +33,7 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.ExponentialBackOff;
+import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import com.reactiveandroid.ReActiveAndroid;
@@ -72,7 +73,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
     private Button idButtonParDefaut;
     private EditText buttonInput;
 
-    public static String spreadsheetIdParDefaut= "10JKhVbqrwQ8oKufdBXRoSLN6hGIDqtOsbbIKsLfipO4";
+    public static final String spreadsheetIdParDefaut= "10JKhVbqrwQ8oKufdBXRoSLN6hGIDqtOsbbIKsLfipO4";
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
@@ -377,14 +378,14 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
      * An asynchronous task that handles the Google Sheets API call.
      * Placing the API calls in their own task ensures the UI stays responsive.
      */
-    public class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
-        private com.google.api.services.sheets.v4.Sheets mService = null;
+    private class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
+        private Sheets mService = null;
         private Exception mLastError = null;
 
         MakeRequestTask(GoogleAccountCredential credential) {
             HttpTransport transport = AndroidHttp.newCompatibleTransport();
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-            mService = new com.google.api.services.sheets.v4.Sheets.Builder(
+            mService = new Sheets.Builder(
                     transport, jsonFactory, credential)
                     .setApplicationName("Big Follow")
                     .build();

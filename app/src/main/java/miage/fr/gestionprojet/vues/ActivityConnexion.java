@@ -1,9 +1,15 @@
 package miage.fr.gestionprojet.vues;
 
+import android.accounts.AccountManager;
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,7 +18,19 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.util.ExponentialBackOff;
+import com.google.api.client.util.store.FileDataStoreFactory;
+import com.google.api.services.sheets.v4.SheetsScopes;
+import com.google.api.services.sheets.v4.Sheets;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -21,25 +39,43 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.plus.model.people.Person;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
+import com.google.api.services.sheets.v4.model.ValueRange;
+import com.reactiveandroid.query.Delete;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.security.GeneralSecurityException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import miage.fr.gestionprojet.R;
 import miage.fr.gestionprojet.models.Ressource;
 
 import static miage.fr.gestionprojet.vues.ActivityGestionDesInitials.EXTRA_INITIAL;
+import static miage.fr.gestionprojet.vues.ChargementDonnees.REQUEST_GOOGLE_PLAY_SERVICES;
+import static miage.fr.gestionprojet.vues.ChargementDonnees.spreadsheetIdParDefaut;
 
 public class ActivityConnexion extends AppCompatActivity implements View.OnClickListener {
 
+    private GoogleAccountCredential mCredential;;
     private GoogleSignInClient mGoogleSignInClient;
     private static final int SIGN_IN_CODE = 0;
     private static final int PROFILE_PIC_SIZE = 120;
-    ProgressDialog progress_dialog;
+    private ProgressDialog progress_dialog;
+    private static final String PREF_ACCOUNT_NAME = "accountName";
 
+    private static final String[] SCOPES = {SheetsScopes.SPREADSHEETS};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         setContentView(R.layout.activity_connexion);
         //Customize sign-in button.a red button may be displayed when Google+ scopes are requested
         setBtnClickListeners();
@@ -54,6 +90,11 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
 
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        // Initialize credentials and service object.
+        mCredential = GoogleAccountCredential.usingOAuth2(
+                getApplicationContext(), Arrays.asList(SCOPES))
+                .setBackOff(new ExponentialBackOff());
     }
 
     @Override
@@ -68,6 +109,38 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
         if (account != null) {
             changeActivity(account);
         }
+    }
+
+    private boolean isDeviceOnline() {
+        ConnectivityManager connMgr =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
+    }
+
+    private boolean isGooglePlayServicesAvailable() {
+        GoogleApiAvailability apiAvailability =
+                GoogleApiAvailability.getInstance();
+        final int connectionStatusCode =
+                apiAvailability.isGooglePlayServicesAvailable(this);
+        return connectionStatusCode == ConnectionResult.SUCCESS;
+    }
+
+    private void acquireGooglePlayServices() {
+        GoogleApiAvailability apiAvailability =
+                GoogleApiAvailability.getInstance();
+        final int connectionStatusCode =
+                apiAvailability.isGooglePlayServicesAvailable(this);
+        if (apiAvailability.isUserResolvableError(connectionStatusCode)) {
+            showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode);
+        }
+    }
+
+    void showGooglePlayServicesAvailabilityErrorDialog(
+            final int connectionStatusCode) {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        Dialog dialog = apiAvailability.getErrorDialog(this, connectionStatusCode, REQUEST_GOOGLE_PLAY_SERVICES);
+        dialog.show();
     }
 
     /*
@@ -176,17 +249,38 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
         if (account.getGivenName().length() > 0 && account.getFamilyName().length() > 0) {
             initial = account.getGivenName().substring(0, 1) + account.getFamilyName().substring(0, 1);
         }
-        Ressource ressource = new Ressource();
-        ressource.setInitiales(initial);
-        ressource.setPrenom(account.getGivenName());
-        ressource.setNom(account.getFamilyName());
-        ressource.setEmail(account.getEmail());
-        ressource.save();
+
+        mCredential.setSelectedAccountName(account.getDisplayName());
+
+        // écriture du nouvel utilisateur dans le fichier google spread sheet
+        List<List<Object>> values = new ArrayList<>();
+        List<Object> data1 = new ArrayList<>();
+        data1.add(initial);
+        data1.add(account.getGivenName());
+        data1.add(account.getFamilyName());
+        data1.add("");
+        data1.add("");
+        data1.add(account.getEmail());
+        values.add(data1);
+        ValueRange body = new ValueRange().setValues(values);
+
+        addRessourceToSheet(body);
+
         Log.d("user connected","connected");
-        Intent intent = new Intent(ActivityConnexion.this,ActivityGestionDesInitials.class);
+        Intent intent = new Intent(ActivityConnexion.this, ActivityGestionDesInitials.class);
         intent.putExtra(EXTRA_INITIAL, initial);
         startActivity(intent);
         progress_dialog.hide();
+    }
+
+    private void addRessourceToSheet(ValueRange body) {
+        if (!isGooglePlayServicesAvailable()) {
+            acquireGooglePlayServices();
+        } else if (!isDeviceOnline()) {
+            Toast.makeText(this,"No network connection available.", Toast.LENGTH_LONG).show();
+        } else {
+            new InsertResourceTask(mCredential, body).execute();
+        }
     }
 
     /*
@@ -233,7 +327,7 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
     private class LoadProfilePic extends AsyncTask<String, Void, Bitmap> {
         ImageView bitmap_img;
 
-        public LoadProfilePic(ImageView bitmap_img) {
+        LoadProfilePic(ImageView bitmap_img) {
             this.bitmap_img = bitmap_img;
         }
 
@@ -257,4 +351,38 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
     }
 
 
+    private class InsertResourceTask extends AsyncTask<Void, Void, String> {
+        private Sheets mService = null;
+        private ValueRange body;
+
+        InsertResourceTask(GoogleAccountCredential credential, ValueRange body) {
+            HttpTransport transport = AndroidHttp.newCompatibleTransport();
+            JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+            this.body = body;
+            mService = new Sheets.Builder(
+                    transport, jsonFactory, credential)
+                    .setApplicationName("Big Follow")
+                    .build();
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            String range = "Ressources!A1:I4";
+//            int sheetId = 1184499476;
+
+            try {
+                UpdateValuesResponse result =
+                        mService.spreadsheets().values().update(spreadsheetIdParDefaut, range, body)
+                                .setValueInputOption("RAW")
+                                .execute();
+                System.out.println();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+    }
 }

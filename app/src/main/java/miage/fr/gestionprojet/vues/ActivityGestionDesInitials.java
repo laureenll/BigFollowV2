@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 
+import com.reactiveandroid.query.Delete;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,12 +27,13 @@ public class ActivityGestionDesInitials extends AppCompatActivity {
 
     private ListView liste = null;
     private List<Ressource> lstRessourceInitials = null;
-    public final static String EXTRA_INITIAL = "Initial";
+    public final static String EXTRA_INITIAL = "";
     private String initialUtilisateurGoogle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Delete.from(Ressource.class).execute();
         setContentView(R.layout.activity_gestion_des_initials);
 
         Intent intentInitial = getIntent();
