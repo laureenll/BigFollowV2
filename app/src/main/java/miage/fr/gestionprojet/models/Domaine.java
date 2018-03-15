@@ -1,23 +1,20 @@
 package miage.fr.gestionprojet.models;
 
-import com.reactiveandroid.Model;
-import com.reactiveandroid.annotation.Column;
-import com.reactiveandroid.annotation.PrimaryKey;
-import com.reactiveandroid.annotation.Table;
-import com.reactiveandroid.query.Select;
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 
 import java.util.List;
-
-import miage.fr.gestionprojet.AppDatabase;
 
 /**
  * Created by Audrey on 23/01/2017.
  */
-@Table(name="Domaine", database = AppDatabase.class)
-public class Domaine extends Model{
+@Table(name="Domaine")
+public class Domaine extends Model {
 
-    @PrimaryKey
-    private Long id;
+    @Column(name = "ident", index = true, unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
+    private Long ident;
 
     @Column(name="nom")
     private String nom;
@@ -40,8 +37,8 @@ public class Domaine extends Model{
         super();
     }
 
-    public Long getId() {
-        return id;
+    public Long getIdent() {
+        return ident;
     }
 
     public String getNom() {
@@ -69,7 +66,7 @@ public class Domaine extends Model{
     }
 
     public List<Action> getLstActions() {
-        return Select.from(Action.class).where("domaine = ?", getId()).fetch();
+        return new Select().from(Action.class).where("domaine = ?", getId()).execute();
     }
 
     @Override

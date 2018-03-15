@@ -1,21 +1,19 @@
 package miage.fr.gestionprojet.models;
 
-import com.reactiveandroid.Model;
-import com.reactiveandroid.annotation.Column;
-import com.reactiveandroid.annotation.PrimaryKey;
-import com.reactiveandroid.annotation.Table;
 
-import miage.fr.gestionprojet.AppDatabase;
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 
 /**
  * Created by Audrey on 25/02/2017.
  */
 
-@Table(name="EtapeFormation", database = AppDatabase.class)
-public class EtapeFormation extends Model{
+@Table(name="EtapeFormation")
+public class EtapeFormation extends Model {
 
-    @PrimaryKey
-    private Long id;
+    @Column(name = "ident", index = true, unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
+    private Long ident;
 
     @Column(name="formation")
     private Formation formation;
@@ -39,8 +37,8 @@ public class EtapeFormation extends Model{
         return formation;
     }
 
-    public Long getId() {
-        return id;
+    public Long getIdent() {
+        return ident;
     }
 
     public void setFormation(Formation formation) {

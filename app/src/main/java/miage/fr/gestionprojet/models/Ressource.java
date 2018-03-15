@@ -1,20 +1,17 @@
 package miage.fr.gestionprojet.models;
 
-import com.reactiveandroid.Model;
-import com.reactiveandroid.annotation.Column;
-import com.reactiveandroid.annotation.PrimaryKey;
-import com.reactiveandroid.annotation.Table;
-
-import miage.fr.gestionprojet.AppDatabase;
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 
 /**
  * Created by Audrey on 25/02/2017.
  */
-@Table(name="Ressource", database = AppDatabase.class)
-public class Ressource extends Model{
+@Table(name="Ressource")
+public class Ressource extends Model {
 
-    @PrimaryKey
-    private Long id;
+    @Column(name = "ident", index = true, unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
+    private Long ident;
     @Column(name="initiales")
     private String initiales;
 
@@ -43,10 +40,11 @@ public class Ressource extends Model{
     private String InformationsDiverses;
 
     public Ressource() {
+        super();
     }
 
-    public Long getId() {
-        return id;
+    public Long getIdent() {
+        return ident;
     }
 
     public String getInitiales() {

@@ -21,7 +21,7 @@ import miage.fr.gestionprojet.models.dao.DaoProjet;
 public class MainActivity  extends AppCompatActivity {
 
     public final static String EXTRA_PROJET = "projetChoisi";
-    public final static String EXTRA_INITIAL = "initial";
+    //public final static String EXTRA_INITIAL = "initial";
     private ListView liste = null;
     private List<Projet> lstProjets = null;
     private String initialUtilisateur = null;
@@ -35,9 +35,8 @@ public class MainActivity  extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        //on récupère la liste des projet dont la date de fin n'est passé
-        DaoProjet daoProjet = new DaoProjet();
-        lstProjets = daoProjet.getProjetEnCours(new Date());
+        //on récupère la liste des projet dont la date de fin n'est passée
+        lstProjets = DaoProjet.getProjetEnCours(new Date());
         liste = (ListView) findViewById(R.id.listViewProjet);
 
         // si le nombre de projet en cours est supérieur à 1 on affiche une liste
@@ -50,7 +49,7 @@ public class MainActivity  extends AppCompatActivity {
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                     Intent intent = new Intent(MainActivity.this, ActivityDetailsProjet.class);
                     intent.putExtra(EXTRA_PROJET, (lstProjets.get(position).getId()));
-                    intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
+                    intent.putExtra(ActivityGestionDesInitials.EXTRA_INITIAL,initialUtilisateur);
 
                     startActivity(intent);
                 }
@@ -61,7 +60,7 @@ public class MainActivity  extends AppCompatActivity {
             if(lstProjets.size()==1) {
                 Intent intent = new Intent(MainActivity.this, ActivityDetailsProjet.class);
                 intent.putExtra(EXTRA_PROJET, (lstProjets.get(0).getId()));
-                intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
+                intent.putExtra(ActivityGestionDesInitials.EXTRA_INITIAL,initialUtilisateur);
 
                 startActivity(intent);
             }else{
@@ -91,7 +90,7 @@ public class MainActivity  extends AppCompatActivity {
                 return true;
             case R.id.charger_donnees:
                 Intent intent = new Intent(MainActivity.this, ChargementDonnees.class);
-                intent.putExtra(EXTRA_INITIAL, (initialUtilisateur));
+                intent.putExtra(ActivityGestionDesInitials.EXTRA_INITIAL, (initialUtilisateur));
                 startActivity(intent);
                 return true;
 

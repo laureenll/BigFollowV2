@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -23,6 +22,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.activeandroid.query.Delete;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -36,8 +37,6 @@ import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.ValueRange;
-import com.reactiveandroid.ReActiveAndroid;
-import com.reactiveandroid.query.Delete;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -48,7 +47,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import miage.fr.gestionprojet.AppDatabase;
 import miage.fr.gestionprojet.models.Action;
 import miage.fr.gestionprojet.models.Domaine;
 import miage.fr.gestionprojet.models.Formation;
@@ -73,7 +71,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
     private Button idButtonParDefaut;
     private EditText buttonInput;
 
-    public static final String spreadsheetIdParDefaut= "10JKhVbqrwQ8oKufdBXRoSLN6hGIDqtOsbbIKsLfipO4";
+    public static String spreadsheetIdParDefaut= "10JKhVbqrwQ8oKufdBXRoSLN6hGIDqtOsbbIKsLfipO4";
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
@@ -84,7 +82,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
     private static final String BUTTON_TEXT = "Charger la base de données ";
     private static final String BUTTON_ID = "Id par defaut";
     private static final String PREF_ACCOUNT_NAME = "accountName";
-    private static final String[] SCOPES = {SheetsScopes.SPREADSHEETS_READONLY};
+    private static final String[] SCOPES = {SheetsScopes.SPREADSHEETS};
 
     /**
      * Create the main activity.
@@ -416,6 +414,9 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
          */
         private List<String> getDataFromApi() throws IOException, ParseException {
             //tables des feuilles à parcourir
+            List<String> results = new ArrayList<String>();
+
+
             HashMap<String,String> feuilles= new HashMap<>();
             feuilles.put("rangeActions","Liste des actions projet!A3:Z");
             feuilles.put("rangeRessources","Ressources!A2:Z");
@@ -432,7 +433,6 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             ValueRange reponsesmesure = this.mService.spreadsheets().values()
                     .get(spreadsheetId, rangeMesure)
                     .execute();
-            List<String> results = new ArrayList<String>();
             ValueRange responseproject = this.mService.spreadsheets().values()
                     .get(spreadsheetId, rangeProject)
                     .execute();
@@ -464,10 +464,9 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             mProgress.setProgress(Outils.calculerPourcentage(5, 7));
             List<List<Object>> valuesressources = responseressources.getValues();
 
-            ReActiveAndroid.getDatabase(AppDatabase.class).beginTransaction();
-
             if (valueproject != null) {
-                initialiserPojet(valueproject);
+                List<String> strings = initialiserPojet(valueproject);
+                results.addAll(strings);
             }
             if (valuesressources != null) {
                 initialiserressource(reglerDonnees(valuesressources));
@@ -490,7 +489,6 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                 initialiserMesures(reglerDonnees(valuesMEsure));
             }
 
-            ReActiveAndroid.getDatabase(AppDatabase.class).endTransaction();
             return results;
         }
 
@@ -565,21 +563,10 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
         }
 
         public void initialiserressource(List<List<Object>> values) {
-            Delete.from(Ressource.class).execute();
-
-            Ressource resource = new Ressource();
-            resource.setNom("");
-            resource.setEmail("");
-            resource.setEntreprise("");
-            resource.setFonction("");
-            resource.setInformationsDiverses("");
-            resource.setInitiales("");
-            resource.setPrenom("");
-            resource.setTelephoneFixe("");
-            resource.setTelephoneMobile("");
-            resource.save();
+            new Delete().from(Ressource.class).execute();
 
             for (List row : values) {
+                Ressource resource = new Ressource();
                 resource.setNom(row.get(2).toString());
                 resource.setEmail(row.get(5).toString());
                 resource.setEntreprise(row.get(3).toString());
@@ -590,13 +577,13 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                 resource.setTelephoneFixe(row.get(6).toString());
                 resource.setTelephoneMobile(row.get(7).toString());
                 resource.save();
+                //Insert.into(Ressource.class).columns("initiales", "nom", "prenom", "entreprise", "fonction", "email", "telephone_fixe", "telephone_mobile", "informations_diverses").values(resource.getInitiales(),resource.getNom(), resource.getPrenom(), resource.getEntreprise(), resource.getFonction(), resource.getEmail(), resource.getTelephoneFixe(), resource.getTelephoneMobile(), resource.getInformationsDiverses()).execute();
             }
-
         }
 
         public void initialiserAction(List<List<Object>> values, List<List<Object>> valuesDcConso) throws ParseException {
-            Delete.from(Action.class).execute();
-            Delete.from(Domaine.class).execute();
+            new Delete().from(Action.class).execute();
+            new Delete().from(Domaine.class).execute();
 
             /*
              */
@@ -617,6 +604,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                 Domaine domaine = DaoDomaine.getByName(row.get(3).toString());
                 if (domaine == null) {
                     domaine = new Domaine(row.get(3).toString(), "description demo", projet);
+                    //Insert.into(Domaine.class).columns("nom", "description", "projet").values(domaine.getNom(),domaine.getDescription(), domaine.getProjet()).execute();
                     domaine.save();
                 }
                 Ressource respOuv;
@@ -636,6 +624,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                     respOuv.setPrenom("");
                     respOuv.setTelephoneFixe("");
                     respOuv.setTelephoneMobile("");
+                    //Insert.into(Ressource.class).columns("initiales", "nom", "prenom", "entreprise", "fonction", "email", "telephone_fixe", "telephone_mobile", "informations_diverses").values(respOuv.getInitiales(),respOuv.getNom(), respOuv.getPrenom(), respOuv.getEntreprise(), respOuv.getFonction(), respOuv.getEmail(), respOuv.getTelephoneFixe(), respOuv.getTelephoneMobile(), respOuv.getInformationsDiverses()).execute();
                     respOuv.save();
                 }
                 action.setRespOuv(respOuv);
@@ -656,6 +645,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                     respOeu.setPrenom("");
                     respOeu.setTelephoneFixe("");
                     respOeu.setTelephoneMobile("");
+                    //Insert.into(Ressource.class).columns("initiales", "nom", "prenom", "entreprise", "fonction", "email", "telephone_fixe", "telephone_mobile", "informations_diverses").values(respOeu.getInitiales(),respOeu.getNom(), respOeu.getPrenom(), respOeu.getEntreprise(), respOeu.getFonction(), respOeu.getEmail(), respOeu.getTelephoneFixe(), respOeu.getTelephoneMobile(), respOeu.getInformationsDiverses()).execute();
                     respOeu.save();
                 }
                 action.setRespOuv(respOuv);
@@ -690,13 +680,41 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                         }
                     }
                 }
+                /*Insert.into(Action.class).columns(
+                        "typeTravail",
+                        "ordre",
+                        "tarif",
+                        "phase",
+                        "code",
+                        "domaine",
+                        "type_facturation",
+                        "nb_jours_prevus",
+                        "cout_par_pour",
+                        "resp_oeu",
+                        "resp_ouv",
+                        "reste_a_faire",
+                        "ecart_projete"
+                ).values(action.getTypeTravail(),
+                        action.getOrdre(),
+                        action.getTarif(),
+                        action.getPhase(),
+                        action.getCode(),
+                        action.getDomaine(),
+                        action.getTypeFacturation(),
+                        action.getNbJoursPrevus(),
+                        action.getCoutParJour(),
+                        action.getRespOeu(),
+                        action.getRespOuv(),
+                        action.getResteAFaire(),
+                        action.getEcartProjete()
+                ).execute();*/
                 action.save();
             }
 
         }
 
         public void intialiserFormation(List<List<Object>> values) {
-            Delete.from(Formation.class).execute();
+            new Delete().from(Formation.class).execute();
 
 
             List<Action> actionList = new ArrayList<>();
@@ -724,11 +742,12 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
 
         }
 
-        public void initialiserPojet(List<List<Object>> values) throws ParseException {
-            Delete.from(Projet.class).execute();
+        public List<String> initialiserPojet(List<List<Object>> values) throws ParseException {
+            new Delete().from(Projet.class).execute();
             Projet projet = new Projet();
             projet.setDescription("");
             projet.setNom("");
+            List<String> results = new ArrayList<>();
             projet.setDateDebut(chainetoDate("20/01/2017"));
             projet.setDateFinReelle(chainetoDate("20/05/2018"));
             projet.setDateFinInitiale(chainetoDate("20/05/2018"));
@@ -736,12 +755,22 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             for (List row : values) {
                 projet.setNom(row.get(0).toString());
                 projet.setDescription("Projet_Master2_MIAGE");
+                /*Insert.into(Projet.class).columns(
+                        "nom",
+                        "description"
+                ).values(projet.getNom(),
+                        projet.getDescription()
+                ).execute();*/
+
+                //Select.from(Projet.class).fetch();
                 projet.save();
+                results.add(projet.getNom());
             }
+            return results;
         }
 
         public void initialiserSaisieCharge(List<List<Object>> values) throws ParseException {
-            Delete.from(SaisieCharge.class).execute();
+            new Delete().from(SaisieCharge.class).execute();
 
             for (List row : values) {
                 SaisieCharge saisiecharge = new SaisieCharge();
@@ -774,7 +803,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
         }
 
         public void initialiserMesures(List<List<Object>> values) throws ParseException {
-            Delete.from(Mesure.class).execute();
+            new Delete().from(Mesure.class).execute();
 
             List<Mesure>listfi = new ArrayList<>();
 

@@ -1,6 +1,6 @@
 package miage.fr.gestionprojet.models.dao;
 
-import com.reactiveandroid.query.Select;
+import com.activeandroid.query.Select;
 
 import java.util.List;
 
@@ -14,11 +14,11 @@ public class DaoMesure {
 
     public static Mesure getLastMesureBySaisieCharge(long idSaisieCharge){
         List<Mesure> lstMesures =
-                Select
+                new Select()
                 .from(Mesure.class)
                 .where("action=?", idSaisieCharge)
                 .orderBy("dt_mesure DESC")
-                .fetch();
+                .execute();
         if (lstMesures.size() > 0) {
             return  lstMesures.get(0);
         } else {
@@ -27,14 +27,14 @@ public class DaoMesure {
     }
 
     public static List<Mesure> getListtMesureByAction(long idSaisieCharge) {
-        return Select
+        return new Select()
                 .from(Mesure.class)
                 .where("action=?", idSaisieCharge)
-                .fetch();
+                .execute();
     }
 
     public static List<Mesure> loadAll() {
-        return Select.from(Mesure.class).fetch();
+        return new Select().from(Mesure.class).execute();
 
     }
 

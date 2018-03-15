@@ -1,6 +1,6 @@
 package miage.fr.gestionprojet.models.dao;
 
-import com.reactiveandroid.query.Select;
+import com.activeandroid.query.Select;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +15,9 @@ public class DaoRessource {
 
 
     public static List<Ressource> loadAll(){
-        return Select
+        return new Select()
                 .from(Ressource.class)
-                .fetch();
+                .execute();
     }
 
     public  List<Ressource> loadAllWithInitialNotEmpty(){
@@ -33,23 +33,18 @@ public class DaoRessource {
         return listeRessourceFinal;
     }
 
-    public List<String> getAllRessourceInitials(){
-        List<Ressource> listeRessource = loadAll();
-        List<String> listeInitials = new ArrayList<>();
+    public static boolean isRessourceExists(String email){
 
-        for ( int i=0; i < listeRessource.size();i++){
-            if (!listeRessource.get(i).getInitiales().equals("") && listeRessource.get(i).getInitiales().length()>0) {
-                listeInitials.add(listeRessource.get(i).getInitiales());
-            }
-        }
-        return listeInitials;
+        List<Ressource> listeRessourceFind = new Select().from(Ressource.class).where("email = ?", email).execute();
+
+        return !listeRessourceFind.isEmpty();
     }
 
     public static Ressource getRessourceByInitial(String initiales){
-        List<Ressource> lst = Select
+        List<Ressource> lst = new Select()
                 .from(Ressource.class)
                 .where("initiales = ?", initiales)
-                .fetch();
+                .execute();
         if(lst.size()>0){
             return lst.get(0);
         }else{

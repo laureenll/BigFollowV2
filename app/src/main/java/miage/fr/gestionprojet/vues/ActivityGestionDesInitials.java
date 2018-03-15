@@ -8,9 +8,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-
-import com.reactiveandroid.query.Delete;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +30,6 @@ public class ActivityGestionDesInitials extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Delete.from(Ressource.class).execute();
         setContentView(R.layout.activity_gestion_des_initials);
 
         Intent intentInitial = getIntent();
@@ -41,8 +37,7 @@ public class ActivityGestionDesInitials extends AppCompatActivity {
 
 
         //on récupère la liste des ressources
-        DaoRessource daoRessource = new DaoRessource();
-        lstRessourceInitials = daoRessource.loadAllWithInitialNotEmpty();
+        lstRessourceInitials = DaoRessource.loadAll();
         liste = (ListView) findViewById(R.id.listViewInitials);
 
         // si le nombre de ressource est supérieur à 1 on affiche une liste
@@ -72,7 +67,7 @@ public class ActivityGestionDesInitials extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                     Intent intent = new Intent(ActivityGestionDesInitials.this, MainActivity.class);
-                    intent.putExtra(EXTRA_INITIAL, initialUtilisateurGoogle);
+                    intent.putExtra(EXTRA_INITIAL, "");
                     startActivity(intent);
                 }
             });

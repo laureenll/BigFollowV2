@@ -46,7 +46,7 @@ public class ActivityDetailsProjet extends AppCompatActivity {
 
         Intent intent = getIntent();
         long id = intent.getLongExtra(MainActivity.EXTRA_PROJET,0);
-        initialUtilisateur = intent.getStringExtra(MainActivity.EXTRA_INITIAL);
+        initialUtilisateur = intent.getStringExtra(ActivityGestionDesInitials.EXTRA_INITIAL);
 
         // s'il n'y pas d'erreur, un projet est sélectionné
         if (id > 0) {

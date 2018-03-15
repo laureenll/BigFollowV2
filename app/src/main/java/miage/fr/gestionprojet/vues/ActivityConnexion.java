@@ -1,6 +1,8 @@
 package miage.fr.gestionprojet.vues;
 
+import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -20,6 +22,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.activeandroid.Model;
+import com.activeandroid.query.Delete;
+import com.activeandroid.query.Select;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -42,7 +47,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
-import com.reactiveandroid.query.Delete;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,6 +58,7 @@ import java.util.List;
 
 import miage.fr.gestionprojet.R;
 import miage.fr.gestionprojet.models.Ressource;
+import miage.fr.gestionprojet.models.dao.DaoRessource;
 
 import static miage.fr.gestionprojet.vues.ActivityGestionDesInitials.EXTRA_INITIAL;
 import static miage.fr.gestionprojet.vues.ChargementDonnees.REQUEST_GOOGLE_PLAY_SERVICES;
@@ -73,8 +78,6 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
 
         setContentView(R.layout.activity_connexion);
         //Customize sign-in button.a red button may be displayed when Google+ scopes are requested
@@ -249,7 +252,7 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
         if (account.getGivenName().length() > 0 && account.getFamilyName().length() > 0) {
             initial = account.getGivenName().substring(0, 1) + account.getFamilyName().substring(0, 1);
         }
-
+        /*setPersonalInfo(account);*/
         mCredential.setSelectedAccountName(account.getDisplayName());
 
         // écriture du nouvel utilisateur dans le fichier google spread sheet
@@ -258,13 +261,32 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
         data1.add(initial);
         data1.add(account.getGivenName());
         data1.add(account.getFamilyName());
-        data1.add("");
-        data1.add("");
+        data1.add("test");
+        data1.add("test");
         data1.add(account.getEmail());
         values.add(data1);
         ValueRange body = new ValueRange().setValues(values);
 
-        addRessourceToSheet(body);
+        /*addRessourceToSheet(body);*/
+        /*List<Ressource> execute = new Select().from(Ressource.class).execute();
+        if (execute.size() > 0) {
+            new Delete().from(Ressource.class).execute();
+        }*/
+
+        // ajout des initiales en base
+        /*Ressource ressource = new Ressource();
+        ressource.setInitiales(initial);
+        ressource.setPrenom(account.getGivenName());
+        ressource.setNom(account.getFamilyName());
+        ressource.setEmail(account.getEmail());
+        ressource.setEntreprise("");
+        ressource.setInformationsDiverses("");
+        ressource.setTelephoneFixe("");
+        ressource.setTelephoneMobile("");
+        if (!DaoRessource.isRessourceExists(ressource.getEmail())) {
+            ressource.save();
+            Insert.into(Ressource.class).columns("nom", "initiales", "prenom").values(account.getGivenName(), initial, account.getFamilyName()).execute();
+        }*/
 
         Log.d("user connected","connected");
         Intent intent = new Intent(ActivityConnexion.this, ActivityGestionDesInitials.class);
@@ -273,7 +295,7 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
         progress_dialog.hide();
     }
 
-    private void addRessourceToSheet(ValueRange body) {
+    /*private void addRessourceToSheet(ValueRange body) {
         if (!isGooglePlayServicesAvailable()) {
             acquireGooglePlayServices();
         } else if (!isDeviceOnline()) {
@@ -281,18 +303,17 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
         } else {
             new InsertResourceTask(mCredential, body).execute();
         }
-    }
+    }*/
 
     /*
      set the User information into the views defined in the layout
      */
-
-    private void setPersonalInfo(Person currentPerson){
+    private void setPersonalInfo(GoogleSignInAccount currentPerson){
 
         String personName = currentPerson.getDisplayName();
-        String personPhotoUrl = currentPerson.getImage().getUrl();
+        String personPhotoUrl = currentPerson.getPhotoUrl().toString();
         TextView user_name = (TextView) findViewById(R.id.userName);
-        user_name.setText("Name: "+personName);
+        user_name.setText("Name: " + personName);
         TextView gemail_id = (TextView)findViewById(R.id.emailId);
         progress_dialog.dismiss();
         setProfilePic(personPhotoUrl);
@@ -351,7 +372,7 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
     }
 
 
-    private class InsertResourceTask extends AsyncTask<Void, Void, String> {
+    /*private class InsertResourceTask extends AsyncTask<Void, Void, String> {
         private Sheets mService = null;
         private ValueRange body;
 
@@ -375,7 +396,6 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
                         mService.spreadsheets().values().update(spreadsheetIdParDefaut, range, body)
                                 .setValueInputOption("RAW")
                                 .execute();
-                System.out.println();
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (Exception e) {
@@ -384,5 +404,5 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
 
             return null;
         }
-    }
+    }*/
 }

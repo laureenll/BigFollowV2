@@ -1,6 +1,9 @@
 package miage.fr.gestionprojet.models.dao;
 
-import com.reactiveandroid.query.Select;
+import android.database.Cursor;
+
+import com.activeandroid.ActiveAndroid;
+import com.activeandroid.query.Select;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,19 +21,19 @@ import miage.fr.gestionprojet.models.Projet;
 public class DaoAction {
     public static List<Action> loadActionsByCode(String code) {
         //getAll
-        return Select.from(Action.class)
+        return new Select().from(Action.class)
                 .where("code=?",code)
-                .fetch();
+                .execute();
     }
 
     public static List<Action> loadActionsByType(String type, long idProjet) {
-        Projet proj = Select.from(Projet.class).where("id=?", idProjet).fetchSingle();
+        Projet proj = new Select().from(Projet.class).where("id=?", idProjet).executeSingle();
         List<Action> lstActions = new ArrayList<>();
 
         for(Domaine d : proj.getLstDomaines()) {
-            List<Action> actions = Select.from(Action.class)
+            List<Action> actions = new Select().from(Action.class)
                     .where("typeTravail = ? and domaine=?", type, d.getId())
-                    .fetch();
+                    .execute();
             lstActions.addAll(actions);
         }
 
@@ -38,260 +41,251 @@ public class DaoAction {
     }
 
     public static List<Action> loadActionsByPhaseAndDate(String phase,Date d, long idProjet) {
-        Projet proj = Select.from(Projet.class).where("id=?", idProjet).fetchSingle();
+        Projet proj = new Select().from(Projet.class).where("id=?", idProjet).executeSingle();
         List<Action> lstActions = new ArrayList<>();
         for(Domaine dom : proj.getLstDomaines()) {
-            List<Action> actions = Select.from(Action.class)
+            List<Action> actions = new Select().from(Action.class)
                     .where("phase = ? and dt_fin_prevue>=? and dt_debut<=? and domaine=?", phase, d.getTime(), d.getTime(), dom.getId())
-                    .fetch();
+                    .execute();
             lstActions.addAll(actions);
         }
         return lstActions;
     }
 
     public static List<Action> loadActionsByDate(Date d, long idProjet) {
-        Projet proj = Select.from(Projet.class).where("id=?", idProjet).fetchSingle();
+        Projet proj = new Select().from(Projet.class).where("id=?", idProjet).executeSingle();
         List<Action> lstActions = new ArrayList<>();
         for(Domaine dom : proj.getLstDomaines()) {
-            List<Action> actions = Select
+            List<Action> actions = new Select()
                     .from(Action.class)
                     .where("dt_fin_prevue>=? and dt_debut<=? and domaine = ?", d.getTime(), d.getTime(), dom.getId())
-                    .fetch();
+                    .execute();
             lstActions.addAll(actions);
         }
         return lstActions;
     }
 
     public static List<Action> loadAll(){
-        return Select.from(Action.class).fetch();
+        return new Select().from(Action.class).execute();
     }
 
     public static List<Action> loadActionsOrderByNomAndDate(Date d, long idProjet){
-        Projet proj = Select.from(Projet.class).where("id=?", idProjet).fetchSingle();
+        Projet proj = new Select().from(Projet.class).where("id=?", idProjet).executeSingle();
         List<Action> lstActions = new ArrayList<>();
         for(Domaine dom : proj.getLstDomaines()) {
-            List<Action> actions = Select
+            List<Action> actions = new Select()
                     .from(Action.class)
                     .where("dt_fin_prevue>=? and dt_debut<=? and domaine=?", d.getTime(), d.getTime(), dom.getId())
                     .orderBy("code ASC")
-                    .fetch();
+                    .execute();
             lstActions.addAll(actions);
         }
         return lstActions;
     }
 
     public static List<Action> loadActionsByDomaineAndDate(int idDomaine,Date d, long idProjet){
-        Projet proj = Select.from(Projet.class).where("id=?", idProjet).fetchSingle();
+        Projet proj = new Select().from(Projet.class).where("id=?", idProjet).executeSingle();
         List<Action> lstActions = new ArrayList<>();
         for(Domaine dom : proj.getLstDomaines()) {
-            List<Action> result = Select
+            List<Action> result = new Select()
                     .from(Action.class)
                     .where("domaine=? and dt_fin_prevue>=? and dt_debut<=? and domaine=?", idDomaine, d.getTime(), d.getTime(),dom.getId())
-                    .fetch();
+                    .execute();
             lstActions.addAll(result);
         }
         return lstActions;
     }
     public static List<Action> getActionbyCode(String id) {
-        return Select
+        return new Select()
                 .from(Action.class)
                 .where("code = ?", id)
-                .fetch();
+                .execute();
     }
 
 
     public static HashMap<String,Integer> getNbActionRealiseeGroupByDomaine(){
-//        Cursor c = ActiveAndroid
-//                .getDatabase()
-//                .rawQuery("SELECT COUNT(*) as total, domaine FROM " + new Action().getTableName() + " WHERE reste_a_faire=0 GROUP BY domaine", null);
+        Cursor c = ActiveAndroid
+                .getDatabase()
+                .rawQuery("SELECT COUNT(*) as total, domaine FROM 'Action' WHERE reste_a_faire=0 GROUP BY domaine", null);
         HashMap<String,Integer> lstResult = new HashMap<>();
-        //TODO
 
-//        try {
-//            while (c.moveToNext()) {
-//               lstResult.put(c.getString(1),c.getInt(0));
-//            }
-//        } finally {
-//            c.close();
-//        }
+        try {
+            while (c.moveToNext()) {
+               lstResult.put(c.getString(1),c.getInt(0));
+            }
+        } finally {
+            c.close();
+        }
 
         return lstResult;
     }
 
     public static HashMap<String,Integer> getNbActionTotalGroupByDomaine(){
-//        Cursor c = ActiveAndroid
-//                .getDatabase()
-//                .rawQuery("SELECT COUNT(*) as total, domaine FROM " + new Action().getTableName() + " GROUP BY domaine", null);
+        Cursor c = ActiveAndroid
+                .getDatabase()
+                .rawQuery("SELECT COUNT(*) as total, domaine FROM 'Action' GROUP BY domaine", null);
         HashMap<String,Integer> lstResult = new HashMap<>();
 
-        //TODO
-
-//        try {
-//            while (c.moveToNext()) {
-//                lstResult.put(c.getString(1),c.getInt(0));
-//            }
-//        } finally {
-//            c.close();
-//        }
+        try {
+            while (c.moveToNext()) {
+                lstResult.put(c.getString(1),c.getInt(0));
+            }
+        } finally {
+            c.close();
+        }
 
         return lstResult;
     }
 
 
     public static HashMap<String,Integer> getNbActionRealiseeGroupByTypeTravail(){
-//        Cursor c = ActiveAndroid
-//                .getDatabase()
-//                .rawQuery("SELECT COUNT(*) as total,typeTravail FROM " + new Action().getTableName() + " WHERE reste_a_faire=0 GROUP BY typeTravail", null);
+        Cursor c = ActiveAndroid
+                .getDatabase()
+                .rawQuery("SELECT COUNT(*) as total,typeTravail FROM 'Action' WHERE reste_a_faire=0 GROUP BY typeTravail", null);
         HashMap<String,Integer> lstResult = new HashMap<>();
-        //TODO
 
-//        try {
-//            while (c.moveToNext()) {
-//                lstResult.put(c.getString(1),c.getInt(0));
-//            }
-//        } finally {
-//            c.close();
-//        }
+        try {
+            while (c.moveToNext()) {
+                lstResult.put(c.getString(1),c.getInt(0));
+            }
+        } finally {
+            c.close();
+        }
 
         return lstResult;
     }
 
     public static HashMap<String,Integer> getNbActionTotalGroupByTypeTravail(){
-//        Cursor c = ActiveAndroid
-//                .getDatabase()
-//                .rawQuery("SELECT COUNT(*) as total, typeTravail FROM " + new Action().getTableName() + " GROUP BY typeTravail", null);
+        Cursor c = ActiveAndroid
+                .getDatabase()
+                .rawQuery("SELECT COUNT(*) as total, typeTravail FROM 'Action' GROUP BY typeTravail", null);
         HashMap<String,Integer> lstResult = new HashMap<>();
-        //TODO
 
-//        try {
-//            while (c.moveToNext()) {
-//                lstResult.put(c.getString(1),c.getInt(0));
-//            }
-//        } finally {
-//            c.close();
-//        }
+        try {
+            while (c.moveToNext()) {
+                lstResult.put(c.getString(1),c.getInt(0));
+            }
+        } finally {
+            c.close();
+        }
 
         return lstResult;
     }
 
     public static List<String> getLstTypeTravail(){
-//        Cursor c = ActiveAndroid
-//                .getDatabase()
-//                .rawQuery("SELECT DISTINCT(typeTravail) FROM " + new Action().getTableName(), null);
+        Cursor c = ActiveAndroid
+                .getDatabase()
+                .rawQuery("SELECT DISTINCT(typeTravail) FROM 'Action'", null);
         List<String> lstResults = new ArrayList<>();
         //TODO
 
-//        try {
-//            while (c.moveToNext()) {
-//                lstResults.add(c.getString(0));
-//            }
-//        } finally {
-//            c.close();
-//        }
+        try {
+            while (c.moveToNext()) {
+                lstResults.add(c.getString(0));
+            }
+        } finally {
+            c.close();
+        }
 
         return lstResults;
     }
 
 
     public static HashMap<String,Integer> getNbActionRealiseeGroupByUtilisateurOeu(){
-//        Cursor c = ActiveAndroid
-//                .getDatabase()
-//                .rawQuery("SELECT COUNT(*) as total,resp_oeu FROM " + new Action().getTableName() + " WHERE reste_a_faire=0 GROUP BY resp_oeu", null);
+        Cursor c = ActiveAndroid
+                .getDatabase()
+                .rawQuery("SELECT COUNT(*) as total,resp_oeu FROM 'Action' WHERE reste_a_faire=0 GROUP BY resp_oeu", null);
         HashMap<String,Integer> lstResult = new HashMap<>();
-        //TODO
 
-//        try {
-//            while (c.moveToNext()) {
-//                lstResult.put(c.getString(1),c.getInt(0));
-//            }
-//        } finally {
-//            c.close();
-//        }
+        try {
+            while (c.moveToNext()) {
+                lstResult.put(c.getString(1),c.getInt(0));
+            }
+        } finally {
+            c.close();
+        }
 
         return lstResult;
     }
 
     public static HashMap<String,Integer> getNbActionRealiseeGroupByUtilisateurOuv(){
-//        Cursor c = ActiveAndroid
-//                .getDatabase()
-//                .rawQuery("SELECT COUNT(*) as total,resp_ouv FROM " + new Action().getTableName() + " WHERE reste_a_faire=0 GROUP BY resp_ouv", null);
+        Cursor c = ActiveAndroid
+                .getDatabase()
+                .rawQuery("SELECT COUNT(*) as total,resp_ouv FROM 'Action' WHERE reste_a_faire=0 GROUP BY resp_ouv", null);
         HashMap<String,Integer> lstResult = new HashMap<>();
-        //TODO
 
-//        try {
-//            while (c.moveToNext()) {
-//                lstResult.put(c.getString(1),c.getInt(0));
-//            }
-//        } finally {
-//            c.close();
-//        }
+        try {
+            while (c.moveToNext()) {
+                lstResult.put(c.getString(1),c.getInt(0));
+            }
+        } finally {
+            c.close();
+        }
 
         return lstResult;
     }
 
     public static HashMap<String,Integer> getNbActionTotalGroupByUtilisateurOeu(){
-//        Cursor c = ActiveAndroid
-//                .getDatabase()
-//                .rawQuery("SELECT COUNT(*) as total, resp_oeu FROM " + new Action().getTableName() + " GROUP BY resp_oeu", null);
+        Cursor c = ActiveAndroid
+                .getDatabase()
+                .rawQuery("SELECT COUNT(*) as total, resp_oeu FROM 'Action' GROUP BY resp_oeu", null);
         HashMap<String,Integer> lstResult = new HashMap<>();
-        //TODO
 
-//        try {
-//            while (c.moveToNext()) {
-//                lstResult.put(c.getString(1),c.getInt(0));
-//            }
-//        } finally {
-//            c.close();
-//        }
+        try {
+            while (c.moveToNext()) {
+                lstResult.put(c.getString(1),c.getInt(0));
+            }
+        } finally {
+            c.close();
+        }
 
         return lstResult;
     }
 
     public static HashMap<String,Integer> getNbActionTotalGroupByUtilisateurOuv(){
-//        Cursor c = ActiveAndroid
-//                .getDatabase()
-//                .rawQuery("SELECT COUNT(*) as total, resp_ouv FROM " + new Action().getTableName() + " GROUP BY resp_ouv", null);
+        Cursor c = ActiveAndroid
+                .getDatabase()
+                .rawQuery("SELECT COUNT(*) as total, resp_ouv FROM 'Action' GROUP BY resp_ouv", null);
         HashMap<String,Integer> lstResult = new HashMap<>();
 
-        //TODO
-
-//        try {
-//            while (c.moveToNext()) {
-//                lstResult.put(c.getString(1),c.getInt(0));
-//            }
-//        } finally {
-//            c.close();
-//        }
+        try {
+            while (c.moveToNext()) {
+                lstResult.put(c.getString(1),c.getInt(0));
+            }
+        } finally {
+            c.close();
+        }
 
         return lstResult;
     }
 
     public static List<Action> getActionRealiseesByProjet(long idProjet){
-        Projet proj = Select.from(Projet.class).where("id=?", idProjet).fetchSingle();
+        Projet proj = new Select().from(Projet.class).where("id=?", idProjet).executeSingle();
         List<Domaine> lstDomaines = proj.getLstDomaines();
         List<Action> lstActionRealisees = new ArrayList<>();
         List<Action> lstActionRecuperees;
 
         for(Domaine d: lstDomaines){
-            lstActionRecuperees = Select
+            lstActionRecuperees =
+                    new Select()
                     .from(Action.class)
                     .where("reste_a_faire=0 and domaine=?",d.getId())
-                    .fetch();
+                    .execute();
             lstActionRealisees.addAll(lstActionRecuperees);
         }
         return lstActionRealisees;
     }
 
     public static List<Action> getAllActionsByProjet(long idProjet){
-        Projet proj = Select.from(Projet.class).where("id=?", idProjet).fetchSingle();
+        Projet proj = new Select().from(Projet.class).where("id=?", idProjet).executeSingle();
         List<Domaine> lstDomaines = proj.getLstDomaines();
         List<Action> lstAction = new ArrayList<>();
         List<Action> lstActionRecuperees;
         for(Domaine d: lstDomaines){
-            lstActionRecuperees = Select
+            lstActionRecuperees = new Select()
                     .from(Action.class)
                     .where("domaine=?",d.getId())
-                    .fetch();
+                    .execute();
             lstAction.addAll(lstActionRecuperees);
         }
         return lstAction;

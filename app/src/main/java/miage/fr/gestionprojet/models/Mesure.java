@@ -1,23 +1,21 @@
 package miage.fr.gestionprojet.models;
 
-import com.reactiveandroid.Model;
-import com.reactiveandroid.annotation.Column;
-import com.reactiveandroid.annotation.PrimaryKey;
-import com.reactiveandroid.annotation.Table;
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 
 import java.util.Date;
 
-import miage.fr.gestionprojet.AppDatabase;
 
 /**
  * Created by Audrey on 25/02/2017.
  */
 
-@Table(name="Mesure", database = AppDatabase.class)
-public class Mesure extends Model{
+@Table(name="Mesure")
+public class Mesure extends Model {
 
-    @PrimaryKey
-    private Long id;
+    @Column(name = "ident", index = true, unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
+    private Long ident;
 
     @Column(name="action")
     private SaisieCharge action;
@@ -32,8 +30,8 @@ public class Mesure extends Model{
         super();
     }
 
-    public Long getId() {
-        return id;
+    public Long getIdent() {
+        return ident;
     }
 
     public SaisieCharge getAction() {

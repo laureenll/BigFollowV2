@@ -1,6 +1,6 @@
 package miage.fr.gestionprojet.models.dao;
 
-import com.reactiveandroid.query.Select;
+import com.activeandroid.query.Select;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,30 +19,30 @@ public class DaoSaisieCharge {
 
 
     public static List<SaisieCharge> loadSaisiebyAction(Action action) {
-        return Select.from(SaisieCharge.class).where("action=?",action.getId()).fetch();
+        return new Select().from(SaisieCharge.class).where("action=?",action.getId()).execute();
 
     }
     public static List<SaisieCharge> loadAll() {
-        return Select.from(SaisieCharge.class).fetch();
+        return new Select().from(SaisieCharge.class).execute();
     }
 
     public static SaisieCharge loadById(long id) {
-        return Select.from(SaisieCharge.class).where("id=?", id).fetchSingle();
+        return new Select().from(SaisieCharge.class).where("id=?", id).executeSingle();
     }
 
     public static List<SaisieCharge> loadSaisieChargesByDomaine(int idDomaine){
         List<SaisieCharge> lst = new ArrayList<>();
-        List<Action> results = Select
+        List<Action> results = new Select()
                 .from(Action.class)
                 .where("domaine=?",idDomaine)
-                .fetch();
+                .execute();
 
         for(Action a : results) {
             if(a.getTypeTravail().equalsIgnoreCase("Saisie")||a.getTypeTravail().equalsIgnoreCase("Test")) {
-                SaisieCharge result = Select
+                SaisieCharge result = new Select()
                         .from(SaisieCharge.class)
                         .where("domaine=?", a.getId())
-                        .fetch().get(0);
+                        .executeSingle();
                 lst.add(result);
             }
         }
@@ -52,16 +52,16 @@ public class DaoSaisieCharge {
 
     public static List<SaisieCharge> loadSaisieChargeByUtilisateur(int idUser){
         List<SaisieCharge> lst = new ArrayList<>();
-        List<Action> results = Select
+        List<Action> results = new Select()
                 .from(Action.class)
                 .where("resp_ouv=? or resp_oeu=?",idUser,idUser)
-                .fetch();
+                .execute();
         for(Action a : results) {
             if(a.getTypeTravail().equalsIgnoreCase("Saisie")||a.getTypeTravail().equalsIgnoreCase("Test")) {
-                SaisieCharge result = Select
+                SaisieCharge result = new Select()
                         .from(SaisieCharge.class)
                         .where("domaine=?", a.getId())
-                        .fetch().get(0);
+                        .executeSingle();
                 lst.add(result);
             }
 
@@ -70,10 +70,10 @@ public class DaoSaisieCharge {
     }
 
     public static SaisieCharge loadSaisieChargeByAction(long idAction){
-        List<SaisieCharge> lst = Select
+        List<SaisieCharge> lst = new Select()
                 .from(SaisieCharge.class)
                 .where("action = ?", idAction)
-                .fetch();
+                .execute();
         if(lst.size()>0) {
             return lst.get(0);
         }else{
@@ -82,7 +82,7 @@ public class DaoSaisieCharge {
     }
 
     public static int getNbUnitesSaisies(long idProjet){
-        Projet projet = Select.from(Projet.class).where("id=?",idProjet).fetchSingle();
+        Projet projet = new Select().from(Projet.class).where("id=?",idProjet).executeSingle();
         List<Domaine> doms = projet.getLstDomaines();
         ArrayList<Action> lstActions = new ArrayList<>();
         for(Domaine d : doms){
@@ -102,7 +102,7 @@ public class DaoSaisieCharge {
     }
 
     public static int getNbUnitesCibles(long idProjet){
-        Projet projet = Select.from(Projet.class).where("id=?",idProjet).fetchSingle();
+        Projet projet = new Select().from(Projet.class).where("id=?",idProjet).executeSingle();
         List<Domaine> doms = projet.getLstDomaines();
         ArrayList<Action> lstActions = new ArrayList<>();
         for(Domaine d : doms){
