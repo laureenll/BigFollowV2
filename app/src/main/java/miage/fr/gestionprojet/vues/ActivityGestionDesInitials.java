@@ -67,7 +67,7 @@ public class ActivityGestionDesInitials extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                     Intent intent = new Intent(ActivityGestionDesInitials.this, MainActivity.class);
-                    intent.putExtra(EXTRA_INITIAL, "");
+                    intent.putExtra(EXTRA_INITIAL, "KK");
                     startActivity(intent);
                 }
             });
