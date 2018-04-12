@@ -14,32 +14,32 @@ import miage.fr.gestionprojet.vues.ActivityBudget;
 
 public class AdapterBudgetDomaine extends AbstractAdapterBudget<Domaine> {
 
-    public AdapterBudgetDomaine(ActivityBudget context,  int resource,  List<Domaine> objects) {
+    public AdapterBudgetDomaine(ActivityBudget context, int resource, List<Domaine> objects) {
         super(context, resource, objects);
     }
 
-  @Override
-    protected void chargerNbAction(){
+    @Override
+    protected void chargerNbAction() {
         setLstNbActions(new ArrayList<Integer>());
         setLstNbActionsRealisees(new ArrayList<Integer>());
-        HashMap<String, Integer> results= DaoAction.getBudgetTotalByActionRealiseeGroupByDomaine();
-        if(results.size()>0){
-            for(Domaine d : getListBudget()){
-                if(results.get(String.valueOf(d.getId()))!=null) {
+        HashMap<String, Integer> results = DaoAction.getBudgetTotalByActionRealiseeGroupByDomaine();
+        if (results.size() > 0) {
+            for (Domaine d : getListBudget()) {
+                if (results.get(String.valueOf(d.getId())) != null) {
                     addActionsRealisees(results.get(String.valueOf(d.getId())));
-                }else{
+                } else {
                     addActionsRealisees(0);
                 }
             }
 
         }
 
-        results= DaoAction.getBudgetTotalByActionTotalGroupByDomaine();
-        if(results.size()>0){
-            for(Domaine d : getListBudget()){
-                if(results.get(String.valueOf(d.getId()))!=null) {
+        results = DaoAction.getBudgetTotalByActionTotalGroupByDomaine();
+        if (results.size() > 0) {
+            for (Domaine d : getListBudget()) {
+                if (results.get(String.valueOf(d.getId())) != null) {
                     addActions(results.get(String.valueOf(d.getId())));
-                }else{
+                } else {
                     addActions(0);
                 }
             }
