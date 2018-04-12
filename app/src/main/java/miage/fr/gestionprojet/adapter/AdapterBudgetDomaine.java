@@ -68,7 +68,12 @@ public class AdapterBudgetDomaine extends ArrayAdapter<Domaine> {
 
         // on définit le texte à afficher
         holder.domaine.setText(getItem(position).toString());
-        holder.nbActionRealisees.setText(Integer.valueOf(this.lstNbActionsRealisees.get(position))+"/"+Integer.valueOf(this.lstNbActions.get(position)));
+
+        int nbActionsRealisees = Integer.valueOf(this.lstNbActionsRealisees.get(position));
+        int nbActionsTot = Integer.valueOf(this.lstNbActions.get(position));
+        String nbActions = nbActionsRealisees + " €" + " / " + nbActionsTot+" €";
+        holder.nbActionRealisees.setText(nbActions);
+
         holder.avancement.setProgress(Outils.calculerPourcentage(this.lstNbActionsRealisees.get(position),this.lstNbActions.get(position)));
         return convertView;
     }
@@ -76,7 +81,7 @@ public class AdapterBudgetDomaine extends ArrayAdapter<Domaine> {
     private void chargerNbAction(){
         this.lstNbActions = new ArrayList<>();
         this.lstNbActionsRealisees = new ArrayList<>();
-        HashMap<String, Integer> results= DaoAction.getNbActionRealiseeGroupByDomaine();
+        HashMap<String, Integer> results= DaoAction.getBudgetTotalByActionRealiseeGroupByDomaine();
         if(results.size()>0){
             for(Domaine d : this.lstDomaines){
                 if(results.get(String.valueOf(d.getId()))!=null) {
@@ -88,7 +93,7 @@ public class AdapterBudgetDomaine extends ArrayAdapter<Domaine> {
 
         }
 
-        results= DaoAction.getNbActionTotalGroupByDomaine();
+        results= DaoAction.getBudgetTotalByActionTotalGroupByDomaine();
         if(results.size()>0){
             for(Domaine d : this.lstDomaines){
                 if(results.get(String.valueOf(d.getId()))!=null) {
