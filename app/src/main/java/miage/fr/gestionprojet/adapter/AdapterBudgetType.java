@@ -66,7 +66,12 @@ public class AdapterBudgetType extends ArrayAdapter<String> {
 
         // on définit le texte à afficher
         holder.type.setText(getItem(position).toString());
-        holder.nbActionRealisees.setText(Integer.valueOf(this.lstNbActionsRealisees.get(position))+"/"+Integer.valueOf(this.lstNbActions.get(position)));
+
+        int nbActionsRealisees = Integer.valueOf(this.lstNbActionsRealisees.get(position));
+        int nbActionsTot = Integer.valueOf(this.lstNbActions.get(position));
+        String nbActions = nbActionsRealisees + " €" + " / " + nbActionsTot+" €";
+        holder.nbActionRealisees.setText(nbActions);
+
         holder.avancement.setProgress(Outils.calculerPourcentage(this.lstNbActionsRealisees.get(position),this.lstNbActions.get(position)));
         return convertView;
     }
@@ -74,7 +79,7 @@ public class AdapterBudgetType extends ArrayAdapter<String> {
     private void chargerNbAction(){
         this.lstNbActions = new ArrayList<>();
         this.lstNbActionsRealisees = new ArrayList<>();
-        HashMap<String, Integer> results= DaoAction.getNbActionRealiseeGroupByTypeTravail();
+        HashMap<String, Integer> results= DaoAction.getBudgetTotalByActionRealiseeGroupByTypeTravail();;
         if(results.size()>0){
             for(String t : this.lstTypeTravail){
                 if(results.get(t)!=null) {
@@ -86,7 +91,7 @@ public class AdapterBudgetType extends ArrayAdapter<String> {
 
         }
 
-        results= DaoAction.getNbActionTotalGroupByTypeTravail();
+        results= DaoAction.getBudgetTotalByActionTotalGroupByTypeTravail();
         if(results.size()>0){
             for(String t : this.lstTypeTravail){
                 if(results.get(t)!=null) {
@@ -98,6 +103,11 @@ public class AdapterBudgetType extends ArrayAdapter<String> {
 
         }
     }
+
+    private void toto() {
+
+    }
+
     private class ViewHolder {
         private TextView type;
         private TextView nbActionRealisees;

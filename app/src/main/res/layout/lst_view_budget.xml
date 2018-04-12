@@ -24,7 +24,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="0dp"
                 android:layout_marginTop="20dp"
-                android:layout_weight="0.3"
+                android:layout_weight="0.4"
                 android:text="text"
                 android:textSize="18sp"></TextView>
 
@@ -34,7 +34,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="0dp"
                 android:layout_marginTop="20dp"
-                android:layout_weight="0.7"
+                android:layout_weight="0.6"
                 android:text="TextView"
                 android:textSize="14sp" />
 

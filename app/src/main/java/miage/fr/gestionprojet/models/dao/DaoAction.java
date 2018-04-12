@@ -138,7 +138,7 @@ public class DaoAction {
     }
 
 
-    public static HashMap<String,Integer> getNbActionRealiseeGroupByTypeTravail(){
+   /* public static HashMap<String,Integer> getNbActionRealiseeGroupByTypeTravail(){
         Cursor c = ActiveAndroid
                 .getDatabase()
                 .rawQuery("SELECT COUNT(*) as total,typeTravail FROM 'Action' WHERE reste_a_faire=0 GROUP BY typeTravail", null);
@@ -153,12 +153,29 @@ public class DaoAction {
         }
 
         return lstResult;
-    }
+    }*/
 
-    public static HashMap<String,Integer> getNbActionTotalGroupByTypeTravail(){
+    public static HashMap<String,Integer> getBudgetTotalByActionRealiseeGroupByTypeTravail(){
         Cursor c = ActiveAndroid
                 .getDatabase()
-                .rawQuery("SELECT COUNT(*) as total, typeTravail FROM 'Action' GROUP BY typeTravail", null);
+                .rawQuery("SELECT SUM(cout_par_pour * nb_jours_prevus) as somme_cout_par_jour,typeTravail FROM 'Action' WHERE reste_a_faire=0 GROUP BY typeTravail", null);
+        HashMap<String,Integer> lstResult = new HashMap<>();
+
+        try {
+            while (c.moveToNext()) {
+                lstResult.put(c.getString(1),c.getInt(0));
+            }
+        } finally {
+            c.close();
+        }
+
+        return lstResult;
+    }
+
+    public static HashMap<String,Integer> getBudgetTotalByActionTotalGroupByTypeTravail(){
+        Cursor c = ActiveAndroid
+                .getDatabase()
+                .rawQuery("SELECT SUM(cout_par_pour * nb_jours_prevus) as somme_cout_par_jour,typeTravail FROM 'Action' GROUP BY typeTravail", null);
         HashMap<String,Integer> lstResult = new HashMap<>();
 
         try {
