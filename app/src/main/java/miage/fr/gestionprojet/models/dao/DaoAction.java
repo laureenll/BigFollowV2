@@ -172,10 +172,61 @@ public class DaoAction {
         return lstResult;
     }
 
+    public static HashMap<String,Integer> getBudgetTotalByActionRealiseeGroupByActions(){
+        Cursor c = ActiveAndroid
+                .getDatabase()
+                .rawQuery("SELECT SUM(cout_par_pour * nb_jours_prevus) as somme_cout_par_jour,code FROM 'Action' WHERE reste_a_faire=0 GROUP BY code", null);
+        HashMap<String,Integer> lstResult = new HashMap<>();
+
+        try {
+            while (c.moveToNext()) {
+                lstResult.put(c.getString(1),c.getInt(0));
+            }
+        } finally {
+            c.close();
+        }
+
+        return lstResult;
+    }
+
+    public static HashMap<String,Integer> getBudgetTotalByActionTotalGroupByActions(){
+        Cursor c = ActiveAndroid
+                .getDatabase()
+                .rawQuery("SELECT SUM(cout_par_pour * nb_jours_prevus) as somme_cout_par_jour,code FROM 'Action' GROUP BY code", null);
+        HashMap<String,Integer> lstResult = new HashMap<>();
+
+        try {
+            while (c.moveToNext()) {
+                lstResult.put(c.getString(1),c.getInt(0));
+            }
+        } finally {
+            c.close();
+        }
+
+        return lstResult;
+    }
+
     public static List<String> getLstTypeTravail(){
         Cursor c = ActiveAndroid
                 .getDatabase()
                 .rawQuery("SELECT DISTINCT(typeTravail) FROM 'Action'", null);
+        List<String> lstResults = new ArrayList<>();
+
+        try {
+            while (c.moveToNext()) {
+                lstResults.add(c.getString(0));
+            }
+        } finally {
+            c.close();
+        }
+
+        return lstResults;
+    }
+
+    public static List<String> getAllCodes(){
+        Cursor c = ActiveAndroid
+                .getDatabase()
+                .rawQuery("SELECT DISTINCT(code) FROM 'Action'", null);
         List<String> lstResults = new ArrayList<>();
 
         try {

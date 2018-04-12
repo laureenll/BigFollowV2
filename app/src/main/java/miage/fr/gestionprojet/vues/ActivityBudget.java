@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import miage.fr.gestionprojet.R;
+import miage.fr.gestionprojet.adapter.AdapterBudgetAction;
 import miage.fr.gestionprojet.adapter.AdapterBudgetDomaine;
 import miage.fr.gestionprojet.adapter.AdapterBudgetType;
 import miage.fr.gestionprojet.adapter.AdapterBudgetUtilisateur;
@@ -36,6 +37,7 @@ public class ActivityBudget extends AppCompatActivity {
     private final static String DOMAINE = "Domaine";
     private final static String TYPE = "Type";
     private final static String UTILISATEUR = "Utilisateur";
+    private final static String ACTION = "Action";
     public final static String EXTRA_INITIAL = "initial";
 
     @Override
@@ -49,6 +51,7 @@ public class ActivityBudget extends AppCompatActivity {
         lstChoixAffichage.add(DOMAINE);
         lstChoixAffichage.add(TYPE);
         lstChoixAffichage.add(UTILISATEUR);
+        lstChoixAffichage.add(ACTION);
 
         spinChoixAffichage = (Spinner) findViewById(R.id.spinnerChoixAffichage);
         this.liste = (ListView) findViewById(R.id.lstViewBudget);
@@ -76,6 +79,9 @@ public class ActivityBudget extends AppCompatActivity {
                     case UTILISATEUR:
                         AffichageUtilisateur();
                         break;
+                    case ACTION:
+                        AffichageAction();
+                        break;
                 }
             }
 
@@ -102,6 +108,12 @@ public class ActivityBudget extends AppCompatActivity {
     private void AffichageUtilisateur(){
         List<Ressource> lstUtilisateurs = DaoRessource.loadAll();
         AdapterBudgetUtilisateur adapter = new AdapterBudgetUtilisateur(ActivityBudget.this,R.layout.lst_view_budget,lstUtilisateurs);
+        this.liste.setAdapter(adapter);
+    }
+
+    private void AffichageAction(){
+        List<String> lstCodes = DaoAction.getAllCodes();
+        AdapterBudgetAction adapter = new AdapterBudgetAction(ActivityBudget.this,R.layout.lst_view_budget,lstCodes);
         this.liste.setAdapter(adapter);
     }
 
