@@ -67,7 +67,12 @@ public class AdapterBudgetUtilisateur extends ArrayAdapter<Ressource> {
 
         // on définit le texte à afficher
         holder.utilisateur.setText(getItem(position).toString());
-        holder.nbActionRealisees.setText(Integer.valueOf(this.lstNbActionsRealisees.get(position))+"/"+Integer.valueOf(this.lstNbActions.get(position)));
+
+        int nbActionsRealisees = Integer.valueOf(this.lstNbActionsRealisees.get(position));
+        int nbActionsTot = Integer.valueOf(this.lstNbActions.get(position));
+        String nbActions = nbActionsRealisees + " €" + " / " + nbActionsTot+" €";
+        holder.nbActionRealisees.setText(nbActions);
+
         holder.avancement.setProgress(Outils.calculerPourcentage(this.lstNbActionsRealisees.get(position),this.lstNbActions.get(position)));
         return convertView;
     }
@@ -75,7 +80,7 @@ public class AdapterBudgetUtilisateur extends ArrayAdapter<Ressource> {
     private void chargerNbAction(){
         this.lstNbActions = new ArrayList<>();
         this.lstNbActionsRealisees = new ArrayList<>();
-        HashMap<String, Integer> results= DaoAction.getNbActionRealiseeGroupByUtilisateurOeu();
+        HashMap<String, Integer> results= DaoAction.getBudgetTotalByActionRealiseeGroupByUtilisateurOeu();
         if(results.size()>0){
             for(Ressource r : this.lstUtilisateurs){
                 if(results.get(String.valueOf(r.getId()))!=null) {
@@ -87,7 +92,7 @@ public class AdapterBudgetUtilisateur extends ArrayAdapter<Ressource> {
 
         }
 
-        results= DaoAction.getNbActionRealiseeGroupByUtilisateurOuv();
+        results= DaoAction.getBudgetTotalByActionRealiseeGroupByUtilisateurOuv();
         if(results.size()>0){
             for(int i =0; i<this.lstUtilisateurs.size(); i++){
                 if(results.get(String.valueOf(this.lstUtilisateurs.get(i).getId()))!=null) {
@@ -99,7 +104,7 @@ public class AdapterBudgetUtilisateur extends ArrayAdapter<Ressource> {
 
         }
 
-        results= DaoAction.getNbActionTotalGroupByUtilisateurOeu();
+        results= DaoAction.getBudgetTotalByActionTotalGroupByUtilisateurOeu();
         if(results.size()>0){
             for(Ressource r : this.lstUtilisateurs){
                 if(results.get(String.valueOf(r.getId()))!=null) {
@@ -111,7 +116,7 @@ public class AdapterBudgetUtilisateur extends ArrayAdapter<Ressource> {
 
         }
 
-        results= DaoAction.getNbActionTotalGroupByUtilisateurOuv();
+        results= DaoAction.getBudgetTotalByActionTotalGroupByUtilisateurOuv();
         if(results.size()>0){
             for(int i =0; i<this.lstUtilisateurs.size(); i++){
                 if(results.get(String.valueOf(this.lstUtilisateurs.get(i).getId()))!=null) {
