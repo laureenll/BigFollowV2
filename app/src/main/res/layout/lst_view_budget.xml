@@ -16,26 +16,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/typeAffiche"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="0dp"
-                android:layout_marginLeft="0dp"
                 android:layout_marginTop="20dp"
-                android:layout_weight="1"
+                android:layout_weight="0.3"
                 android:text="text"
                 android:textSize="18sp"></TextView>
 
             <TextView
                 android:id="@+id/nbActionRealisees"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="0dp"
+                android:layout_marginTop="20dp"
+                android:layout_weight="0.7"
                 android:text="TextView"
-                android:textAlignment="textStart"
                 android:textSize="14sp" />
 
         </LinearLayout>
