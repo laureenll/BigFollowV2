@@ -1,13 +1,9 @@
 package miage.fr.gestionprojet.vues;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -20,49 +16,28 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.activeandroid.Model;
-import com.activeandroid.query.Delete;
-import com.activeandroid.query.Select;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.ExponentialBackOff;
-import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.SheetsScopes;
-import com.google.api.services.sheets.v4.Sheets;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.plus.model.people.Person;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
-
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import miage.fr.gestionprojet.R;
-import miage.fr.gestionprojet.models.Ressource;
-import miage.fr.gestionprojet.models.dao.DaoRessource;
 
 import static miage.fr.gestionprojet.vues.ActivityGestionDesInitials.EXTRA_INITIAL;
 import static miage.fr.gestionprojet.vues.ChargementDonnees.REQUEST_GOOGLE_PLAY_SERVICES;
-import static miage.fr.gestionprojet.vues.ChargementDonnees.spreadsheetIdParDefaut;
 
 public class ActivityConnexion extends AppCompatActivity implements View.OnClickListener {
 

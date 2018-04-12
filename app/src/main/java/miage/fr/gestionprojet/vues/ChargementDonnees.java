@@ -464,6 +464,17 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             mProgress.setProgress(Outils.calculerPourcentage(5, 7));
             List<List<Object>> valuesressources = responseressources.getValues();
 
+
+            new Delete().from(Ressource.class).execute();
+            new Delete().from(Mesure.class).execute();
+            new Delete().from(SaisieCharge.class).execute();
+            new Delete().from(Action.class).execute();
+
+            new Delete().from(Formation.class).execute();
+            new Delete().from(Domaine.class).execute();
+            new Delete().from(Projet.class).execute();
+
+
             if (valueproject != null) {
                 List<String> strings = initialiserPojet(valueproject);
                 results.addAll(strings);
@@ -743,6 +754,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
         }
 
         public List<String> initialiserPojet(List<List<Object>> values) throws ParseException {
+            new Delete().from(Domaine.class).execute();
             new Delete().from(Projet.class).execute();
             Projet projet = new Projet();
             projet.setDescription("");

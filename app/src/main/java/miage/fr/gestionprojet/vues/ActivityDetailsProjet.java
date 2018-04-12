@@ -151,22 +151,22 @@ public class ActivityDetailsProjet extends AppCompatActivity {
 
             //détermination de la couleur du bouton budget en fonction du temps restant et du nombre d'actions déjà réalisées
             if(ratioDuree<100-ratioBudget){
-                buttonBudget.setBackgroundColor(Color.RED);
+                buttonBudget.setBackgroundColor(getResources().getColor(R.color.red));
             }else if(ratioDuree>100-ratioBudget){
-                buttonBudget.setBackgroundColor(Color.GREEN);
+                buttonBudget.setBackgroundColor(getResources().getColor(R.color.green));
             }else{
-                buttonBudget.setBackgroundColor(Color.YELLOW);
+                buttonBudget.setBackgroundColor(getResources().getColor(R.color.orange));
             }
 
             //détermination de la couleur du bouton formation
             float avancementTotalFormation = DaoFormation.getAvancementTotal(this.proj.getId());
             int ratioFormation = Outils.calculerPourcentage(avancementTotalFormation,100);
             if(ratioDuree<100-ratioFormation){
-                buttonFormations.setBackgroundColor(Color.RED);
+                buttonFormations.setBackgroundColor(getResources().getColor(R.color.red));
             }else if(ratioDuree>100-ratioFormation){
-                buttonFormations.setBackgroundColor(Color.GREEN);
+                buttonFormations.setBackgroundColor(getResources().getColor(R.color.green));
             }else{
-                buttonFormations.setBackgroundColor(Color.YELLOW);
+                buttonFormations.setBackgroundColor(getResources().getColor(R.color.orange));
             }
 
             //détermination de la couleur du bouton action
@@ -174,11 +174,11 @@ public class ActivityDetailsProjet extends AppCompatActivity {
             int nbUniteesCibles = DaoSaisieCharge.getNbUnitesCibles(this.proj.getId());
             int ratioSaisies = Outils.calculerPourcentage(nbUniteesSaisies,nbUniteesCibles);
             if(ratioDuree<100-ratioSaisies){
-                buttonSaisies.setBackgroundColor(Color.RED);
+                buttonSaisies.setBackgroundColor(getResources().getColor(R.color.red));
             }else if(ratioDuree>100-ratioSaisies){
-                buttonSaisies.setBackgroundColor(Color.GREEN);
+                buttonSaisies.setBackgroundColor(getResources().getColor(R.color.green));
             }else{
-                buttonSaisies.setBackgroundColor(Color.YELLOW);
+                buttonSaisies.setBackgroundColor(getResources().getColor(R.color.orange));
             }
         }
 

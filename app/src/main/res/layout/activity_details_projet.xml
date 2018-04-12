@@ -38,6 +38,8 @@
                 android:id="@+id/btnBudget"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
                 android:layout_weight="1"
                 android:text="Budget" />
 
@@ -45,6 +47,8 @@
                 android:id="@+id/btnSaisies"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
                 android:layout_weight="1"
                 android:text="Saisies" />
 
@@ -52,6 +56,8 @@
                 android:id="@+id/btnFormations"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
                 android:layout_weight="1"
                 android:text="Formation" />
         </LinearLayout>
