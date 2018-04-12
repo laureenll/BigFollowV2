@@ -32,6 +32,7 @@ public class ActivityDetailsProjet extends AppCompatActivity {
     private final static String FORMATIONS = "Avancement des formations";
     private final static String PLANNING = "Planning détaillé";
     private final static String BUDGET = "Suivi du budget";
+    private final static String RESTITUTION = "Envoi de restitution";
     public final static String PROJET = "projet visu";
     private ListView liste = null;
     public final static String EXTRA_INITIAL = "initial";
@@ -66,6 +67,7 @@ public class ActivityDetailsProjet extends AppCompatActivity {
             lstActions.add(FORMATIONS);
             lstActions.add(PLANNING);
             lstActions.add(BUDGET);
+            lstActions.add(RESTITUTION);
             final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lstActions);
             liste.setAdapter(adapter);
 
@@ -94,6 +96,12 @@ public class ActivityDetailsProjet extends AppCompatActivity {
                             break;
                         case 3:
                             intent = new Intent(ActivityDetailsProjet.this, ActivityBudget.class);
+                            intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
+                            intent.putExtra(PROJET, proj.getId());
+                            startActivity(intent);
+                            break;
+                        case 4:
+                            intent = new Intent(ActivityDetailsProjet.this, ActivityRestitution.class);
                             intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
                             intent.putExtra(PROJET, proj.getId());
                             startActivity(intent);

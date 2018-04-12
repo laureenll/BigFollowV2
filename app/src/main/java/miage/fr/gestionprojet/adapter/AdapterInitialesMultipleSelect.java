@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckedTextView;
 import android.widget.ImageView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
@@ -15,20 +16,18 @@ import java.util.List;
 
 import miage.fr.gestionprojet.R;
 import miage.fr.gestionprojet.models.Ressource;
-import miage.fr.gestionprojet.vues.ActivityGestionDesInitials;
-import miage.fr.gestionprojet.vues.ActivityRestitution;
 
 /**
- * Created by gamouzou on 04/05/2017.
+ * Created by lloison on 12/04/2018.
  */
 
-public class AdapterInitiales extends ArrayAdapter<Ressource> {
-
-
+public class AdapterInitialesMultipleSelect  extends ArrayAdapter<Ressource> {
     private List<Ressource> lstInitiales;
     private AppCompatActivity activity;
 
-    public AdapterInitiales(AppCompatActivity context, int resource, List<Ressource> objects) {
+
+
+    public AdapterInitialesMultipleSelect(AppCompatActivity context, int resource, List<Ressource> objects) {
         super(context, resource, objects);
         this.activity = context;
         this.lstInitiales = objects;
@@ -51,16 +50,16 @@ public class AdapterInitiales extends ArrayAdapter<Ressource> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        AdapterInitiales.ViewHolder holder;
+        AdapterInitialesMultipleSelect.ViewHolder holder;
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
         // on récupère la vue à laquelle doit être ajouter l'image
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.list_view_initiales, parent, false);
-            holder = new AdapterInitiales.ViewHolder(convertView);
+            convertView = inflater.inflate(R.layout.lst_view_users, parent, false);
+            holder = new AdapterInitialesMultipleSelect.ViewHolder(convertView);
             convertView.setTag(holder);
         } else {
-            holder = (AdapterInitiales.ViewHolder) convertView.getTag();
+            holder = (AdapterInitialesMultipleSelect.ViewHolder) convertView.getTag();
         }
 
         //on récupère la première lettre du domaine associé au travail
@@ -82,14 +81,15 @@ public class AdapterInitiales extends ArrayAdapter<Ressource> {
 
     private class ViewHolder {
         private ImageView imageView;
+        private CheckedTextView checked;
 
         public ViewHolder(View v) {
-            imageView = (ImageView) v.findViewById(R.id.icon_ttravail);
+            imageView = v.findViewById(R.id.icon_ttravail);
+            checked = v.findViewById(R.id.checkedTextView);
         }
     }
 
+    public void changeCheckedVisibility(int position, View convertView, ViewGroup parent) {
+
+    }
 }
-
-
-
-
