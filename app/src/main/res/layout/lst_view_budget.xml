@@ -26,7 +26,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_weight="0.4"
                 android:text="text"
-                android:textSize="18sp"></TextView>
+                android:textSize="16sp"></TextView>
 
             <TextView
                 android:id="@+id/nbActionRealisees"
@@ -36,7 +36,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_weight="0.6"
                 android:text="TextView"
-                android:textSize="14sp" />
+                android:textSize="12sp" />
 
         </LinearLayout>
 
