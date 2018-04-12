@@ -15,7 +15,7 @@ public class EtapeFormation extends Model {
     @Column(name = "ident", index = true, unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private Long ident;
 
-    @Column(name="formation")
+    @Column(name="formation", onDelete = Column.ForeignKeyAction.CASCADE)
     private Formation formation;
 
     @Column(name="type_element")

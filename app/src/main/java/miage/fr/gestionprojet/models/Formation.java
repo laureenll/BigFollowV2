@@ -17,7 +17,7 @@ public class Formation extends Model {
 
     @Column(name = "ident", index = true, unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private Long ident;
-    @Column(name="action")
+    @Column(name="action", onDelete = Column.ForeignKeyAction.CASCADE)
     private Action action;
 
     @Column(name="avancement_total")

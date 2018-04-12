@@ -17,7 +17,7 @@ public class Mesure extends Model {
     @Column(name = "ident", index = true, unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private Long ident;
 
-    @Column(name="action")
+    @Column(name="action", onDelete = Column.ForeignKeyAction.CASCADE)
     private SaisieCharge action;
 
     @Column(name="nb_unites_mesures")
