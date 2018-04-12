@@ -9,41 +9,58 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import miage.fr.gestionprojet.R;
-import miage.fr.gestionprojet.models.dao.DaoAction;
 import miage.fr.gestionprojet.outils.Outils;
 import miage.fr.gestionprojet.vues.ActivityBudget;
 
 /**
- * Created by Audrey on 25/04/2017.
+ * Created by Khira on 12/04/2018.
  */
 
-public class AdapterBudgetType extends ArrayAdapter<String> {
-    private List<String> lstTypeTravail;
+public abstract class AbstractAdapterBudget<T> extends ArrayAdapter<T> {
+
+    private List<T> listBudget;
     private ActivityBudget activity;
     private ArrayList<Integer> lstNbActionsRealisees;
     private ArrayList<Integer> lstNbActions;
 
-
-    public AdapterBudgetType(ActivityBudget context,  int resource,  List<String> objects) {
+    public AbstractAdapterBudget(ActivityBudget context, int resource, List<T> objects) {
         super(context, resource, objects);
         this.activity = context;
-        this.lstTypeTravail= objects;
+        this.listBudget = objects;
         chargerNbAction();
     }
 
+    public List<T> getListBudget() {
+        return listBudget;
+    }
 
-    @Override
-    public int getCount() {
-        return lstTypeTravail.size();
+    public void setLstNbActionsRealisees(ArrayList<Integer> lstNbActionsRealisees) {
+        this.lstNbActionsRealisees = lstNbActionsRealisees;
+    }
+
+    public void setLstNbActions(ArrayList<Integer> lstNbActions) {
+        this.lstNbActions = lstNbActions;
+    }
+
+    public void addActionsRealisees(Integer integer) {
+        lstNbActionsRealisees.add(integer);
+    }
+
+    public void addActions(Integer integer) {
+        lstNbActions.add(integer);
     }
 
     @Override
-    public String getItem(int position) {
-        return lstTypeTravail.get(position);
+    public int getCount() {
+        return listBudget.size();
+    }
+
+    @Override
+    public T getItem(int position) {
+        return listBudget.get(position);
     }
 
     @Override
@@ -52,20 +69,20 @@ public class AdapterBudgetType extends ArrayAdapter<String> {
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        AdapterBudgetType.ViewHolder holder;
+        AbstractAdapterBudget.ViewHolder holder;
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
         // on récupère la vue à laquelle doit être ajouter l'image
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.lst_view_budget, parent, false);
-            holder = new AdapterBudgetType.ViewHolder(convertView);
+            holder = new AbstractAdapterBudget.ViewHolder(convertView);
             convertView.setTag(holder);
         } else {
-            holder = (AdapterBudgetType.ViewHolder) convertView.getTag();
+            holder = (AbstractAdapterBudget.ViewHolder) convertView.getTag();
         }
 
         // on définit le texte à afficher
-        holder.type.setText(getItem(position).toString());
+        holder.domaine.setText(getItem(position).toString());
 
         int nbActionsRealisees = Integer.valueOf(this.lstNbActionsRealisees.get(position));
         int nbActionsTot = Integer.valueOf(this.lstNbActions.get(position));
@@ -76,43 +93,18 @@ public class AdapterBudgetType extends ArrayAdapter<String> {
         return convertView;
     }
 
-    private void chargerNbAction(){
-        this.lstNbActions = new ArrayList<>();
-        this.lstNbActionsRealisees = new ArrayList<>();
-        HashMap<String, Integer> results= DaoAction.getBudgetTotalByActionRealiseeGroupByTypeTravail();;
-        if(results.size()>0){
-            for(String t : this.lstTypeTravail){
-                if(results.get(t)!=null) {
-                    this.lstNbActionsRealisees.add(results.get(t));
-                }else{
-                    this.lstNbActionsRealisees.add(0);
-                }
-            }
+    protected abstract void chargerNbAction();
 
-        }
-
-        results= DaoAction.getBudgetTotalByActionTotalGroupByTypeTravail();
-        if(results.size()>0){
-            for(String t : this.lstTypeTravail){
-                if(results.get(t)!=null) {
-                    this.lstNbActions.add(results.get(t));
-                }else{
-                    this.lstNbActions.add(0);
-                }
-            }
-
-        }
-    }
-
-    private class ViewHolder {
-        private TextView type;
+    class ViewHolder {
+        private TextView domaine;
         private TextView nbActionRealisees;
         private ProgressBar avancement;
 
         public ViewHolder(View v) {
-            type = (TextView) v.findViewById(R.id.typeAffiche);
+            domaine = (TextView) v.findViewById(R.id.typeAffiche);
             nbActionRealisees = (TextView) v.findViewById(R.id.nbActionRealisees);
             avancement = (ProgressBar) v.findViewById(R.id.progress_bar_budget);
         }
     }
+
 }
