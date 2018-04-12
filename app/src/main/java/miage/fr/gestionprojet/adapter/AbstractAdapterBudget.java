@@ -34,7 +34,15 @@ public abstract class AbstractAdapterBudget<T> extends ArrayAdapter<T> {
     }
 
     public List<T> getListBudget() {
-        return listBudget;
+        return this.listBudget;
+    }
+
+    public List<Integer> getActionsRealisees() {
+        return this.lstNbActionsRealisees;
+    }
+
+    public List<Integer> getActions() {
+        return this.lstNbActions;
     }
 
     public void setLstNbActionsRealisees(ArrayList<Integer> lstNbActionsRealisees) {
@@ -49,8 +57,16 @@ public abstract class AbstractAdapterBudget<T> extends ArrayAdapter<T> {
         lstNbActionsRealisees.add(integer);
     }
 
+    public void addActionsRealisees(int indice, Integer integer) {
+        lstNbActionsRealisees.add(indice, integer);
+    }
+
     public void addActions(Integer integer) {
         lstNbActions.add(integer);
+    }
+
+    public void addActions(int indice, Integer integer) {
+        lstNbActions.add(indice, integer);
     }
 
     @Override
