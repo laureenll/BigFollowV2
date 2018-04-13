@@ -25,7 +25,10 @@ public class Outils {
     }
 
     public static long dureeEntreDeuxDate(Date dateInf, Date datePost){
-        long duree = datePost.getTime() - dateInf.getTime();
+        long duree = 1;
+        if (dateInf != null && datePost != null) {
+            duree = datePost.getTime() - dateInf.getTime();
+        }
         long numberOfDay = duree/CONST_DURATION_OF_DAY;
         return numberOfDay;
     }

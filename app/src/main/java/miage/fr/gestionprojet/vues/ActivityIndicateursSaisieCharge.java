@@ -147,7 +147,8 @@ public class ActivityIndicateursSaisieCharge extends AppCompatActivity {
         Menu menu = pMenu.getMenu();
         if(type.equalsIgnoreCase("domaine")){
             pMenu.getMenuInflater().inflate(R.menu.popup_menu_domaine,menu);
-            pMenu.setGravity(Gravity.CENTER);
+            pMenu.setGravity(Gravity.END);
+
             ArrayList<Domaine> doms = getDomainesAffiches();
             for(Domaine d : doms){
                 menu.add(0, (int)(long)d.getId(), 0, d.getNom());
@@ -168,7 +169,7 @@ public class ActivityIndicateursSaisieCharge extends AppCompatActivity {
 
         if(type.equalsIgnoreCase("utilisateurs")){
             pMenu.getMenuInflater().inflate(R.menu.popup_menu_utilisateur,menu);
-            pMenu.setGravity(Gravity.CENTER);
+            pMenu.setGravity(Gravity.END);
             ArrayList<Ressource> res = getRessourcesAffiches();
             for(Ressource r : res){
                 if (r != null && r.getId() != null && !r.getInitiales().equals("")) {

@@ -62,12 +62,15 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
             TextView txtDateDeb = (TextView) findViewById(R.id.txtDtDeb);
             TextView txtDateFin = (TextView) findViewById(R.id.txtDtFin);
             DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-            txtDateDeb.setText(df.format(saisieCharge.getAction().getDtDeb()));
-            txtDateFin.setText(df.format(saisieCharge.getAction().getDtFinPrevue()));
+            txtDateDeb.setText(df.format(saisieCharge.getAction().getDtDeb() != null ? saisieCharge.getAction().getDtDeb() : ""));
+            txtDateFin.setText(df.format(saisieCharge.getAction().getDtFinPrevue() != null ? saisieCharge.getAction().getDtFinPrevue() : ""));
 
             ProgressBar progressBarDate = (ProgressBar) findViewById(R.id.progressBarDate);
             Calendar c = Calendar.getInstance();
-            int progress = Outils.calculerPourcentage(c.getTimeInMillis()-saisieCharge.getAction().getDtDeb().getTime(),saisieCharge.getAction().getDtFinPrevue().getTime()-saisieCharge.getAction().getDtDeb().getTime());
+            int progress = 0;
+            if (saisieCharge.getAction().getDtDeb() != null && saisieCharge.getAction().getDtFinPrevue() != null) {
+                progress = Outils.calculerPourcentage(c.getTimeInMillis()-saisieCharge.getAction().getDtDeb().getTime(),saisieCharge.getAction().getDtFinPrevue().getTime()-saisieCharge.getAction().getDtDeb().getTime());
+            }
             progressBarDate.setProgress(progress);
 
             ListView lstViewIndicateur = (ListView) findViewById(R.id.ListViewDetailsSaisieCharge);

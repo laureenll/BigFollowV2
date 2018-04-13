@@ -17,7 +17,7 @@ public class DaoProjet {
     public static List<Projet> getProjetEnCours(Date dateDuJour){
         return new Select()
                 .from(Projet.class)
-                .where("date_fin_initiale>? or date_fin_reelle>?", dateDuJour.getTime(),dateDuJour.getTime())
+                .where("date_fin_initiale is null or date_fin_initiale>? or date_fin_reelle is null or date_fin_reelle>?", dateDuJour.getTime(),dateDuJour.getTime())
                 .execute();
     }
 
@@ -40,7 +40,7 @@ public class DaoProjet {
                 .execute();
         for (Action action :fetch) {
             Date dtFinPrevue = action.getDtFinPrevue();
-            if (dateFinPrevue == null) {
+            if (dateFinPrevue == null || dtFinPrevue == null) {
                 dateFinPrevue = dtFinPrevue;
             } else if (dateFinPrevue.compareTo(dtFinPrevue) == 0){
                 dateFinPrevue = dtFinPrevue;
@@ -60,7 +60,7 @@ public class DaoProjet {
                 .execute();
         for (Action action :fetch) {
             Date dtDebut = action.getDtDeb();
-            if (dateDebutPrevue == null) {
+            if (dateDebutPrevue == null || dtDebut == null) {
                 dateDebutPrevue = dtDebut;
             } else if (dtDebut.compareTo(dateDebutPrevue) == 0){
                 dateDebutPrevue = dtDebut;

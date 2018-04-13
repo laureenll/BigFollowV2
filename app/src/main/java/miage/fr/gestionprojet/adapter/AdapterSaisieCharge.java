@@ -1,5 +1,6 @@
 package miage.fr.gestionprojet.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,8 +89,10 @@ public class AdapterSaisieCharge extends ArrayAdapter<SaisieCharge>{
         Mesure mesure = dao.getLastMesureBySaisieCharge(getItem(position).getId());
         holder.avancement.setProgress(Outils.calculerPourcentage(mesure.getNbUnitesMesures(),getItem(position).getNbUnitesCibles()));
 
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        holder.date.setText(df.format(getItem(position).getAction().getDtFinPrevue()));
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        if (getItem(position).getAction().getDtFinPrevue() != null) {
+            holder.date.setText(df.format(getItem(position).getAction().getDtFinPrevue()));
+        }
         return convertView;
     }
 

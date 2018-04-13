@@ -524,12 +524,10 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             Date resultat;
             if (s.equals("") || s.equals(null) || s.equals("NON PREVU")) {
-                resultat = sdf.parse("00/00/0000");
-
+                resultat = null;
             } else {
                 resultat = sdf.parse(s);
             }
-            ;
             return resultat;
         }
 
@@ -669,7 +667,6 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                 action.setTypeFacturation(row.get(7).toString());
                 action.setNbJoursPrevus(chainetofloat(row.get(8).toString()));
                 action.setCoutParJour(chainetofloat(row.get(11).toString()));
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
                 Date datedebut = chainetoDate(row.get(9).toString());
                 Date datefin = chainetoDate(row.get(10).toString());
                 action.setDtDeb(datedebut);
