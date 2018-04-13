@@ -171,7 +171,9 @@ public class ActivityIndicateursSaisieCharge extends AppCompatActivity {
             pMenu.setGravity(Gravity.CENTER);
             ArrayList<Ressource> res = getRessourcesAffiches();
             for(Ressource r : res){
-                menu.add(0, (int)(long)r.getId(), 0, r.getInitiales());
+                if (r != null && r.getId() != null && !r.getInitiales().equals("")) {
+                    menu.add(0, (int)(long)r.getId(), 0, r.getInitiales());
+                }
             }
             pMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override

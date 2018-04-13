@@ -41,7 +41,7 @@ public class DaoSaisieCharge {
             if(a.getTypeTravail().equalsIgnoreCase("Saisie")||a.getTypeTravail().equalsIgnoreCase("Test")) {
                 SaisieCharge result = new Select()
                         .from(SaisieCharge.class)
-                        .where("domaine=?", a.getId())
+                        .where("action=?", a.getId())
                         .executeSingle();
                 lst.add(result);
             }
