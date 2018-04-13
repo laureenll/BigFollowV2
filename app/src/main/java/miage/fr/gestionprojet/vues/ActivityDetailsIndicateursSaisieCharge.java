@@ -125,6 +125,7 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
 
     private void createEditButton() {
         Button editButton = (Button) findViewById(R.id.button_edition_saisie);
+        editButton.setText("Editer la saisie");
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
