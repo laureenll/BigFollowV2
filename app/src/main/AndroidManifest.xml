@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <meta-data android:name="AA_DB_NAME" android:value="AppDatabase" />
-        <meta-data android:name="AA_DB_VERSION" android:value="5" />
+        <meta-data android:name="AA_DB_VERSION" android:value="6" />
         <meta-data
             android:name="AA_MODELS"
             android:value="miage.fr.gestionprojet.models.Action,
@@ -35,11 +35,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".vues.ActionsActivity"
+        <activity
+            android:name=".vues.ActionsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar" />
-
-        <activity android:name=".vues.FormationActivity"
+        <activity
+            android:name=".vues.FormationActivity"
             android:theme="@style/AppTheme.PopupCustomTheme" />
         <activity android:name=".vues.ChargementDonnees" />
         <activity android:name=".vues.MainActivity" />
@@ -50,7 +51,7 @@
         <activity android:name=".vues.ActivityMesures" />
         <activity android:name=".vues.ActivityBudget" />
         <activity android:name=".vues.FormationsActivity" />
-
+        <activity android:name=".vues.ActivityRestitution"></activity>
     </application>
 
 </manifest>

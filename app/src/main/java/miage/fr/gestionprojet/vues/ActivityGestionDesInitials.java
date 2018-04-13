@@ -38,6 +38,14 @@ public class ActivityGestionDesInitials extends AppCompatActivity {
 
         //on récupère la liste des ressources
         lstRessourceInitials = DaoRessource.loadAll();
+        // liste de ressources tmp
+        List<Ressource> listeTmpRessources = new ArrayList<>();
+        for (Ressource ressource :lstRessourceInitials) {
+            if (!ressource.getInitiales().equals("")) {
+                listeTmpRessources.add(ressource);
+            }
+        }
+        lstRessourceInitials = listeTmpRessources;
         liste = (ListView) findViewById(R.id.listViewInitials);
 
         // si le nombre de ressource est supérieur à 1 on affiche une liste

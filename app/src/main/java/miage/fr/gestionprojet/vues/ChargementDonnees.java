@@ -46,6 +46,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import miage.fr.gestionprojet.models.Action;
 import miage.fr.gestionprojet.models.Domaine;
@@ -577,18 +578,19 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             new Delete().from(Ressource.class).execute();
 
             for (List row : values) {
-                Ressource resource = new Ressource();
-                resource.setNom(row.get(2).toString());
-                resource.setEmail(row.get(5).toString());
-                resource.setEntreprise(row.get(3).toString());
-                resource.setFonction(row.get(4).toString());
-                resource.setInformationsDiverses(row.get(8).toString());
-                resource.setInitiales(row.get(0).toString());
-                resource.setPrenom(row.get(1).toString());
-                resource.setTelephoneFixe(row.get(6).toString());
-                resource.setTelephoneMobile(row.get(7).toString());
-                resource.save();
-                //Insert.into(Ressource.class).columns("initiales", "nom", "prenom", "entreprise", "fonction", "email", "telephone_fixe", "telephone_mobile", "informations_diverses").values(resource.getInitiales(),resource.getNom(), resource.getPrenom(), resource.getEntreprise(), resource.getFonction(), resource.getEmail(), resource.getTelephoneFixe(), resource.getTelephoneMobile(), resource.getInformationsDiverses()).execute();
+                if (!Objects.equals(row.get(0).toString(), "")) {
+                    Ressource resource = new Ressource();
+                    resource.setNom(row.get(2).toString());
+                    resource.setEmail(row.get(5).toString());
+                    resource.setEntreprise(row.get(3).toString());
+                    resource.setFonction(row.get(4).toString());
+                    resource.setInformationsDiverses(row.get(8).toString());
+                    resource.setInitiales(row.get(0).toString());
+                    resource.setPrenom(row.get(1).toString());
+                    resource.setTelephoneFixe(row.get(6).toString());
+                    resource.setTelephoneMobile(row.get(7).toString());
+                    resource.save();
+                }
             }
         }
 
