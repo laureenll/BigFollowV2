@@ -66,9 +66,12 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
             TextView txtDateDeb = (TextView) findViewById(R.id.txtDtDeb);
             TextView txtDateFin = (TextView) findViewById(R.id.txtDtFin);
             DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-            txtDateDeb.setText(df.format(saisieCharge.getAction().getDtDeb() != null ? saisieCharge.getAction().getDtDeb() : ""));
-            txtDateFin.setText(df.format(saisieCharge.getAction().getDtFinPrevue() != null ? saisieCharge.getAction().getDtFinPrevue() : ""));
-
+            if (saisieCharge.getAction().getDtDeb() != null) {
+                txtDateDeb.setText(df.format(saisieCharge.getAction().getDtDeb()));
+            }
+            if (saisieCharge.getAction().getDtFinPrevue() != null) {
+                txtDateFin.setText(df.format(saisieCharge.getAction().getDtFinPrevue()));
+            }
             ProgressBar progressBarDate = (ProgressBar) findViewById(R.id.progressBarDate);
             Calendar c = Calendar.getInstance();
             int progress = 0;
