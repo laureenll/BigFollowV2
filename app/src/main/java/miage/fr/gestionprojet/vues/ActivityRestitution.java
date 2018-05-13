@@ -1,5 +1,6 @@
 package miage.fr.gestionprojet.vues;
 
+import android.Manifest;
 import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
@@ -40,8 +41,10 @@ import miage.fr.gestionprojet.R;
 import miage.fr.gestionprojet.adapter.AdapterInitialesMultipleSelect;
 import miage.fr.gestionprojet.models.Ressource;
 import miage.fr.gestionprojet.models.dao.DaoRessource;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 
-public class ActivityRestitution extends AppCompatActivity {
+public class ActivityRestitution extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
 
     private String initialUtilisateur;
     public final static String EXTRA_INITIAL = "initial";
@@ -49,6 +52,7 @@ public class ActivityRestitution extends AppCompatActivity {
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
+    static final int REQUEST_PERMISSION_WRITE_STORAGE = 1002;
     public static String spreadsheetIdParDefaut= "10JKhVbqrwQ8oKufdBXRoSLN6hGIDqtOsbbIKsLfipO4";
     private GoogleAccountCredential credential;
     private AdapterInitialesMultipleSelect usersAdapter;
@@ -121,10 +125,21 @@ public class ActivityRestitution extends AppCompatActivity {
         }
     }
 
+    @AfterPermissionGranted(REQUEST_PERMISSION_WRITE_STORAGE)
     private void getPDFAndSendMail() {
         if (usersAdapter.getEmailSelected().size() == 0) {
             Toast.makeText(getBaseContext(), "Aucun destinataire selectionné", Toast.LENGTH_LONG).show();
             return;
+        }
+
+        if (!EasyPermissions.hasPermissions(
+                this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            // Request the GET_ACCOUNTS permission via a user dialog
+            EasyPermissions.requestPermissions(
+                    this,
+                    "This app needs to write to your external storage to format the pdf.",
+                    REQUEST_PERMISSION_WRITE_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
 
         if (credential.getSelectedAccountName() == null) {
@@ -158,6 +173,16 @@ public class ActivityRestitution extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.initial_utilisateur, menu);
         menu.findItem(R.id.initial_utilisateur).setTitle(initialUtilisateur);
         return true;
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+
     }
 
     private class DownloadPDFTask extends AsyncTask<Void, Void, File> {
