@@ -2,6 +2,7 @@ package miage.fr.gestionprojet.vues;
 
 import android.Manifest;
 import android.accounts.AccountManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -51,11 +52,14 @@ public class ActivityRestitution extends AppCompatActivity implements EasyPermis
 
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final int REQUEST_ACCOUNT_PICKER = 1000;
-    static final int REQUEST_AUTHORIZATION = 1001;
-    static final int REQUEST_PERMISSION_WRITE_STORAGE = 1002;
-    public static String spreadsheetIdParDefaut= "10JKhVbqrwQ8oKufdBXRoSLN6hGIDqtOsbbIKsLfipO4";
+    private static final int REQUEST_AUTHORIZATION = 1001;
+    private static final int REQUEST_PERMISSION_WRITE_STORAGE = 1002;
+    private static final String[] SCOPES = {DriveScopes.DRIVE, DriveScopes.DRIVE_FILE, DriveScopes.DRIVE_READONLY, SheetsScopes.SPREADSHEETS };
+    private static final String spreadsheetIdParDefaut= "10JKhVbqrwQ8oKufdBXRoSLN6hGIDqtOsbbIKsLfipO4";
     private GoogleAccountCredential credential;
     private AdapterInitialesMultipleSelect usersAdapter;
+    private ProgressDialog mProgress;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +97,9 @@ public class ActivityRestitution extends AppCompatActivity implements EasyPermis
             }
         });
 
-        final String[] SCOPES = {DriveScopes.DRIVE, DriveScopes.DRIVE_FILE, DriveScopes.DRIVE_READONLY, SheetsScopes.SPREADSHEETS };
+        mProgress = new ProgressDialog(this);
+        mProgress.setMessage("Chargement  ...");
+
         credential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
@@ -189,6 +195,11 @@ public class ActivityRestitution extends AppCompatActivity implements EasyPermis
         private Exception mLastError = null;
 
         @Override
+        protected void onPreExecute() {
+            mProgress.show();
+        }
+
+        @Override
         protected File doInBackground(Void... voids) {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             try {
@@ -229,6 +240,8 @@ public class ActivityRestitution extends AppCompatActivity implements EasyPermis
 
         @Override
         protected void onPostExecute(File file) {
+            mProgress.hide();
+
             if (file == null) {
                 Toast.makeText(getBaseContext(), "Une erreur est survenue", Toast.LENGTH_LONG).show();
             } else {
@@ -238,6 +251,8 @@ public class ActivityRestitution extends AppCompatActivity implements EasyPermis
 
         @Override
         protected void onCancelled() {
+            mProgress.hide();
+
             if (mLastError != null) {
                 if (mLastError instanceof UserRecoverableAuthIOException) {
                     startActivityForResult(
