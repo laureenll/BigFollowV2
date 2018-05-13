@@ -4,21 +4,23 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckedTextView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.google.android.gms.drive.Drive;
+
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import miage.fr.gestionprojet.R;
-import miage.fr.gestionprojet.adapter.AdapterInitiales;
 import miage.fr.gestionprojet.adapter.AdapterInitialesMultipleSelect;
-import miage.fr.gestionprojet.adapter.FormationsAdapter;
 import miage.fr.gestionprojet.models.Ressource;
 import miage.fr.gestionprojet.models.dao.DaoRessource;
 
@@ -28,8 +30,7 @@ public class ActivityRestitution extends AppCompatActivity {
     public final static String EXTRA_INITIAL = "initial";
     private ListView userList;
     private List<Ressource> allRessources;
-    private List<String> listeDestinataires = new ArrayList<>();
-    Intent intent ;
+
     public static String spreadsheetIdParDefaut= "10JKhVbqrwQ8oKufdBXRoSLN6hGIDqtOsbbIKsLfipO4";
 
     @Override
@@ -43,7 +44,7 @@ public class ActivityRestitution extends AppCompatActivity {
         allRessources = DaoRessource.loadAll();
         List<Ressource> listeTmp = new ArrayList<>();
         for (Ressource ressource : allRessources) {
-            if (!ressource.getInitiales().equals("")) {
+            if (!ressource.getInitiales().isEmpty() && !ressource.getEmail().isEmpty()) {
                 listeTmp.add(ressource);
             }
         }
@@ -52,23 +53,6 @@ public class ActivityRestitution extends AppCompatActivity {
         userList.setAdapter(usersAdapter);
         usersAdapter.notifyDataSetChanged();
         System.out.println("remplissage de la liste");
-
-        userList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                View viewById = view.findViewById(R.id.checkedTextView);
-                if (viewById.getVisibility() == View.VISIBLE) {
-                    viewById.setVisibility(View.GONE);
-                    listeDestinataires.remove(position);
-                } else {
-                    viewById.setVisibility(View.VISIBLE);
-                    listeDestinataires.add(allRessources.get(position).getEmail());
-                }
-
-
-            }
-        });
 
         Button buttonLoadIdFileDefault = (Button) findViewById(R.id.buttonIdParDefaut);
         buttonLoadIdFileDefault.setOnClickListener(new View.OnClickListener() {
@@ -81,9 +65,13 @@ public class ActivityRestitution extends AppCompatActivity {
         Button buttonSendEmail = (Button) findViewById(R.id.buttonSendMail);
         buttonSendEmail.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                intent = new Intent(Intent.ACTION_SEND);
-
-                intent.putExtra(Intent.EXTRA_EMAIL, listeDestinataires.toArray());
+                if (usersAdapter.getEmailSelected().size() == 0) {
+                    Toast.makeText(getBaseContext(), "Aucun destinataire selectionné", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                final String[] listeEmail = usersAdapter.getEmailSelected().toArray(new String[0]);
+                intent.putExtra(Intent.EXTRA_EMAIL, listeEmail);
                 intent.putExtra(Intent.EXTRA_SUBJECT, "test");
                 intent.putExtra(Intent.EXTRA_TEXT, spreadsheetIdParDefaut);
 
@@ -93,6 +81,14 @@ public class ActivityRestitution extends AppCompatActivity {
             }
         });
     }
+
+    /*public void exportSpreadsheet() {
+        OutputStream outputStream = new ByteArrayOutputStream();
+        Drive driveService = new Drive.Builder(TRANSPORT, JSON_FACTORY, credential).build();
+        driveService.files().export(spreadsheetIdParDefaut, "application/pdf")
+                .executeMediaAndDownloadTo(outputStream);
+
+    }*/
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.initial_utilisateur, menu);

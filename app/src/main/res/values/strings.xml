@@ -10,4 +10,5 @@
     <string name="signIn">Se Connecter</string>
     <string name="title_activity_actions">ActionsActivity</string>
     <string name="title_activity_formations">FormationsActivity</string>
+    <string name="row">row</string>
 </resources>

@@ -12,24 +12,28 @@
 
         <ImageView
             android:id="@+id/icon_ttravail"
-            android:layout_width="40dp"
+            android:layout_width="120dp"
             android:layout_height="40dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="6dp"
-            android:layout_marginTop="25dp"
-            android:contentDescription="row"
-            android:textAlignment="center"></ImageView>
-
-        <CheckedTextView
-            android:id="@+id/checkedTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="Destinataire"
-            android:textAlignment="textEnd"
-            android:visibility="invisible" />
+            android:contentDescription="@string/row"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/emailText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical" />
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:gravity="right|center_vertical" />
 
     </LinearLayout>
 
