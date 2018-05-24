@@ -84,4 +84,9 @@ public class EtapeFormation extends Model {
     public void setObjectifAtteint(boolean objectifAtteint) {
         this.objectifAtteint = objectifAtteint;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
 }

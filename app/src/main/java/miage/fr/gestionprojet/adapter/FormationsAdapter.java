@@ -14,7 +14,6 @@ import java.util.List;
 
 import miage.fr.gestionprojet.R;
 import miage.fr.gestionprojet.models.Formation;
-import miage.fr.gestionprojet.models.SaisieCharge;
 import miage.fr.gestionprojet.vues.FormationsActivity;
 
 /**
@@ -80,11 +79,11 @@ public class FormationsAdapter extends ArrayAdapter<Formation> {
         public FormationViewHolder(View itemView) {
             super(itemView);
 
-            formationName = (TextView) itemView.findViewById(R.id.formationName);
-            formationPhase = (TextView) itemView.findViewById(R.id.formationPhase);
-            formationPercentage = (TextView) itemView.findViewById(R.id.formationPercentage);
-            formationProgressBar = (ProgressBar) itemView.findViewById(R.id.formationProgressBar);
-            formationContainer = (LinearLayout) itemView.findViewById(R.id.formationContainer);
+            formationName = itemView.findViewById(R.id.formationName);
+            formationPhase =  itemView.findViewById(R.id.formationPhase);
+            formationPercentage =  itemView.findViewById(R.id.formationPercentage);
+            formationProgressBar =  itemView.findViewById(R.id.formationProgressBar);
+            formationContainer =  itemView.findViewById(R.id.formationContainer);
         }
     }
 }

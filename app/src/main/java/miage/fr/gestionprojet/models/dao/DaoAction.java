@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import miage.fr.gestionprojet.models.Action;
 import miage.fr.gestionprojet.models.Domaine;
@@ -19,6 +20,9 @@ import miage.fr.gestionprojet.models.Projet;
  */
 
 public class DaoAction {
+    private DaoAction() {
+    }
+
     public static List<Action> loadActionsByCode(String code) {
         //getAll
         return new Select().from(Action.class)
@@ -119,7 +123,7 @@ public class DaoAction {
         return lstResult;
     }
 
-    public static HashMap<String,Integer> getBudgetTotalByActionTotalGroupByDomaine(){
+    public static Map<String,Integer> getBudgetTotalByActionTotalGroupByDomaine(){
         Cursor c = ActiveAndroid
                 .getDatabase()
                 .rawQuery("SELECT SUM(cout_par_pour * nb_jours_prevus) as somme_cout_par_jour,domaine FROM 'Action' GROUP BY domaine", null);
@@ -138,7 +142,7 @@ public class DaoAction {
 
 
 
-    public static HashMap<String,Integer> getBudgetTotalByActionRealiseeGroupByTypeTravail(){
+    public static Map<String,Integer> getBudgetTotalByActionRealiseeGroupByTypeTravail(){
         Cursor c = ActiveAndroid
                 .getDatabase()
                 .rawQuery("SELECT SUM(cout_par_pour * nb_jours_prevus) as somme_cout_par_jour,typeTravail FROM 'Action' WHERE reste_a_faire=0 GROUP BY typeTravail", null);
@@ -155,7 +159,7 @@ public class DaoAction {
         return lstResult;
     }
 
-    public static HashMap<String,Integer> getBudgetTotalByActionTotalGroupByTypeTravail(){
+    public static Map<String,Integer> getBudgetTotalByActionTotalGroupByTypeTravail(){
         Cursor c = ActiveAndroid
                 .getDatabase()
                 .rawQuery("SELECT SUM(cout_par_pour * nb_jours_prevus) as somme_cout_par_jour,typeTravail FROM 'Action' GROUP BY typeTravail", null);
@@ -172,7 +176,7 @@ public class DaoAction {
         return lstResult;
     }
 
-    public static HashMap<String,Integer> getBudgetTotalByActionRealiseeGroupByActions(){
+    public static Map<String,Integer> getBudgetTotalByActionRealiseeGroupByActions(){
         Cursor c = ActiveAndroid
                 .getDatabase()
                 .rawQuery("SELECT SUM(cout_par_pour * nb_jours_prevus) as somme_cout_par_jour,code FROM 'Action' WHERE reste_a_faire=0 GROUP BY code", null);
@@ -189,7 +193,7 @@ public class DaoAction {
         return lstResult;
     }
 
-    public static HashMap<String,Integer> getBudgetTotalByActionTotalGroupByActions(){
+    public static Map<String,Integer> getBudgetTotalByActionTotalGroupByActions(){
         Cursor c = ActiveAndroid
                 .getDatabase()
                 .rawQuery("SELECT SUM(cout_par_pour * nb_jours_prevus) as somme_cout_par_jour,code FROM 'Action' GROUP BY code", null);
@@ -240,7 +244,7 @@ public class DaoAction {
         return lstResults;
     }
 
-    public static HashMap<String,Integer> getBudgetTotalByActionRealiseeGroupByUtilisateurOeu(){
+    public static Map<String,Integer> getBudgetTotalByActionRealiseeGroupByUtilisateurOeu(){
         Cursor c = ActiveAndroid
                 .getDatabase()
                 .rawQuery("SELECT SUM(cout_par_pour * nb_jours_prevus) as somme_cout_par_jour,resp_oeu FROM 'Action' WHERE reste_a_faire=0 GROUP BY resp_oeu", null);
@@ -257,7 +261,7 @@ public class DaoAction {
         return lstResult;
     }
 
-    public static HashMap<String,Integer> getBudgetTotalByActionTotalGroupByUtilisateurOeu(){
+    public static Map<String,Integer> getBudgetTotalByActionTotalGroupByUtilisateurOeu(){
         Cursor c = ActiveAndroid
                 .getDatabase()
                 .rawQuery("SELECT SUM(cout_par_pour * nb_jours_prevus) as somme_cout_par_jour,resp_oeu FROM 'Action' GROUP BY resp_oeu", null);
@@ -274,7 +278,7 @@ public class DaoAction {
         return lstResult;
     }
 
-    public static HashMap<String,Integer> getBudgetTotalByActionRealiseeGroupByUtilisateurOuv(){
+    public static Map<String,Integer> getBudgetTotalByActionRealiseeGroupByUtilisateurOuv(){
         Cursor c = ActiveAndroid
                 .getDatabase()
                 .rawQuery("SELECT SUM(cout_par_pour * nb_jours_prevus) as somme_cout_par_jour,resp_ouv FROM 'Action' WHERE reste_a_faire=0 GROUP BY resp_ouv", null);
@@ -291,7 +295,7 @@ public class DaoAction {
         return lstResult;
     }
 
-    public static HashMap<String,Integer> getBudgetTotalByActionTotalGroupByUtilisateurOuv(){
+    public static Map<String,Integer> getBudgetTotalByActionTotalGroupByUtilisateurOuv(){
         Cursor c = ActiveAndroid
                 .getDatabase()
                 .rawQuery("SELECT SUM(cout_par_pour * nb_jours_prevus) as somme_cout_par_jour,resp_ouv FROM 'Action' GROUP BY resp_ouv", null);

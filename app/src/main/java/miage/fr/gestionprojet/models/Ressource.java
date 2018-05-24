@@ -37,7 +37,7 @@ public class Ressource extends Model {
     private String telephoneMobile;
 
     @Column(name="informations_diverses")
-    private String InformationsDiverses;
+    private String informationsDiverses;
 
     public Ressource() {
         super();
@@ -112,15 +112,20 @@ public class Ressource extends Model {
     }
 
     public String getInformationsDiverses() {
-        return InformationsDiverses;
+        return this.informationsDiverses;
     }
 
     public void setInformationsDiverses(String informationsDiverses) {
-        InformationsDiverses = informationsDiverses;
+        this.informationsDiverses = informationsDiverses;
     }
 
     @Override
     public String toString() {
         return this.initiales + "  " + this.prenom + " " + this.nom;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
 }

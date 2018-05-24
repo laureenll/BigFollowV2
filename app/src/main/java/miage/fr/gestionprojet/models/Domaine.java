@@ -73,6 +73,11 @@ public class Domaine extends Model {
     public String toString() {
         return this.nom.toUpperCase();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
 }
 
 

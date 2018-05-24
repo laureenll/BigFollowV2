@@ -12,6 +12,9 @@ import miage.fr.gestionprojet.models.Mesure;
 
 public class DaoMesure {
 
+    private DaoMesure() {
+    }
+
     public static Mesure getLastMesureBySaisieCharge(long idSaisieCharge){
         List<Mesure> lstMesures =
                 new Select()
@@ -19,7 +22,7 @@ public class DaoMesure {
                 .where("action=?", idSaisieCharge)
                 .orderBy("dt_mesure DESC")
                 .execute();
-        if (lstMesures.size() > 0) {
+        if (!lstMesures.isEmpty()) {
             return  lstMesures.get(0);
         } else {
             return new Mesure();

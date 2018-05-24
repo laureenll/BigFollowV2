@@ -15,8 +15,6 @@ import java.util.List;
 
 import miage.fr.gestionprojet.R;
 import miage.fr.gestionprojet.models.Ressource;
-import miage.fr.gestionprojet.vues.ActivityGestionDesInitials;
-import miage.fr.gestionprojet.vues.ActivityRestitution;
 
 /**
  * Created by gamouzou on 04/05/2017.
@@ -69,7 +67,6 @@ public class AdapterInitiales extends ArrayAdapter<Ressource> {
         ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
         // generate random color
         int color = generator.getColor(getItem(position));
-        //int color = generator.getRandomColor();
 
         TextDrawable drawable = TextDrawable.builder()
                 .buildRound(firstLetter, color); // radius in px
@@ -84,7 +81,7 @@ public class AdapterInitiales extends ArrayAdapter<Ressource> {
         private ImageView imageView;
 
         public ViewHolder(View v) {
-            imageView = (ImageView) v.findViewById(R.id.icon_ttravail);
+            imageView = v.findViewById(R.id.icon_ttravail);
         }
     }
 

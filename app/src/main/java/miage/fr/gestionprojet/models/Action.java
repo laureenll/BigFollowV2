@@ -48,13 +48,10 @@ public class Action extends Model {
     private float coutParJour;
 
     @Column(name="resp_oeu", onDelete = Column.ForeignKeyAction.CASCADE)
-    private Ressource RespOeu;
+    private Ressource respOeu;
 
     @Column(name="resp_ouv", onDelete = Column.ForeignKeyAction.CASCADE)
-    private Ressource RespOuv;
-
-    //@Column(name="utilisateurs_ouv")
-   // private ArrayList<Ressource> lstUtilisateursOuv;
+    private Ressource respOuv;
 
     @Column(name="dt_debut")
     private Date dtDeb;
@@ -152,28 +149,21 @@ public class Action extends Model {
         this.coutParJour = coutParJour;
     }
     public Ressource getRespOeu() {
-        return RespOeu;
+        return respOeu;
     }
 
     public void setRespOeu(Ressource respOeu) {
-        RespOeu = respOeu;
+        this.respOeu = respOeu;
     }
 
     public Ressource getRespOuv() {
-        return RespOuv;
+        return respOuv;
     }
 
     public void setRespOuv(Ressource respOuv) {
-        RespOuv = respOuv;
+        this.respOuv = respOuv;
     }
 
-    /*public ArrayList<Ressource> getLstUtilisateursOuv() {
-        return lstUtilisateursOuv;
-    }
-
-    public void setLstUtilisateursOuv(ArrayList<Ressource> lstUtilisateursOuv) {
-        this.lstUtilisateursOuv = lstUtilisateursOuv;
-    }*/
     public Date getDtDeb() {
         return dtDeb;
     }
@@ -206,6 +196,7 @@ public class Action extends Model {
         this.domaine = domaine;
     }
 
+    @Override
     public String toString(){
         return this.code;
     }
@@ -218,7 +209,12 @@ public class Action extends Model {
         return ecartProjete;
     }
 
-    public void setResteAFaire(float p_RAF) {this.resteAFaire=p_RAF;}
+    public void setResteAFaire(float pRAF) {this.resteAFaire=pRAF;}
 
-    public void setEcartProjete(float p_ecart) {this.ecartProjete= p_ecart;}
+    public void setEcartProjete(float pEcart) {this.ecartProjete= pEcart;}
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
 }

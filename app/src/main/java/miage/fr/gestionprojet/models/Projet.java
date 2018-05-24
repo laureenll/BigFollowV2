@@ -100,4 +100,9 @@ public class Projet extends Model {
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         return this.nom+"            "+df.format(this.dateDebut)+"-"+df.format(this.dateFinReelle);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
 }

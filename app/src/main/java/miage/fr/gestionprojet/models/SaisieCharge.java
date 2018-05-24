@@ -53,8 +53,6 @@ public class SaisieCharge extends Model {
     @Column(name="prct_charge_faite_par_semaine_par_cahre_estimee")
     private float prctChargeFaiteParSemaineParChargeEstimee;
 
-    private List<Mesure> lstMesures;
-
     public SaisieCharge() {
         super();
     }
@@ -155,10 +153,7 @@ public class SaisieCharge extends Model {
         return new Select().from(Mesure.class).where("action = ?", getId()).execute();
     }
 
-    public void setLstMesures(List<Mesure> lstMesures) {
-      this.lstMesures = lstMesures;
-    }
-
+    @Override
     public String toString(){
         return this.action.getCode();
     }
@@ -169,5 +164,10 @@ public class SaisieCharge extends Model {
 
     public void setAction(Action action) {
         this.action = action;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
 }

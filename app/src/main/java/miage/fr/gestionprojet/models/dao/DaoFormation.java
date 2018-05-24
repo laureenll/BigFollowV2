@@ -16,6 +16,9 @@ import miage.fr.gestionprojet.models.Projet;
  */
 public class DaoFormation {
 
+    private DaoFormation() {
+    }
+
     public static List<Formation> getFormations() {
         return new Select().from(Formation.class).execute();
     }
@@ -42,7 +45,7 @@ public class DaoFormation {
                 }
             }
         }
-        if(lstFormation.size()>0){
+        if(!lstFormation.isEmpty()){
             avancementTotal /= lstFormation.size();
         }
         return avancementTotal;

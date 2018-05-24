@@ -12,6 +12,9 @@ import miage.fr.gestionprojet.models.Domaine;
 
 public class DaoDomaine {
 
+    private DaoDomaine() {
+    }
+
     public static List<Domaine> loadAll(){
         return new Select()
                 .from(Domaine.class)
@@ -23,7 +26,7 @@ public class DaoDomaine {
                 .from(Domaine.class)
                 .where("nom = ?",name)
                 .execute();
-        if(lst.size()>0){
+        if(!lst.isEmpty()){
             return lst.get(0);
         }else{
             return null;

@@ -73,7 +73,6 @@ public class AdapterInitialesMultipleSelect  extends ArrayAdapter<Ressource> {
             ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
             // generate random color
             int color = generator.getColor(item);
-            //int color = generator.getRandomColor();
 
             TextDrawable drawable = TextDrawable.builder()
                     .buildRound(firstLetter, color); // radius in px

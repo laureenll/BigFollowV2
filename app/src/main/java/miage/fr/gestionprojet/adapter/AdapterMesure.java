@@ -5,22 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.amulyakhare.textdrawable.TextDrawable;
-import com.amulyakhare.textdrawable.util.ColorGenerator;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 import miage.fr.gestionprojet.models.Mesure;
-import miage.fr.gestionprojet.models.dao.DaoMesure;
-import miage.fr.gestionprojet.vues.ActivityIndicateursSaisieCharge;
-import miage.fr.gestionprojet.outils.Outils;
 import miage.fr.gestionprojet.R;
-import miage.fr.gestionprojet.models.SaisieCharge;
 import miage.fr.gestionprojet.vues.ActivityMesures;
 
 /**
@@ -68,7 +59,7 @@ public class AdapterMesure extends ArrayAdapter<Mesure>{
         }
 
         // on définit le text à afficher
-        holder.nbUnite.setText("Nombre de saisies : "+String.valueOf(getItem(position).getNbUnitesMesures()));
+        holder.nbUnite.setText("Nombre de saisies : "+ getItem(position).getNbUnitesMesures());
 
 
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -81,8 +72,8 @@ public class AdapterMesure extends ArrayAdapter<Mesure>{
         private TextView date;
 
         public ViewHolder(View v) {
-            nbUnite = (TextView) v.findViewById(R.id.nbUnites);
-            date = (TextView) v.findViewById(R.id.dateMesure);
+            nbUnite =  v.findViewById(R.id.nbUnites);
+            date = v.findViewById(R.id.dateMesure);
         }
     }
 

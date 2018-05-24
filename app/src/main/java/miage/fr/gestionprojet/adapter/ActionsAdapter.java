@@ -56,7 +56,7 @@ public class ActionsAdapter extends RecyclerView.Adapter<ActionsAdapter.ActionVi
         int position = (int) view.getTag();
         Action action = actions.get(position);
         if(mListener != null)
-            mListener.SelectedAction(action);
+            mListener.selectedAction(action);
     }
 
     public static String getDateFormat(Long time){
@@ -73,15 +73,15 @@ public class ActionsAdapter extends RecyclerView.Adapter<ActionsAdapter.ActionVi
 
         public ActionViewHolder(View itemView) {
             super(itemView);
-            mPhasetextView = (TextView) itemView.findViewById(R.id.phase);
-            mNameTextView = (TextView) itemView.findViewById(R.id.name);
-            mDateTextView = (TextView) itemView.findViewById(R.id.date);
-            mDomaineTextView = (TextView) itemView.findViewById(R.id.domain);
-            mActionContainer = (LinearLayout) itemView.findViewById(R.id.actionContainer);
+            mPhasetextView = itemView.findViewById(R.id.phase);
+            mNameTextView = itemView.findViewById(R.id.name);
+            mDateTextView = itemView.findViewById(R.id.date);
+            mDomaineTextView = itemView.findViewById(R.id.domain);
+            mActionContainer = itemView.findViewById(R.id.actionContainer);
         }
     }
 
     public interface ActionClicked{
-        void SelectedAction(Action action);
+        void selectedAction(Action action);
     }
 }

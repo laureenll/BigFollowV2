@@ -90,5 +90,8 @@ public class Formation extends Model {
         this.action = action;
     }
 
-
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
 }

@@ -76,7 +76,6 @@ public class AdapterSaisieCharge extends ArrayAdapter<SaisieCharge>{
         ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
         // generate random color
         int color = generator.getColor(getItem(position));
-        //int color = generator.getRandomColor();
 
         TextDrawable drawable = TextDrawable.builder()
                 .buildRound(firstLetter, color); // radius in px
@@ -85,8 +84,7 @@ public class AdapterSaisieCharge extends ArrayAdapter<SaisieCharge>{
         holder.imageView.setImageDrawable(drawable);
 
         // on affiche l'état d'avancment du travail
-        DaoMesure dao = new DaoMesure();
-        Mesure mesure = dao.getLastMesureBySaisieCharge(getItem(position).getId());
+        Mesure mesure = DaoMesure.getLastMesureBySaisieCharge(getItem(position).getId());
         holder.avancement.setProgress(Outils.calculerPourcentage(mesure.getNbUnitesMesures(),getItem(position).getNbUnitesCibles()));
 
         @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -103,10 +101,10 @@ public class AdapterSaisieCharge extends ArrayAdapter<SaisieCharge>{
         private TextView date;
 
         public ViewHolder(View v) {
-            imageView = (ImageView) v.findViewById(R.id.icon_ttravail);
-            action = (TextView) v.findViewById(R.id.label);
-            avancement = (ProgressBar) v.findViewById(R.id.progress_bar_saisiecharge_crit);
-            date = (TextView) v.findViewById(R.id.textViewDateSaisieCharge);
+            imageView = v.findViewById(R.id.icon_ttravail);
+            action = v.findViewById(R.id.label);
+            avancement = v.findViewById(R.id.progress_bar_saisiecharge_crit);
+            date = v.findViewById(R.id.textViewDateSaisieCharge);
         }
     }
 

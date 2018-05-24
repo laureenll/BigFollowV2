@@ -14,7 +14,9 @@ import miage.fr.gestionprojet.models.Projet;
 
 public class DaoProjet {
 
-    //TODO à décommenter à la fin
+    private DaoProjet() {
+    }
+
     public static List<Projet> getProjetEnCours(Date dateDuJour){
         return new Select()
                 .from(Projet.class)
