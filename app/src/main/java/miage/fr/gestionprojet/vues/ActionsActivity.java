@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -67,6 +68,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
             idProjet = getIntent().getLongExtra(EXTRA_PROJET,0);
         }catch(Exception e){
             e.printStackTrace();
+            Log.e("error", e.getMessage(), e);
             finish();
         }
 
@@ -119,7 +121,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
                     dateSaisie = Outils.weekOfYearToDate(year,week);
                     refreshAdapter(DaoAction.loadActionsByDate(dateSaisie, idProjet));
                 }catch(Exception e){
-                    e.printStackTrace();
+                    Log.e("error", e.getMessage(), e);
                     yearEditText.setError("");
                 }
             }
@@ -142,7 +144,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
                     dateSaisie = Outils.weekOfYearToDate(year,week);
                     refreshAdapter(DaoAction.loadActionsByDate(dateSaisie, idProjet));
                 }catch(Exception e){
-                    e.printStackTrace();
+                    Log.e("error", e.getMessage(), e);
                     weekEditText.setError("");
                 }
             }

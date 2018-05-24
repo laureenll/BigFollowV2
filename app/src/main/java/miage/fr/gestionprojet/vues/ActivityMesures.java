@@ -19,7 +19,7 @@ import miage.fr.gestionprojet.models.dao.DaoSaisieCharge;
 public class ActivityMesures extends AppCompatActivity {
     public final static String EXTRA_INITIAL = "initial";
     public static final String EXTRA_SAISIECHARGE = "saisie charge";
-    public String initialUtilisateur =null;
+    private String initialUtilisateur =null;
     private SaisieCharge saisieCharge = null;
 
     @Override

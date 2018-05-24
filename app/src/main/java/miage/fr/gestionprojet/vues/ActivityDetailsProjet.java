@@ -38,7 +38,7 @@ public class ActivityDetailsProjet extends AppCompatActivity {
     public final static String EXTRA_INITIAL = "initial";
     private ArrayList <String> lstActions;
     private Projet proj;
-    public String initialUtilisateur =null;
+    private String initialUtilisateur =null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

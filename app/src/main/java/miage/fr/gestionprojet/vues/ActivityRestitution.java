@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -170,7 +171,7 @@ public class ActivityRestitution extends AppCompatActivity implements EasyPermis
 
             startActivity(Intent.createChooser(intent, "Select Email Sending App :"));
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("error", e.getMessage(), e);
             Toast.makeText(getBaseContext(), "Une erreur est survenue", Toast.LENGTH_LONG).show();
         }
     }
@@ -211,7 +212,7 @@ public class ActivityRestitution extends AppCompatActivity implements EasyPermis
                 Drive.Files.Export export = driveService.files().export(idSpreadSheet, "application/pdf");
                 export.executeMediaAndDownloadTo(outputStream);
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e("error", e.getMessage(), e);
                 mLastError = e;
                 cancel(true);
             }
@@ -226,14 +227,14 @@ public class ActivityRestitution extends AppCompatActivity implements EasyPermis
                 }
             } catch(IOException ioe) {
                 // Handle exception here
-                ioe.printStackTrace();
+                Log.e("error", ioe.getMessage(), ioe);
             } finally {
                 try {
                     if (fos != null) {
                         fos.close();
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.e("error", e.getMessage(), e);
                 }
             }
 

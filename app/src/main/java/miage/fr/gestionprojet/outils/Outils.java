@@ -10,11 +10,10 @@ import java.util.Date;
  */
 
 public class Outils {
-    public static long CONST_DURATION_OF_DAY = 1000l * 60 * 60 * 24;
+    private final static long CONST_DURATION_OF_DAY = 1000L * 60 * 60 * 24;
 
     public static int calculerPourcentage(double valeurReleve, double valeurCible){
-        int result = (int) ((valeurReleve/valeurCible)*100);
-        return result;
+        return (int) ((valeurReleve/valeurCible)*100);
     }
 
     public static Date weekOfYearToDate(int year, int week){
@@ -29,7 +28,6 @@ public class Outils {
         if (dateInf != null && datePost != null) {
             duree = datePost.getTime() - dateInf.getTime();
         }
-        long numberOfDay = duree/CONST_DURATION_OF_DAY;
-        return numberOfDay;
+        return duree/CONST_DURATION_OF_DAY;
     }
 }

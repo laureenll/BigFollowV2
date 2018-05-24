@@ -42,9 +42,9 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
 	public static final String EXTRA_SAISIECHARGE = "saisie charge";
 	public String initialUtilisateur = null;
 
-	public EditText editTxtSaisieName;
-	public EditText editTxtTypeName;
-	public EditText editTxtDomaineName;
+	private EditText editTxtSaisieName;
+	private EditText editTxtTypeName;
+	private EditText editTxtDomaineName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

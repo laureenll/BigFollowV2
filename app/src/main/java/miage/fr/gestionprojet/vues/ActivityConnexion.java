@@ -337,7 +337,6 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
                 new_icon = BitmapFactory.decodeStream(in_stream);
             } catch (Exception e) {
                 Log.e("Error", e.getMessage());
-                e.printStackTrace();
             }
             return new_icon;
         }
