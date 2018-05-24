@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.activeandroid.ActiveAndroid;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
 import java.text.DateFormat;
@@ -24,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import miage.fr.gestionprojet.models.Action;
+import miage.fr.gestionprojet.models.Domaine;
 import miage.fr.gestionprojet.models.Mesure;
 import miage.fr.gestionprojet.models.SaisieCharge;
 import miage.fr.gestionprojet.models.dao.DaoMesure;
@@ -38,6 +41,10 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
 	public final static String EXTRA_INITIAL = "initial";
 	public static final String EXTRA_SAISIECHARGE = "saisie charge";
 	public String initialUtilisateur = null;
+
+	public EditText editTxtSaisieName;
+	public EditText editTxtTypeName;
+	public EditText editTxtDomaineName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -147,22 +154,14 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
 				builder.setCancelable(true);
 				final String title = "Éditer la saisie " + saisieCharge.toString();
 				builder.setTitle(title);
-
 				LinearLayout layout = new LinearLayout(context);
 				layout.setOrientation(LinearLayout.VERTICAL);
-
-				createLayoutForPopup(layout, "Nom de la saisie :", saisieCharge.toString());
-				createLayoutForPopup(layout, "Type de la saisie :", saisieCharge.getAction()
-                        .getTypeTravail());
-				createLayoutForPopup(layout, "Domaine de la saisie :", saisieCharge.getAction()
-                        .getDomaine().getNom());
-
+				createPopup(layout);
 				builder.setView(layout);
-
 				builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-
+						onPopupClickConfirm();
 					}
 				});
 				builder.setNegativeButton(android.R.string.cancel, new DialogInterface
@@ -178,15 +177,39 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
 		});
 	}
 
-	private void createLayoutForPopup(LinearLayout layout,
-									  String textViewName,
-									  String editTextName) {
-		final TextView textView = new TextView(ActivityDetailsIndicateursSaisieCharge.this);
+	private void onPopupClickConfirm() {
+		ActiveAndroid.beginTransaction();
+		Action action = saisieCharge.getAction();
+		Domaine domaine = action.getDomaine();
+		domaine.setNom(editTxtDomaineName.getText().toString());
+		domaine.save();
+		action.setCode(editTxtSaisieName.getText().toString());
+		action.setTypeTravail(editTxtTypeName.getText().toString());
+		action.setDomaine(domaine);
+		action.save();
+		saisieCharge.setAction(action);
+		saisieCharge.save();
+		ActiveAndroid.setTransactionSuccessful();
+		ActiveAndroid.endTransaction();
+	}
+
+	private void createPopup(LinearLayout layout) {
+		editTxtSaisieName = new EditText(ActivityDetailsIndicateursSaisieCharge.this);
+		editTxtTypeName = new EditText(ActivityDetailsIndicateursSaisieCharge.this);
+		editTxtDomaineName = new EditText(ActivityDetailsIndicateursSaisieCharge.this);
+		editTxtSaisieName.setHint(saisieCharge.toString());
+		editTxtTypeName.setHint(saisieCharge.getAction().getTypeTravail());
+		editTxtDomaineName.setHint(saisieCharge.getAction().getDomaine().getNom());
+		createLayoutForPopup(layout, editTxtSaisieName, "Nom de la saisie :");
+		createLayoutForPopup(layout, editTxtTypeName, "Type de la saisie :");
+		createLayoutForPopup(layout, editTxtDomaineName, "Domaine de la saisie :");
+	}
+
+	private void createLayoutForPopup(LinearLayout layout,EditText editText,
+									  String textViewName) {
+		final TextView textView = new TextView(this);
 		textView.setText(textViewName);
 		layout.addView(textView);
-
-		final EditText editText = new EditText(ActivityDetailsIndicateursSaisieCharge.this);
-		editText.setHint(editTextName);
 		layout.addView(editText);
 	}
 

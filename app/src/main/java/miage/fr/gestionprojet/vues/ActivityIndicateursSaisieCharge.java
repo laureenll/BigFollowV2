@@ -86,6 +86,12 @@ public class ActivityIndicateursSaisieCharge extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+		refreshAdapter(lstSaisieCharge);
+    }
+
     //ajout du menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
