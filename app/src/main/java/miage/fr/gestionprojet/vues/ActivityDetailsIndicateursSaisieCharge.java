@@ -40,7 +40,7 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
 	private TextView txtSaisieCharge;
 	public static final String EXTRA_INITIAL = "initial";
 	public static final String EXTRA_SAISIECHARGE = "saisie charge";
-	public String initialUtilisateur = null;
+	private String initialUtilisateur = null;
 
 	private EditText editTxtSaisieName;
 	private EditText editTxtTypeName;
