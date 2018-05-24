@@ -87,9 +87,9 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
 			int progress = 0;
 			if (saisieCharge.getAction().getDtDeb() != null && saisieCharge.getAction()
                     .getDtFinPrevue() != null) {
-				progress = Outils.calculerPourcentage(c.getTimeInMillis() - saisieCharge.getAction
-                        ().getDtDeb().getTime(), saisieCharge.getAction().getDtFinPrevue()
-                        .getTime() - saisieCharge.getAction().getDtDeb().getTime());
+				progress = Outils.calculerPourcentage((double) c.getTimeInMillis() - (double) saisieCharge.getAction
+                        ().getDtDeb().getTime(), (double) saisieCharge.getAction().getDtFinPrevue()
+                        .getTime() - (double) saisieCharge.getAction().getDtDeb().getTime());
 			}
 			progressBarDate.setProgress(progress);
 

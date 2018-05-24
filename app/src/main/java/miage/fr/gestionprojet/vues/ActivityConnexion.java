@@ -327,6 +327,8 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
             this.bitmap_img = bitmap_img;
         }
 
+
+        @Override
         protected Bitmap doInBackground(String... urls) {
             String url = urls[0];
             Bitmap new_icon = null;

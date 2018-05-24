@@ -100,8 +100,8 @@ public abstract class AbstractAdapterBudget<T> extends ArrayAdapter<T> {
         // on définit le texte à afficher
         holder.domaine.setText(getItem(position).toString());
 
-        int nbActionsRealisees = Integer.valueOf(this.lstNbActionsRealisees.get(position));
-        int nbActionsTot = Integer.valueOf(this.lstNbActions.get(position));
+        int nbActionsRealisees = this.lstNbActionsRealisees.get(position);
+        int nbActionsTot = this.lstNbActions.get(position);
         String nbActions = nbActionsRealisees + " €" + " / " + nbActionsTot+" €";
         holder.nbActionRealisees.setText(nbActions);
 
@@ -117,9 +117,9 @@ public abstract class AbstractAdapterBudget<T> extends ArrayAdapter<T> {
         private ProgressBar avancement;
 
         public ViewHolder(View v) {
-            domaine = (TextView) v.findViewById(R.id.typeAffiche);
-            nbActionRealisees = (TextView) v.findViewById(R.id.nbActionRealisees);
-            avancement = (ProgressBar) v.findViewById(R.id.progress_bar_budget);
+            domaine = v.findViewById(R.id.typeAffiche);
+            nbActionRealisees = v.findViewById(R.id.nbActionRealisees);
+            avancement = v.findViewById(R.id.progress_bar_budget);
         }
     }
 

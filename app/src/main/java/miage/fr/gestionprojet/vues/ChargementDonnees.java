@@ -523,7 +523,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
         public Date chainetoDate(String s) throws ParseException {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             Date resultat;
-            if (s.equals("") || s.equals(null) || s.equals("NON PREVU")) {
+            if (s.equals("") || s.equals("NON PREVU")) {
                 resultat = null;
             } else {
                 resultat = sdf.parse(s);
