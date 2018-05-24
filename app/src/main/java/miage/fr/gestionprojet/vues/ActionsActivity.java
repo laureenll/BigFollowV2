@@ -67,7 +67,6 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
             initial = getIntent().getStringExtra(ActivityDetailsProjet.EXTRA_INITIAL);
             idProjet = getIntent().getLongExtra(EXTRA_PROJET,0);
         }catch(Exception e){
-            e.printStackTrace();
             Log.e("error", e.getMessage(), e);
             finish();
         }

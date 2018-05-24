@@ -38,7 +38,7 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
 
 	private SaisieCharge saisieCharge = null;
 	private TextView txtSaisieCharge;
-	public final static String EXTRA_INITIAL = "initial";
+	public static final String EXTRA_INITIAL = "initial";
 	public static final String EXTRA_SAISIECHARGE = "saisie charge";
 	public String initialUtilisateur = null;
 
