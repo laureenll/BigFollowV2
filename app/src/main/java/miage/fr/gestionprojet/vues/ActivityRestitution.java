@@ -206,7 +206,9 @@ public class ActivityRestitution extends AppCompatActivity implements EasyPermis
                 HttpTransport HTTP_TRANSPORT = AndroidHttp.newCompatibleTransport();
                 JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
                 Drive driveService = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).build();
-                Drive.Files.Export export = driveService.files().export(spreadsheetIdParDefaut, "application/pdf");
+                EditText inputFile = findViewById(R.id.editTextIdFile);
+                String idSpreadSheet = !inputFile.getText().toString().equals("") ? inputFile.getText().toString() : spreadsheetIdParDefaut;
+                Drive.Files.Export export = driveService.files().export(idSpreadSheet, "application/pdf");
                 export.executeMediaAndDownloadTo(outputStream);
             } catch (IOException e) {
                 e.printStackTrace();

@@ -39,30 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="5dp"
             android:layout_marginVertical="30dp"
-            android:text="Charger le fichier à envoyer" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textView8"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:text="Charger le fichier de restitution" />
-
-            <ImageButton
-                android:id="@+id/imageButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="8dp"
-                android:layout_weight="5"
-                app:srcCompat="@drawable/ic_action_update" />
-        </LinearLayout>
+            android:text="Choisir le fichier à envoyer" />
 
         <EditText
             android:id="@+id/editTextIdFile"
