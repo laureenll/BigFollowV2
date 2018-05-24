@@ -1,8 +1,8 @@
 package miage.fr.gestionprojet.adapter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import miage.fr.gestionprojet.models.Domaine;
 import miage.fr.gestionprojet.models.dao.DaoAction;
@@ -22,7 +22,7 @@ public class AdapterBudgetDomaine extends AbstractAdapterBudget<Domaine> {
     protected void chargerNbAction() {
         setLstNbActions(new ArrayList<Integer>());
         setLstNbActionsRealisees(new ArrayList<Integer>());
-        HashMap<String, Integer> results = DaoAction.getBudgetTotalByActionRealiseeGroupByDomaine();
+        Map<String, Integer> results = DaoAction.getBudgetTotalByActionRealiseeGroupByDomaine();
         if (results.size() > 0) {
             for (Domaine d : getListBudget()) {
                 if (results.get(String.valueOf(d.getId())) != null) {

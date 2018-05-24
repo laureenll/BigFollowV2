@@ -217,7 +217,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     @Override
-    public void SelectedAction(Action action) {
+    public void selectedAction(Action action) {
         showDialog(action);
     }
 

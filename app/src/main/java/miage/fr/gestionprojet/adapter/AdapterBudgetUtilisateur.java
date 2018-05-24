@@ -1,8 +1,8 @@
 package miage.fr.gestionprojet.adapter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import miage.fr.gestionprojet.models.Ressource;
 import miage.fr.gestionprojet.models.dao.DaoAction;
@@ -22,7 +22,7 @@ public class AdapterBudgetUtilisateur extends AbstractAdapterBudget<Ressource> {
     protected void chargerNbAction() {
         setLstNbActions(new ArrayList<Integer>());
         setLstNbActionsRealisees(new ArrayList<Integer>());
-        HashMap<String, Integer> results = DaoAction.getBudgetTotalByActionRealiseeGroupByUtilisateurOeu();
+        Map<String, Integer> results = DaoAction.getBudgetTotalByActionRealiseeGroupByUtilisateurOeu();
         if (results.size() > 0) {
             for (Ressource r : getListBudget()) {
                 if (results.get(String.valueOf(r.getId())) != null) {
