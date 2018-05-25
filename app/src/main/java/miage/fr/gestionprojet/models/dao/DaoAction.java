@@ -106,7 +106,7 @@ public class DaoAction {
                 .execute();
     }
 
-    public static HashMap<String,Integer> getBudgetTotalByActionRealiseeGroupByDomaine(){
+    public static Map<String,Integer> getBudgetTotalByActionRealiseeGroupByDomaine(){
         Cursor c = ActiveAndroid
                 .getDatabase()
                 .rawQuery("SELECT SUM(cout_par_pour * nb_jours_prevus) as somme_cout_par_jour,domaine FROM 'Action' WHERE reste_a_faire=0 GROUP BY domaine", null);

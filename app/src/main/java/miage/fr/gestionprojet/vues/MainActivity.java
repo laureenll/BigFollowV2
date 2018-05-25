@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import miage.fr.gestionprojet.R;
@@ -21,8 +20,6 @@ import miage.fr.gestionprojet.models.dao.DaoProjet;
 public class MainActivity  extends AppCompatActivity {
 
     public final static String EXTRA_PROJET = "projetChoisi";
-    //public final static String EXTRA_INITIAL = "initial";
-    private ListView liste = null;
     private List<Projet> lstProjets = null;
     private String initialUtilisateur = null;
 
@@ -36,12 +33,12 @@ public class MainActivity  extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //on récupère la liste des projet dont la date de fin n'est passée
-        lstProjets = DaoProjet.getProjetEnCours(new Date());
-        liste = (ListView) findViewById(R.id.listViewProjet);
+        lstProjets = DaoProjet.getProjetEnCours();
+        ListView liste = findViewById(R.id.listViewProjet);
 
         // si le nombre de projet en cours est supérieur à 1 on affiche une liste
         if(lstProjets.size()>1) {
-            final ArrayAdapter<Projet> adapter = new ArrayAdapter<Projet>(this, android.R.layout.simple_list_item_1, lstProjets);
+            final ArrayAdapter<Projet> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, lstProjets);
             liste.setAdapter(adapter);
 
             liste.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -75,6 +72,7 @@ public class MainActivity  extends AppCompatActivity {
 
     }
 
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.initial_utilisateur, menu);
         menu.findItem(R.id.initial_utilisateur).setTitle(initialUtilisateur);
@@ -84,7 +82,6 @@ public class MainActivity  extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
         switch(id){
             case R.id.initial_utilisateur:
                 return true;
@@ -93,7 +90,8 @@ public class MainActivity  extends AppCompatActivity {
                 intent.putExtra(ActivityGestionDesInitials.EXTRA_INITIAL, (initialUtilisateur));
                 startActivity(intent);
                 return true;
-
+            default:
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

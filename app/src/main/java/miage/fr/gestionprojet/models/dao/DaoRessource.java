@@ -45,7 +45,7 @@ public class DaoRessource {
                 .from(Ressource.class)
                 .where("initiales = ?", initiales)
                 .execute();
-        if(lst.size()>0){
+        if(!lst.isEmpty()){
             return lst.get(0);
         }else{
             return null;

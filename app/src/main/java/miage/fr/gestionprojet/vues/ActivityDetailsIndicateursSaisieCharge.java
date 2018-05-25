@@ -37,7 +37,6 @@ import miage.fr.gestionprojet.R;
 public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
 
 	private SaisieCharge saisieCharge = null;
-	private TextView txtSaisieCharge;
 	public static final String EXTRA_INITIAL = "initial";
 	public static final String EXTRA_SAISIECHARGE = "saisie charge";
 	private String initialUtilisateur = null;
@@ -59,22 +58,22 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
 		if (id > 0) {
 			saisieCharge = DaoSaisieCharge.loadById(id);
 			Mesure mesure = DaoMesure.getLastMesureBySaisieCharge(saisieCharge.getId());
-			txtSaisieCharge = (TextView) findViewById(R.id.textViewSaisieCharge);
+			TextView txtSaisieCharge = findViewById(R.id.textViewSaisieCharge);
 			txtSaisieCharge.setText(saisieCharge.toString());
 
 			int progression = Outils.calculerPourcentage(mesure.getNbUnitesMesures(), saisieCharge
                     .getNbUnitesCibles());
-			CircularProgressBar circularProgressBar = (CircularProgressBar) findViewById(R.id
+			CircularProgressBar circularProgressBar = findViewById(R.id
                     .progressBarAvancement);
 			circularProgressBar.setProgress(progression);
 
-			TextView txtPrct = (TextView) findViewById(R.id.textViewPrct);
+			TextView txtPrct = findViewById(R.id.textViewPrct);
 			txtPrct.setText("Heure/unite:" + saisieCharge.getHeureParUnite() + "\n" +
                     "ChargeTotale:" + saisieCharge.getChargeTotaleEstimeeEnHeure() + "\n" +
                     "Charge/semaine:" + saisieCharge.getChargeEstimeeParSemaine());
 
-			TextView txtDateDeb = (TextView) findViewById(R.id.txtDtDeb);
-			TextView txtDateFin = (TextView) findViewById(R.id.txtDtFin);
+			TextView txtDateDeb = findViewById(R.id.txtDtDeb);
+			TextView txtDateFin = findViewById(R.id.txtDtFin);
 			DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 			if (saisieCharge.getAction().getDtDeb() != null) {
 				txtDateDeb.setText(df.format(saisieCharge.getAction().getDtDeb()));
@@ -82,7 +81,7 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
 			if (saisieCharge.getAction().getDtFinPrevue() != null) {
 				txtDateFin.setText(df.format(saisieCharge.getAction().getDtFinPrevue()));
 			}
-			ProgressBar progressBarDate = (ProgressBar) findViewById(R.id.progressBarDate);
+			ProgressBar progressBarDate = findViewById(R.id.progressBarDate);
 			Calendar c = Calendar.getInstance();
 			int progress = 0;
 			if (saisieCharge.getAction().getDtDeb() != null && saisieCharge.getAction()
@@ -93,17 +92,17 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
 			}
 			progressBarDate.setProgress(progress);
 
-			ListView lstViewIndicateur = (ListView) findViewById(R.id.ListViewDetailsSaisieCharge);
+			ListView lstViewIndicateur = findViewById(R.id.ListViewDetailsSaisieCharge);
 			List<String> indicateurs = new ArrayList<>();
 			indicateurs.add("Nombre d'unités produites:" + mesure.getNbUnitesMesures() + "/" +
                     saisieCharge.getNbUnitesCibles());
 			indicateurs.add("Temps restant (semaines): " + saisieCharge.getNbSemainesRestantes());
 			indicateurs.add("Dernière mesure saisie:" + mesure.getDtMesure());
-			final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout
+			final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout
                     .simple_list_item_1, indicateurs);
 			lstViewIndicateur.setAdapter(adapter);
 
-			Button btnMessures = (Button) findViewById(R.id.btnMesures);
+			Button btnMessures = findViewById(R.id.btnMesures);
 			btnMessures.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
@@ -128,7 +127,6 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		//noinspection SimplifiableIfStatement
 		switch (id) {
 			case R.id.initial_utilisateur:
 				return true;
@@ -138,6 +136,8 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
 				intent.putExtra(EXTRA_INITIAL, (initialUtilisateur));
 				startActivity(intent);
 				return true;
+			default:
+				break;
 
 		}
 		return super.onOptionsItemSelected(item);

@@ -29,11 +29,10 @@ import miage.fr.gestionprojet.models.dao.DaoSaisieCharge;
 
 public class ActivityIndicateursSaisieCharge extends AppCompatActivity {
 
-    private Projet proj;
     private List<SaisieCharge> lstSaisieCharge;
     private ListView liste;
     public static final String SAISIECHARGE = "saisie charge";
-    public final static String EXTRA_INITIAL = "initial";
+    public static final String EXTRA_INITIAL = "initial";
     private String initialUtilisateur =null;
 
     @Override
@@ -43,14 +42,14 @@ public class ActivityIndicateursSaisieCharge extends AppCompatActivity {
         Intent intent = getIntent();
         //on récupère le projet sélectionné
         long id =  intent.getLongExtra(ActivityDetailsProjet.PROJET,0);
-        liste = (ListView) findViewById(R.id.listViewSaisieCharge);
+        liste = findViewById(R.id.listViewSaisieCharge);
         initialUtilisateur = intent.getStringExtra(ActivityDetailsProjet.EXTRA_INITIAL);
 
         if (id > 0 ) {
             // on récupère les données associées à ce projet
-            proj = DaoProjet.loadById(id);
+            Projet proj = DaoProjet.loadById(id);
             // on récupère la liste des travaux à afficher
-            lstSaisieCharge= new ArrayList<SaisieCharge>();
+            lstSaisieCharge= new ArrayList<>();
             List<Domaine> lstDomaines = proj.getLstDomaines();
             for(Domaine d : lstDomaines){
                 for(Action a: d.getLstActions()){
@@ -81,7 +80,7 @@ public class ActivityIndicateursSaisieCharge extends AppCompatActivity {
             // si pas de saisiecharge en cours
             ArrayList<String> list = new ArrayList<>(1);
             list.add("Aucune saisie en cours");
-            final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,list);
+            final ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,list);
             liste.setAdapter(adapter);
         }
     }
@@ -199,7 +198,7 @@ public class ActivityIndicateursSaisieCharge extends AppCompatActivity {
     }
 
     private void refreshAdapter(List<SaisieCharge> actions){
-        if(actions != null && actions.size() > 0) {
+        if(actions != null && !actions.isEmpty()) {
             AdapterSaisieCharge adapter = new AdapterSaisieCharge(this, R.layout.list_view_layout_saisie_charge,actions);
             liste.setAdapter(adapter);
             adapter.notifyDataSetChanged();

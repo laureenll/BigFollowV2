@@ -1,10 +1,8 @@
 package miage.fr.gestionprojet.vues;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.util.DiffUtil;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,15 +26,13 @@ import miage.fr.gestionprojet.outils.Outils;
 
 public class ActivityDetailsProjet extends AppCompatActivity {
 
-    private final static String RESSOURCES = "Avancement des saisies";
-    private final static String FORMATIONS = "Avancement des formations";
-    private final static String PLANNING = "Planning détaillé";
-    private final static String BUDGET = "Suivi du budget";
-    private final static String RESTITUTION = "Envoi de restitution";
-    public final static String PROJET = "projet visu";
-    private ListView liste = null;
-    public final static String EXTRA_INITIAL = "initial";
-    private ArrayList <String> lstActions;
+    private static final String RESSOURCES = "Avancement des saisies";
+    private static final String FORMATIONS = "Avancement des formations";
+    private static final String PLANNING = "Planning détaillé";
+    private static final String BUDGET = "Suivi du budget";
+    private static final String RESTITUTION = "Envoi de restitution";
+    public static final String PROJET = "projet visu";
+    public static final String EXTRA_INITIAL = "initial";
     private Projet proj;
     private String initialUtilisateur =null;
 
@@ -55,20 +51,20 @@ public class ActivityDetailsProjet extends AppCompatActivity {
             proj = DaoProjet.loadById(id);
 
             // on récupère les différents élements de la vue
-            TextView txtNomProj = (TextView) findViewById(R.id.textViewNomProjet);
+            TextView txtNomProj = findViewById(R.id.textViewNomProjet);
 
             // on alimente ces différents éléments
             txtNomProj.setText(proj.getNom());
 
             // on constitue une liste d'action
-            liste = (ListView) findViewById(R.id.listViewAction);
-            lstActions = new ArrayList<String>();
+            ListView liste = findViewById(R.id.listViewAction);
+            ArrayList<String> lstActions = new ArrayList<>();
             lstActions.add(RESSOURCES);
             lstActions.add(FORMATIONS);
             lstActions.add(PLANNING);
             lstActions.add(BUDGET);
             lstActions.add(RESTITUTION);
-            final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lstActions);
+            final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, lstActions);
             liste.setAdapter(adapter);
 
 
@@ -106,21 +102,22 @@ public class ActivityDetailsProjet extends AppCompatActivity {
                             intent.putExtra(PROJET, proj.getId());
                             startActivity(intent);
                             break;
-
+                        default:
+                            break;
                     }
 
                 }
             });
 
             //avancement du projet
-            ProgressBar progress = (ProgressBar) findViewById(R.id.progressBarProjet);
+            ProgressBar progress = findViewById(R.id.progressBarProjet);
             int nbActionsRealise = DaoAction.getActionRealiseesByProjet(this.proj.getId()).size();
             int nbActions = DaoAction.getAllActionsByProjet(this.proj.getId()).size();
             int ratioBudget = Outils.calculerPourcentage(nbActionsRealise,nbActions);
             progress.setProgress(ratioBudget);
 
             //action lors du clic sur le bouton action
-            final Button buttonSaisies = (Button) findViewById(R.id.btnSaisies);
+            final Button buttonSaisies = findViewById(R.id.btnSaisies);
             buttonSaisies.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = new Intent(ActivityDetailsProjet.this, ActivityIndicateursSaisieCharge.class);
@@ -131,7 +128,7 @@ public class ActivityDetailsProjet extends AppCompatActivity {
             });
 
             //action lors du clic sur le bouton formation
-            final Button buttonFormations = (Button) findViewById(R.id.btnFormations);
+            final Button buttonFormations = findViewById(R.id.btnFormations);
             buttonFormations.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = new Intent(ActivityDetailsProjet.this, FormationsActivity.class);
@@ -141,7 +138,7 @@ public class ActivityDetailsProjet extends AppCompatActivity {
             });
 
             //action lors du clic sur le bouton budget
-            final Button buttonBudget = (Button) findViewById(R.id.btnBudget);
+            final Button buttonBudget = findViewById(R.id.btnBudget);
             buttonBudget.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = new Intent(ActivityDetailsProjet.this, ActivityBudget.class);
@@ -200,23 +197,17 @@ public class ActivityDetailsProjet extends AppCompatActivity {
         return true;
     }
 
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
-        switch(id){
-            case R.id.initial_utilisateur:
-                return true;
-            case R.id.charger_donnees:
-                Intent intent = new Intent(ActivityDetailsProjet.this, ChargementDonnees.class);
-                intent.putExtra(EXTRA_INITIAL, (initialUtilisateur));
-                startActivity(intent);
-                return true;
-
+        if (id == R.id.initial_utilisateur) {
+            return true;
+        } else if (id == R.id.charger_donnees) {
+            Intent intent = new Intent(ActivityDetailsProjet.this, ChargementDonnees.class);
+            intent.putExtra(EXTRA_INITIAL, (initialUtilisateur));
+            startActivity(intent);
+            return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public void definirCouleurBouton(){
-
     }
 }

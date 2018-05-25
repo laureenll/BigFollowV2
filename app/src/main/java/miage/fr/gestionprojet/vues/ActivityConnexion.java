@@ -41,12 +41,11 @@ import static miage.fr.gestionprojet.vues.ChargementDonnees.REQUEST_GOOGLE_PLAY_
 
 public class ActivityConnexion extends AppCompatActivity implements View.OnClickListener {
 
-    private GoogleAccountCredential mCredential;;
+    private GoogleAccountCredential mCredential;
     private GoogleSignInClient mGoogleSignInClient;
     private static final int SIGN_IN_CODE = 0;
     private static final int PROFILE_PIC_SIZE = 120;
-    private ProgressDialog progress_dialog;
-    private static final String PREF_ACCOUNT_NAME = "accountName";
+    private ProgressDialog progressDialog;
 
     private static final String[] SCOPES = {SheetsScopes.SPREADSHEETS};
 
@@ -57,8 +56,8 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_connexion);
         //Customize sign-in button.a red button may be displayed when Google+ scopes are requested
         setBtnClickListeners();
-        progress_dialog = new ProgressDialog(this);
-        progress_dialog.setMessage("Chargement....");
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Chargement....");
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -146,7 +145,7 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInResult(task);
         } else {
-            progress_dialog.dismiss();
+            progressDialog.dismiss();
         }
 
     }
@@ -173,18 +172,20 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sign_in_button:
-                progress_dialog.show();
+                progressDialog.show();
                 signIn();
                 break;
 
             case R.id.sign_out_button:
-                progress_dialog.show();
+                progressDialog.show();
                 signOut();
                 break;
 
             case R.id.disconnect_button:
-                progress_dialog.show();
+                progressDialog.show();
                 revokeAccess();
+            default:
+                break;
         }
     }
 
@@ -227,7 +228,6 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
         if (account.getGivenName().length() > 0 && account.getFamilyName().length() > 0) {
             initial = account.getGivenName().substring(0, 1) + account.getFamilyName().substring(0, 1);
         }
-        /*setPersonalInfo(account);*/
         mCredential.setSelectedAccountName(account.getDisplayName());
 
         // écriture du nouvel utilisateur dans le fichier google spread sheet
@@ -242,43 +242,12 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
         values.add(data1);
         ValueRange body = new ValueRange().setValues(values);
 
-        /*addRessourceToSheet(body);*/
-        /*List<Ressource> execute = new Select().from(Ressource.class).execute();
-        if (execute.size() > 0) {
-            new Delete().from(Ressource.class).execute();
-        }*/
-
-        // ajout des initiales en base
-        /*Ressource ressource = new Ressource();
-        ressource.setInitiales(initial);
-        ressource.setPrenom(account.getGivenName());
-        ressource.setNom(account.getFamilyName());
-        ressource.setEmail(account.getEmail());
-        ressource.setEntreprise("");
-        ressource.setInformationsDiverses("");
-        ressource.setTelephoneFixe("");
-        ressource.setTelephoneMobile("");
-        if (!DaoRessource.isRessourceExists(ressource.getEmail())) {
-            ressource.save();
-            Insert.into(Ressource.class).columns("nom", "initiales", "prenom").values(account.getGivenName(), initial, account.getFamilyName()).execute();
-        }*/
-
         Log.d("user connected","connected");
         Intent intent = new Intent(ActivityConnexion.this, ActivityGestionDesInitials.class);
         intent.putExtra(EXTRA_INITIAL, initial);
         startActivity(intent);
-        progress_dialog.hide();
+        progressDialog.hide();
     }
-
-    /*private void addRessourceToSheet(ValueRange body) {
-        if (!isGooglePlayServicesAvailable()) {
-            acquireGooglePlayServices();
-        } else if (!isDeviceOnline()) {
-            Toast.makeText(this,"No network connection available.", Toast.LENGTH_LONG).show();
-        } else {
-            new InsertResourceTask(mCredential, body).execute();
-        }
-    }*/
 
     /*
      set the User information into the views defined in the layout
@@ -287,10 +256,9 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
 
         String personName = currentPerson.getDisplayName();
         String personPhotoUrl = currentPerson.getPhotoUrl().toString();
-        TextView user_name = (TextView) findViewById(R.id.userName);
+        TextView user_name = findViewById(R.id.userName);
         user_name.setText("Name: " + personName);
-        TextView gemail_id = (TextView)findViewById(R.id.emailId);
-        progress_dialog.dismiss();
+        progressDialog.dismiss();
         setProfilePic(personPhotoUrl);
     }
 
@@ -303,7 +271,7 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
         profile_pic = profile_pic.substring(0,
                 profile_pic.length() - 2)
                 + PROFILE_PIC_SIZE;
-        ImageView user_picture = (ImageView)findViewById(R.id.profile_pic);
+        ImageView user_picture = findViewById(R.id.profile_pic);
         new ActivityConnexion.LoadProfilePic(user_picture).execute(profile_pic);
     }
 
@@ -331,14 +299,14 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
         @Override
         protected Bitmap doInBackground(String... urls) {
             String url = urls[0];
-            Bitmap new_icon = null;
+            Bitmap newIcon = null;
             try {
-                InputStream in_stream = new java.net.URL(url).openStream();
-                new_icon = BitmapFactory.decodeStream(in_stream);
+                InputStream inStream = new java.net.URL(url).openStream();
+                newIcon = BitmapFactory.decodeStream(inStream);
             } catch (Exception e) {
                 Log.e("Error", e.getMessage());
             }
-            return new_icon;
+            return newIcon;
         }
 
         protected void onPostExecute(Bitmap result_img) {
@@ -346,39 +314,4 @@ public class ActivityConnexion extends AppCompatActivity implements View.OnClick
             bitmap_img.setImageBitmap(result_img);
         }
     }
-
-
-    /*private class InsertResourceTask extends AsyncTask<Void, Void, String> {
-        private Sheets mService = null;
-        private ValueRange body;
-
-        InsertResourceTask(GoogleAccountCredential credential, ValueRange body) {
-            HttpTransport transport = AndroidHttp.newCompatibleTransport();
-            JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-            this.body = body;
-            mService = new Sheets.Builder(
-                    transport, jsonFactory, credential)
-                    .setApplicationName("Big Follow")
-                    .build();
-        }
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            String range = "Ressources!A1:I4";
-//            int sheetId = 1184499476;
-
-            try {
-                UpdateValuesResponse result =
-                        mService.spreadsheets().values().update(spreadsheetIdParDefaut, range, body)
-                                .setValueInputOption("RAW")
-                                .execute();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-    }*/
 }
