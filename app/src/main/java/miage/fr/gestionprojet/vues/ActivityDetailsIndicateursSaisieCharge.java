@@ -179,15 +179,9 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
 
 	private void onPopupClickConfirm() {
 		ActiveAndroid.beginTransaction();
-		Action action = saisieCharge.getAction();
-		Domaine domaine = action.getDomaine();
-		domaine.setNom(editTxtDomaineName.getText().toString());
-		domaine.save();
-		action.setCode(editTxtSaisieName.getText().toString());
-		action.setTypeTravail(editTxtTypeName.getText().toString());
-		action.setDomaine(domaine);
-		action.save();
-		saisieCharge.setAction(action);
+		saisieCharge.setString(editTxtSaisieName.getText().toString());
+		saisieCharge.setType(editTxtTypeName.getText().toString());
+		saisieCharge.setDomaineName(editTxtDomaineName.getText().toString());
 		saisieCharge.save();
 		ActiveAndroid.setTransactionSuccessful();
 		ActiveAndroid.endTransaction();

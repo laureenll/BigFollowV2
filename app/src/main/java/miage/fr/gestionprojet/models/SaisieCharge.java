@@ -158,6 +158,18 @@ public class SaisieCharge extends Model {
         return this.action.getCode();
     }
 
+    public void setString(String string) {
+        action.setCode(string);
+    }
+
+    public void setType(String type) {
+        action.setTypeTravail(type);
+    }
+
+    public void setDomaineName(String domaine) {
+        action.getDomaine().setNom(domaine);
+    }
+
     public Action getAction() {
         return action;
     }
