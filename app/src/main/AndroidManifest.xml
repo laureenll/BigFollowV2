@@ -53,6 +53,13 @@
         <activity android:name=".vues.ActivityBudget" />
         <activity android:name=".vues.FormationsActivity" />
         <activity android:name=".vues.ActivityRestitution"></activity>
+
+        <provider
+            android:name="com.activeandroid.content.ContentProvider"
+            android:authorities="miage.fr.gestionprojet"
+            android:enabled="true"
+            android:exported="false">
+        </provider>
     </application>
 
 </manifest>

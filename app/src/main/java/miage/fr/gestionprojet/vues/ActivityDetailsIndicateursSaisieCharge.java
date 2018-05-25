@@ -191,6 +191,8 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
 		saisieCharge.save();
 		ActiveAndroid.setTransactionSuccessful();
 		ActiveAndroid.endTransaction();
+		startActivity(getIntent());
+		finish();
 	}
 
 	private void createPopup(LinearLayout layout) {
