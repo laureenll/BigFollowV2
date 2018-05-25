@@ -1,6 +1,5 @@
 package miage.fr.gestionprojet.outils;
 
-import android.icu.text.LocaleDisplayNames;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -10,7 +9,10 @@ import java.util.Date;
  */
 
 public class Outils {
-    private final static long CONST_DURATION_OF_DAY = 1000L * 60 * 60 * 24;
+    private static final long CONST_DURATION_OF_DAY = 1000L * 60 * 60 * 24;
+
+    private Outils() {
+    }
 
     public static int calculerPourcentage(double valeurReleve, double valeurCible){
         return (int) ((valeurReleve/valeurCible)*100);

@@ -49,14 +49,14 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class ActivityRestitution extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
 
     private String initialUtilisateur;
-    public final static String EXTRA_INITIAL = "initial";
+    public static final String EXTRA_INITIAL = "initial";
 
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final int REQUEST_ACCOUNT_PICKER = 1000;
     private static final int REQUEST_AUTHORIZATION = 1001;
     private static final int REQUEST_PERMISSION_WRITE_STORAGE = 1002;
     private static final String[] SCOPES = {DriveScopes.DRIVE, DriveScopes.DRIVE_FILE, DriveScopes.DRIVE_READONLY, SheetsScopes.SPREADSHEETS };
-    private static final String spreadsheetIdParDefaut= "10JKhVbqrwQ8oKufdBXRoSLN6hGIDqtOsbbIKsLfipO4";
+    private static final String SPREADSHEET_ID_PAR_DEFAUT = "10JKhVbqrwQ8oKufdBXRoSLN6hGIDqtOsbbIKsLfipO4";
     private GoogleAccountCredential credential;
     private AdapterInitialesMultipleSelect usersAdapter;
     private ProgressDialog mProgress;
@@ -87,7 +87,7 @@ public class ActivityRestitution extends AppCompatActivity implements EasyPermis
         buttonLoadIdFileDefault.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 EditText inputFile = findViewById(R.id.editTextIdFile);
-                inputFile.setText(spreadsheetIdParDefaut);
+                inputFile.setText(SPREADSHEET_ID_PAR_DEFAUT);
             }
         });
 
@@ -128,6 +128,8 @@ public class ActivityRestitution extends AppCompatActivity implements EasyPermis
                 if (resultCode == RESULT_OK) {
                     getPDFAndSendMail();
                 }
+                break;
+            default:
                 break;
         }
     }
@@ -208,7 +210,7 @@ public class ActivityRestitution extends AppCompatActivity implements EasyPermis
                 JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
                 Drive driveService = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).build();
                 EditText inputFile = findViewById(R.id.editTextIdFile);
-                String idSpreadSheet = !inputFile.getText().toString().equals("") ? inputFile.getText().toString() : spreadsheetIdParDefaut;
+                String idSpreadSheet = !inputFile.getText().toString().equals("") ? inputFile.getText().toString() : SPREADSHEET_ID_PAR_DEFAUT;
                 Drive.Files.Export export = driveService.files().export(idSpreadSheet, "application/pdf");
                 export.executeMediaAndDownloadTo(outputStream);
             } catch (IOException e) {

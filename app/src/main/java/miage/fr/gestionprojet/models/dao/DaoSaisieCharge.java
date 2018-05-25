@@ -17,6 +17,10 @@ import miage.fr.gestionprojet.models.SaisieCharge;
 
 public class DaoSaisieCharge {
 
+    public static final String SAISIE = "Saisie";
+
+    private DaoSaisieCharge() {
+    }
 
     public static List<SaisieCharge> loadSaisiebyAction(Action action) {
         return new Select().from(SaisieCharge.class).where("action=?",action.getId()).execute();
@@ -38,7 +42,7 @@ public class DaoSaisieCharge {
                 .execute();
 
         for(Action a : results) {
-            if(a.getTypeTravail().equalsIgnoreCase("Saisie")||a.getTypeTravail().equalsIgnoreCase("Test")) {
+            if(a.getTypeTravail().equalsIgnoreCase(SAISIE)||a.getTypeTravail().equalsIgnoreCase("Test")) {
                 SaisieCharge result = new Select()
                         .from(SaisieCharge.class)
                         .where("action=?", a.getId())
@@ -57,7 +61,7 @@ public class DaoSaisieCharge {
                 .where("resp_ouv=? or resp_oeu=?",idUser,idUser)
                 .execute();
         for(Action a : results) {
-            if(a.getTypeTravail().equalsIgnoreCase("Saisie")||a.getTypeTravail().equalsIgnoreCase("Test")) {
+            if(a.getTypeTravail().equalsIgnoreCase(SAISIE)||a.getTypeTravail().equalsIgnoreCase("Test")) {
                 SaisieCharge result = new Select()
                         .from(SaisieCharge.class)
                         .where("domaine=?", a.getId())
@@ -74,7 +78,7 @@ public class DaoSaisieCharge {
                 .from(SaisieCharge.class)
                 .where("action = ?", idAction)
                 .execute();
-        if(lst.size()>0) {
+        if(!lst.isEmpty()) {
             return lst.get(0);
         }else{
             return null;
@@ -90,7 +94,7 @@ public class DaoSaisieCharge {
         }
         int nbUnitesSaisies = 0;
         for(Action a : lstActions){
-            if(a.getTypeTravail().equalsIgnoreCase("Saisie")||a.getTypeTravail().equalsIgnoreCase("Test")){
+            if(a.getTypeTravail().equalsIgnoreCase(SAISIE)||a.getTypeTravail().equalsIgnoreCase("Test")){
                 SaisieCharge s = DaoSaisieCharge.loadSaisieChargeByAction(a.getId());
                 if(s!=null) {
                     Mesure m = DaoMesure.getLastMesureBySaisieCharge(s.getId());
@@ -110,7 +114,7 @@ public class DaoSaisieCharge {
         }
         int nbUnitesCibles = 0;
         for(Action a : lstActions){
-            if(a.getTypeTravail().equalsIgnoreCase("Saisie")||a.getTypeTravail().equalsIgnoreCase("Test")){
+            if(a.getTypeTravail().equalsIgnoreCase(SAISIE)||a.getTypeTravail().equalsIgnoreCase("Test")){
                 SaisieCharge s = DaoSaisieCharge.loadSaisieChargeByAction(a.getId());
                 if(s!=null) {
                     nbUnitesCibles += s.getNbUnitesCibles();

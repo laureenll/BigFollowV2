@@ -41,12 +41,9 @@ import miage.fr.gestionprojet.outils.DividerItemDecoration;
 import miage.fr.gestionprojet.outils.Outils;
 
 public class ActionsActivity extends AppCompatActivity implements View.OnClickListener, ActionsAdapter.ActionClicked{
+    public static final String ERROR = "error";
     private String initial;
     private RecyclerView mRecyclerView;
-    private ImageButton yearPlus;
-    private ImageButton yearMinus;
-    private ImageButton weekPlus;
-    private ImageButton weekMinus;
     private EditText yearEditText;
     private EditText weekEditText;
     private TextView mEmptyView;
@@ -55,11 +52,9 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
     private Date dateSaisie;
     private long idProjet;
 
-    public final static String EXTRA_INITIAL = "initial";
-    public final static String EXTRA_PROJET = "projet visu";
+    public static final String EXTRA_INITIAL = "initial";
+    public static final String EXTRA_PROJET = "projet visu";
     @Override
-
-    //TODO voir problème de date
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actions);
@@ -67,11 +62,11 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
             initial = getIntent().getStringExtra(ActivityDetailsProjet.EXTRA_INITIAL);
             idProjet = getIntent().getLongExtra(EXTRA_PROJET,0);
         }catch(Exception e){
-            Log.e("error", e.getMessage(), e);
+            Log.e(ERROR, e.getMessage(), e);
             finish();
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         Calendar c = Calendar.getInstance();
         week = c.get(Calendar.WEEK_OF_YEAR);
         year = c.get(Calendar.YEAR);
@@ -86,31 +81,31 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
             });
         }
 
-        mEmptyView = (TextView) findViewById(R.id.emptyView);
-        mRecyclerView = (RecyclerView) findViewById(R.id.actionRecycler);
+        mEmptyView = findViewById(R.id.emptyView);
+        mRecyclerView = findViewById(R.id.actionRecycler);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this));
-        yearPlus = (ImageButton) findViewById(R.id.year_plus);
-        yearMinus = (ImageButton) findViewById(R.id.year_minus);
-        weekPlus = (ImageButton) findViewById(R.id.week_plus);
-        weekMinus = (ImageButton) findViewById(R.id.week_minus);
+        ImageButton yearPlus = findViewById(R.id.year_plus);
+        ImageButton yearMinus = findViewById(R.id.year_minus);
+        ImageButton weekPlus = findViewById(R.id.week_plus);
+        ImageButton weekMinus = findViewById(R.id.week_minus);
         yearPlus.setOnClickListener(this);
         yearMinus.setOnClickListener(this);
         weekPlus.setOnClickListener(this);
         weekMinus.setOnClickListener(this);
-        yearEditText = (EditText) findViewById(R.id.edit_text_year);
-        weekEditText = (EditText) findViewById(R.id.edit_text_week);
+        yearEditText = findViewById(R.id.edit_text_year);
+        weekEditText = findViewById(R.id.edit_text_week);
         weekEditText.setText(String.valueOf(week));
         yearEditText.setText(String.valueOf(year));
         yearEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                //before text changed
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                //on text changed
             }
 
             @Override
@@ -120,7 +115,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
                     dateSaisie = Outils.weekOfYearToDate(year,week);
                     refreshAdapter(DaoAction.loadActionsByDate(dateSaisie, idProjet));
                 }catch(Exception e){
-                    Log.e("error", e.getMessage(), e);
+                    Log.e(ERROR, e.getMessage(), e);
                     yearEditText.setError("");
                 }
             }
@@ -128,12 +123,12 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
         weekEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                // before text changed
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                //text change
             }
 
             @Override
@@ -143,7 +138,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
                     dateSaisie = Outils.weekOfYearToDate(year,week);
                     refreshAdapter(DaoAction.loadActionsByDate(dateSaisie, idProjet));
                 }catch(Exception e){
-                    Log.e("error", e.getMessage(), e);
+                    Log.e(ERROR, e.getMessage(), e);
                     weekEditText.setError("");
                 }
             }
@@ -162,7 +157,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
 
 
     private void refreshAdapter(List<Action> actions){
-        if(actions != null && actions.size() > 0) {
+        if(actions != null && !actions.isEmpty()) {
             mEmptyView.setVisibility(View.INVISIBLE);
             mRecyclerView.setVisibility(View.VISIBLE);
             ActionsAdapter adapter = new ActionsAdapter(actions);
@@ -179,7 +174,6 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View view) {
         yearEditText.setError(null);
         weekEditText.setError(null);
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         switch (view.getId()){
             case R.id.week_minus:
                 week = (Integer.parseInt(weekEditText.getText().toString()) - 1) % 53;
@@ -211,6 +205,8 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 yearEditText.setText(String.valueOf(year));
                 break;
+            default :
+                break;
         }
 
         refreshAdapter(DaoAction.loadActionsByDate(dateSaisie,idProjet));
@@ -224,12 +220,12 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
     private void showDialog(final Action action){
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout = inflater.inflate(R.layout.dialog_details_action, null, false);
-        TextView phase = (TextView) layout.findViewById(R.id.phase);
-        TextView name = (TextView) layout.findViewById(R.id.name);
-        TextView dtDebut = (TextView) layout.findViewById(R.id.dtDebut);
-        TextView dtFin = (TextView) layout.findViewById(R.id.dtFin);
-        TextView nbJr = (TextView) layout.findViewById(R.id.nbJr);
-        TextView estimation = (TextView) layout.findViewById(R.id.estimation);
+        TextView phase = layout.findViewById(R.id.phase);
+        TextView name = layout.findViewById(R.id.name);
+        TextView dtDebut = layout.findViewById(R.id.dtDebut);
+        TextView dtFin = layout.findViewById(R.id.dtFin);
+        TextView nbJr = layout.findViewById(R.id.nbJr);
+        TextView estimation = layout.findViewById(R.id.estimation);
         phase.setText(action.getPhase());
         name.setText(action.getCode());
         SimpleDateFormat sf = new SimpleDateFormat("dd/MM/yyyy");
@@ -339,7 +335,6 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
             popupMenu.getMenuInflater().inflate(R.menu.popup_menu_domaine, menu);
             popupMenu.setGravity(Gravity.CENTER);
             ArrayList<Domaine> doms = getDomainesAffiches();
-            int i = 0 ;
             for(Domaine d : doms){
                 menu.add(0,(int)(long) d.getId(), 0, d.getNom());
             }

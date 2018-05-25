@@ -23,22 +23,20 @@ import miage.fr.gestionprojet.models.Domaine;
 import miage.fr.gestionprojet.models.Projet;
 import miage.fr.gestionprojet.models.Ressource;
 import miage.fr.gestionprojet.models.dao.DaoAction;
-import miage.fr.gestionprojet.models.dao.DaoDomaine;
 import miage.fr.gestionprojet.models.dao.DaoProjet;
 import miage.fr.gestionprojet.models.dao.DaoRessource;
 
 public class ActivityBudget extends AppCompatActivity {
-    private Spinner spinChoixAffichage;
     private ListView liste;
     private ArrayList<String> lstChoixAffichage;
     private String initialUtilisateur;
     private Projet proj;
 
-    private final static String DOMAINE = "Domaine";
-    private final static String TYPE = "Type";
-    private final static String UTILISATEUR = "Utilisateur";
-    private final static String ACTION = "Action";
-    public final static String EXTRA_INITIAL = "initial";
+    private static final String DOMAINE = "Domaine";
+    private static final String TYPE = "Type";
+    private static final String UTILISATEUR = "Utilisateur";
+    private static final String ACTION = "Action";
+    public static final String EXTRA_INITIAL = "initial";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +51,9 @@ public class ActivityBudget extends AppCompatActivity {
         lstChoixAffichage.add(UTILISATEUR);
         lstChoixAffichage.add(ACTION);
 
-        spinChoixAffichage = (Spinner) findViewById(R.id.spinnerChoixAffichage);
-        this.liste = (ListView) findViewById(R.id.lstViewBudget);
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lstChoixAffichage);
+        Spinner spinChoixAffichage = findViewById(R.id.spinnerChoixAffichage);
+        this.liste = findViewById(R.id.lstViewBudget);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, lstChoixAffichage);
         spinChoixAffichage.setAdapter(adapter);
         //on récupère le projet sélectionné
         Intent intent = getIntent();
@@ -71,70 +69,71 @@ public class ActivityBudget extends AppCompatActivity {
                 String valeurSelectionne = lstChoixAffichage.get(i);
                 switch(valeurSelectionne){
                     case DOMAINE:
-                        AffichageDomaine();
+                        affichageDomaine();
                         break;
                     case TYPE:
-                        AffichageType();
+                        affichageType();
                         break;
                     case UTILISATEUR:
-                        AffichageUtilisateur();
+                        affichageUtilisateur();
                         break;
                     case ACTION:
-                        AffichageAction();
+                        affichageAction();
+                        break;
+                    default:
                         break;
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
+                // on nothing selected
             }
         });
 
     }
 
-    private void AffichageDomaine(){
+    private void affichageDomaine(){
         List<Domaine> lstDomaines = proj.getLstDomaines();
         AdapterBudgetDomaine adapter = new AdapterBudgetDomaine(ActivityBudget.this,R.layout.lst_view_budget,lstDomaines);
         this.liste.setAdapter(adapter);
     }
 
-    private void AffichageType(){
+    private void affichageType(){
         List<String> lstTypes = DaoAction.getLstTypeTravail();
         AdapterBudgetType adapter = new AdapterBudgetType(ActivityBudget.this,R.layout.lst_view_budget,lstTypes);
         this.liste.setAdapter(adapter);
     }
 
-    private void AffichageUtilisateur(){
+    private void affichageUtilisateur(){
         List<Ressource> lstUtilisateurs = DaoRessource.loadAll();
         AdapterBudgetUtilisateur adapter = new AdapterBudgetUtilisateur(ActivityBudget.this,R.layout.lst_view_budget,lstUtilisateurs);
         this.liste.setAdapter(adapter);
     }
 
-    private void AffichageAction(){
+    private void affichageAction(){
         List<String> lstCodes = DaoAction.getAllCodes();
         AdapterBudgetAction adapter = new AdapterBudgetAction(ActivityBudget.this,R.layout.lst_view_budget,lstCodes);
         this.liste.setAdapter(adapter);
     }
 
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.initial_utilisateur, menu);
         menu.findItem(R.id.initial_utilisateur).setTitle(initialUtilisateur);
         return true;
     }
 
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
-        switch(id){
-            case R.id.initial_utilisateur:
-                return true;
-            case R.id.charger_donnees:
-                Intent intent = new Intent(ActivityBudget.this, ChargementDonnees.class);
-                intent.putExtra(EXTRA_INITIAL, (initialUtilisateur));
-                startActivity(intent);
-                return true;
-
+        if (id == R.id.initial_utilisateur) {
+            return true;
+        } else if (id == R.id.charger_donnees) {
+            Intent intent = new Intent(ActivityBudget.this, ChargementDonnees.class);
+            intent.putExtra(EXTRA_INITIAL, (initialUtilisateur));
+            startActivity(intent);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

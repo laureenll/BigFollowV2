@@ -18,9 +18,7 @@ import miage.fr.gestionprojet.models.dao.DaoSaisieCharge;
 
 public class ActivityMesures extends AppCompatActivity {
     public final static String EXTRA_INITIAL = "initial";
-    public static final String EXTRA_SAISIECHARGE = "saisie charge";
     private String initialUtilisateur =null;
-    private SaisieCharge saisieCharge = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,14 +30,14 @@ public class ActivityMesures extends AppCompatActivity {
 
 
         if(id > 0) {
-            saisieCharge = DaoSaisieCharge.loadById(id);
-            ListView lstViewMesures = (ListView) findViewById(R.id.lstViewMesures);
+            ListView lstViewMesures = findViewById(R.id.lstViewMesures);
             List<Mesure> lstMesures = DaoMesure.getListtMesureByAction(id);
             final AdapterMesure adapter = new AdapterMesure(this, R.layout.lst_view_mesures, lstMesures);
             lstViewMesures.setAdapter(adapter);
         }
     }
 
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.initial_utilisateur, menu);
         menu.findItem(R.id.initial_utilisateur).setTitle(initialUtilisateur);
@@ -49,7 +47,6 @@ public class ActivityMesures extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
         switch(id){
             case R.id.initial_utilisateur:
                 return true;
@@ -58,6 +55,8 @@ public class ActivityMesures extends AppCompatActivity {
                 intent.putExtra(EXTRA_INITIAL, (initialUtilisateur));
                 startActivity(intent);
                 return true;
+            default:
+                break;
 
         }
         return super.onOptionsItemSelected(item);
