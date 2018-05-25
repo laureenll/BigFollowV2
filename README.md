@@ -11,17 +11,16 @@ Le projet Big Follow est une application Android permettant de suivre l'avanceme
 
 ### 1.2. Objectif
 
-Derrière ce projet, l'objectif est de mettre en pratique la méthode de gestion de projet RUP, et ce dans le cadre du cours de *Processus de développement* dispensé en M2 MIAGE à l'UFR des Sciences et Techniques de Nantes.
+Derrière ce projet, l'objectif est de mettre en pratique la méthode de gestion de projet RUP, et ce dans le cadre du cours de *Processus de développement* dispensé en M2 MIAGE à l'UFR des Sciences et Techniques de Nantes. Une première partie a été développée l'année dernière. Nous devons nous baser sur l'existant pour faire évoluer l'application.
 
 ### 1.3. Équipe
 
 Membre | Rôle
 --- | ---
-Guillaume AMOUZOU | Responsable Technique
-Audrey BALLENGHIEN | Chef de projet
-Charifa EL ALAOUI MOSTAFA | Responsable communication/marketing
-Mohammed Amine EL OUFIR | Responsable Qualité
-Romain HUNAULT | Responsable métier
+Laureen LOISON | Responsable Technique
+Reine OUILIDANA | Chef de projet
+Khira BOUKHIAR | Responsable Qualité/marketing
+Samia MOUATTA | Responsable métier
 
 ## 2. Environnement de développement
 
@@ -30,8 +29,8 @@ L'application est développée pour les téléphones Android. Le développement 
 
 ## 3. Liens
 
-* [Google Drive](https://drive.google.com/drive/folders/0B9w0H-NLpQyebkpoV0J0Rmt2eUk)
-* [Trello](https://trello.com/b/IZpxAou7/projet-big-follow)
+* [Google Drive](https://drive.google.com/drive/folders/1ehJM4Mg5hiS-OGeWW2jdZpiNZj_qjaWj)
+* [Trello](https://trello.com/b/1E2pQUYX/projet-bigfollow)
 
 ## 4. Bugs
 
