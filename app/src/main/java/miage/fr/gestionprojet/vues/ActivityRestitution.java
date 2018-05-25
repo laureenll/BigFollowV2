@@ -167,7 +167,8 @@ public class ActivityRestitution extends AppCompatActivity implements EasyPermis
             Intent intent = new Intent(Intent.ACTION_SEND);
             final String[] listeEmail = usersAdapter.getEmailSelected().toArray(new String[0]);
             intent.putExtra(Intent.EXTRA_EMAIL, listeEmail);
-            intent.putExtra(Intent.EXTRA_SUBJECT, "test");
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Projet restitution par mail");
+            intent.putExtra(Intent.EXTRA_TEXT, "Restitution par mail du projet google drive ");
             intent.putExtra(Intent.EXTRA_STREAM, pdfUri);
             intent.setType("message/rfc822");
 
